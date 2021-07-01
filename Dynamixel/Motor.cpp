@@ -21,7 +21,7 @@ Motor::Motor(const unsigned char ID)
  * Tells where is the motor
  * @returns Current position
  */
-short Motor::getPosition() const
+unsigned Motor::getPosition() const
 {
     return _PresentPos;
 }
@@ -30,9 +30,33 @@ short Motor::getPosition() const
  * Tells the motor baudrate
  * @returns Current baudrate
  */
-int Motor::getBaudrate() const
+unsigned Motor::getBaudrate() const
 {
     return _Baudrate;
+}
+
+/**
+ * Tells Proportionnal gain
+ */
+unsigned Motor::getP() const
+{
+    return _P;
+}
+
+/**
+ * Tells Integral gain
+ */
+unsigned Motor::getI() const
+{
+    return _I;
+}
+
+/**
+ * Tells Derivative gain
+ */
+unsigned Motor::getD() const
+{
+    return _D;
 }
 
 Motor::~Motor()

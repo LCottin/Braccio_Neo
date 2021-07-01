@@ -25,7 +25,10 @@ class XL320 : public Motor
         bool move(unsigned int newPos);
         bool enableTorque();
         bool disableTorque();
-        bool setBaudrate(const int baudrate);
+        bool setBaudrate(const unsigned baudrate);
+        bool setP(const unsigned char p);
+        bool setI(const unsigned char i);
+        bool setD(const unsigned char d);
 
         ~XL320();
 };
