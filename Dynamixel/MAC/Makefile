@@ -2,7 +2,8 @@
 TARGET      = read_write
 
 # important directories used by assorted rules and other variables
-DIR_OBJS   = ./objects
+DIR_DXL    = ..
+DIR_OBJS   = .objects
 
 # compiler options
 CC          = gcc
@@ -15,7 +16,7 @@ LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 #---------------------------------------------------------------------
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
-INCLUDES   = ./include/dynamixel_sdk
+INCLUDES   += -I$(DIR_DXL)/include/dynamixel_sdk
 LIBRARIES  += -ldxl_mac_cpp
 
 #---------------------------------------------------------------------
@@ -47,7 +48,7 @@ make_directory:
 $(DIR_OBJS)/%.o: %.c
 	$(CC) $(CCFLAGS) -c $? -o $@
 
-$(DIR_OBJS)/%.o: %.cpp
+$(DIR_OBJS)/%.o: ../%.cpp
 	$(CX) $(CXFLAGS) -c $? -o $@
 
 #---------------------------------------------------------------------
