@@ -21,7 +21,7 @@ class XL320 : public Motor
 
         void start();
         bool openPort();
-        bool move(unsigned short newPos);
+        bool move(unsigned int newPos);
         bool enableTorque();
         bool disableTorque();
         bool setBaudrate(const int baudrate);

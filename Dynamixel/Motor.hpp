@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string>
+#include <cmath>
 #include <iostream>
 
 #include "functions.hpp"
@@ -20,10 +21,10 @@ class Motor
         unsigned char _Threshold;
 
         int _Baudrate;
-        uint32_t _PresentPos;
-        uint32_t _GoalPos;
-        uint32_t _MinPos;
-        uint32_t _MaxPos;
+        unsigned int _PresentPos;
+        unsigned int _GoalPos;
+        unsigned int _MinPos;
+        unsigned int _MaxPos;
         bool  _TorqueEnable;
 
         short _PresentPosAddr;
@@ -43,7 +44,7 @@ class Motor
         
         virtual void start() = 0;
         virtual bool openPort() = 0;
-        virtual bool move(unsigned short newPos) = 0;
+        virtual bool move(unsigned int newPos) = 0;
         virtual bool enableTorque() = 0;
         virtual bool disableTorque() = 0;
         virtual bool setBaudrate(const int baudrate) = 0;

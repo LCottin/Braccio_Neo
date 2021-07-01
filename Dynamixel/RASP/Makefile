@@ -18,7 +18,7 @@ LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 #---------------------------------------------------------------------
 INCLUDES   += -I$(DIR_DXL)/include/dynamixel_sdk
 LIBRARIES  += -ldxl_sbc_cpp
-LIBRARIES  += -lrt
+LIBRARIES  += -lrt -lm
 
 #---------------------------------------------------------------------
 # Files

@@ -68,7 +68,7 @@ bool XL320::openPort()
  * @param newPos New position of the motor
  * @returns true if moved correctly, else false
  */
-bool XL320::move(unsigned short newPos)
+bool XL320::move(unsigned int newPos)
 {
     newPos = newPos % 1023;
     _GoalPos = newPos;
@@ -90,6 +90,7 @@ bool XL320::move(unsigned short newPos)
 		return false;
     }
 
+	long dif;
     do
     {
         // Read present position
@@ -106,8 +107,8 @@ bool XL320::move(unsigned short newPos)
         }
 
         printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", _ID, _GoalPos, _PresentPos);
-
-    } while((abs(_GoalPos - _PresentPos) > _Threshold));
+		dif = _GoalPos - _PresentPos;
+    } while((abs(dif) > _Threshold));
 	return true;
 }
 
