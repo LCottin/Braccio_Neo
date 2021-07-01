@@ -25,6 +25,7 @@ LIBRARIES  += -lrt
 #---------------------------------------------------------------------
 SOURCES = XL320.cpp \
 		  functions.cpp \
+		  Motor.cpp \
 		  main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
