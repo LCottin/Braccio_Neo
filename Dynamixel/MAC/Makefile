@@ -3,7 +3,7 @@ TARGET      = read_write
 
 # important directories used by assorted rules and other variables
 DIR_DXL    = ..
-DIR_OBJS   = .objects
+DIR_OBJS   = ../objects
 
 # compiler options
 CC          = gcc
@@ -24,6 +24,7 @@ LIBRARIES  += -ldxl_mac_cpp
 #---------------------------------------------------------------------
 SOURCES = XL320.cpp \
 		  functions.cpp \
+		  Motor.cpp \
 		  main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
