@@ -20,10 +20,10 @@ class Motor
         unsigned char _Threshold;
 
         int _Baudrate;
-        short _PresentPos;
-        short _GoalPos;
-        short _MinPos;
-        short _MaxPos;
+        uint32_t _PresentPos;
+        uint32_t _GoalPos;
+        uint32_t _MinPos;
+        uint32_t _MaxPos;
         bool  _TorqueEnable;
 
         short _PresentPosAddr;
