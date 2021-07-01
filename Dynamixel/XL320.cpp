@@ -6,6 +6,9 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
     _GoalPosAddr    	= 30;
     _PresentPosAddr 	= 37;
 	_LedAddr			= 25;
+	_PAddr				= 29;
+	_DAddr				= 27;
+	_IAddr				= 28;
 
     _Protocol       	= 2.0;
 
@@ -70,7 +73,7 @@ bool XL320::openPort()
  * @param newPos New position of the motor
  * @returns true if moved correctly, else false
  */
-bool XL320::move(unsigned int newPos)
+bool XL320::move(unsigned newPos)
 {
     newPos = newPos % 1023;
     _GoalPos = newPos;
@@ -125,13 +128,13 @@ bool XL320::enableTorque()
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Error 1\n");
+		printf("Disable Torque : Error 1\n");
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Error 2\n");
+		printf("Enable Torque : Error 2\n");
 		return false;
 	}
 	else
@@ -152,13 +155,13 @@ bool XL320::disableTorque()
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Error 1\n");
+		printf("Disable Torque : Error 1\n");
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Error 2\n");
+		printf("Disable Torque : Error 2\n");
 		return false;
 	}
 	else
@@ -173,7 +176,7 @@ bool XL320::disableTorque()
  * @param baudrate New baudrate
  * @returns true if the baudrate is correctly changed, else false
  */
-bool XL320::setBaudrate(const int baudrate)
+bool XL320::setBaudrate(const unsigned baudrate)
 {
 	if (_PortHandler->setBaudRate(_Baudrate))
 	{
@@ -196,22 +199,107 @@ bool XL320::setBaudrate(const int baudrate)
  */
 bool XL320::setLed(const LED color)
 {
+	_ColorLed = color;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, color, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Error 1\n");
+		printf("Set Led : Error 1\n");
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Error 2\n");
+		printf("Set Led : Error 2\n");
 		return false;
 	}
 	else
 	{
 		cout << "Led color successfully changed " << endl;
+		return true;
+	}
+}
+
+/**
+ * Changes Propotionnal Gain
+ * @param p New value
+ * @returns true if correctly changed, else false
+ */
+bool XL320::setP(const unsigned char p)
+{
+	_P = p;
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _PAddr, _P, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		printf("Set P : Error 1\n");
+		return false;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		printf("Set P : Error 2\n");
+		return false;
+	}
+	else
+	{
+		cout << "Proportionnal gain successfully changed " << endl;
+		return true;
+	}
+}
+
+/**
+ * Changes Integral Gain
+ * @param i New value
+ * @returns true if correctly changed, else false
+ */
+bool XL320::setI(const unsigned char i)
+{
+	_I = i;
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _IAddr, _I, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		printf("Set I : Error 1\n");
+		return false;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		printf("Set I : Error 2\n");
+		return false;
+	}
+	else
+	{
+		cout << "Integral gain successfully changed " << endl;
+		return true;
+	}
+}
+
+/**
+ * Changes Derivative Gain
+ * @param d New value
+ * @returns true if correctly changed, else false
+ */
+bool XL320::setD(const unsigned char d)
+{
+	_D = d;
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _DAddr, _D, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		printf("Set D : Error 1\n");
+		return false;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		printf("Set D : Error 2\n");
+		return false;
+	}
+	else
+	{
+		cout << "Derivative gain successfully changed " << endl;
 		return true;
 	}
 }

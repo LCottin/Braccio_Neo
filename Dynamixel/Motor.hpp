@@ -18,25 +18,31 @@ class Motor
 {
     protected:
         //motors attributs
-        unsigned char _ID;
-        double _Protocol;
         string _PortName;
+        double _Protocol;
+        unsigned char _ID;
         unsigned char _Threshold;
-        int _Baudrate;
-        unsigned int _MinPos;
-        unsigned int _MaxPos;
+        unsigned _Baudrate;
+        unsigned _MinPos;
+        unsigned _MaxPos;
 
         //users attributs
-        unsigned int _PresentPos;
-        unsigned int _GoalPos;
+        unsigned _PresentPos;
+        unsigned _GoalPos;
+        unsigned char _P;
+        unsigned char _I;
+        unsigned char _D;
         bool  _TorqueEnable;
         LED _ColorLed;
 
         //addreses attributs
-        short _PresentPosAddr;
-        short _GoalPosAddr;
-        short _TorqueEnableAddr;
-        short _LedAddr;
+        unsigned char _PresentPosAddr;
+        unsigned char _GoalPosAddr;
+        unsigned char _TorqueEnableAddr;
+        unsigned char _LedAddr;
+        unsigned char _PAddr;
+        unsigned char _IAddr;
+        unsigned char _DAddr;
 
         uint8_t _Error;
         int _ComResult;
@@ -46,16 +52,22 @@ class Motor
     public:
         Motor(const unsigned char ID);
         
-        short getPosition() const;
-        int getBaudrate() const;
+        unsigned getPosition() const;
+        unsigned getBaudrate() const;
+        unsigned getP() const;
+        unsigned getI() const;
+        unsigned getD() const;
         
         virtual void start() = 0;
         virtual bool openPort() = 0;
         virtual bool setLed(const LED color) = 0;
-        virtual bool move(unsigned int newPos) = 0;
+        virtual bool move(unsigned newPos) = 0;
         virtual bool enableTorque() = 0;
         virtual bool disableTorque() = 0;
-        virtual bool setBaudrate(const int baudrate) = 0;
+        virtual bool setBaudrate(const unsigned baudrate) = 0;
+        virtual bool setP(const unsigned char p) = 0;
+        virtual bool setI(const unsigned char i) = 0;
+        virtual bool setD(const unsigned char d) = 0;
 
         virtual ~Motor() = 0;
 };
