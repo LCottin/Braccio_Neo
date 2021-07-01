@@ -2,15 +2,17 @@
 
 XL320::XL320(const unsigned char ID) : Motor(ID)
 {
-    _TorqueEnableAddr     = 24;
-    _GoalPosAddr    = 30;
-    _PresentPosAddr = 37;
+    _TorqueEnableAddr   = 24;
+    _GoalPosAddr    	= 30;
+    _PresentPosAddr 	= 37;
+	_LedAddr			= 25;
 
-    _Protocol       = 2.0;
+    _Protocol       	= 2.0;
 
-    _TorqueEnable   = true;
-    _MinPos         = 0;
-    _MaxPos         = 1023;
+    _TorqueEnable   	= true;
+    _MinPos         	= 0;
+    _MaxPos         	= 1023;
+	_ColorLed			= OFF;
 
     start();
 }
@@ -78,7 +80,7 @@ bool XL320::move(unsigned int newPos)
         return true;
 
     // Write goal position
-    _ComResult = _PacketHandler->write4ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
+    _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
     if (_ComResult != COMM_SUCCESS)
     {
         printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -94,7 +96,7 @@ bool XL320::move(unsigned int newPos)
     do
     {
         // Read present position
-        _ComResult = _PacketHandler->read4ByteTxRx(_PortHandler, _ID, _PresentPosAddr, (uint32_t*)&_PresentPos, &_Error);
+        _ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _PresentPosAddr, (uint16_t*)&_PresentPos, &_Error);
         if (_ComResult != COMM_SUCCESS)
         {
             printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -184,6 +186,33 @@ bool XL320::setBaudrate(const int baudrate)
 		printf("Press any key to terminate...\n");
 		getch();
 		return false;
+	}
+}
+
+/**
+ * Changes the color of the led
+ * @param color New color of the led
+ * @returns true if correctly changed, else false
+ */
+bool XL320::setLed(const LED color)
+{
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, color, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		printf("Error 1\n");
+		return false;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		printf("Error 2\n");
+		return false;
+	}
+	else
+	{
+		cout << "Led color successfully changed " << endl;
+		return true;
 	}
 }
 
