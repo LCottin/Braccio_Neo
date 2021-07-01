@@ -26,11 +26,11 @@
 //
 
 #if defined(__linux__) || defined(__APPLE__)
-#include <fcntl.h>
-#include <termios.h>
+	#include <fcntl.h>
+	#include <termios.h>
 #define STDIN_FILENO 0
 #elif defined(_WIN32) || defined(_WIN64)
-#include <conio.h>
+	#include <conio.h>
 #endif
 
 #include <stdlib.h>
@@ -39,24 +39,24 @@
 #include "dynamixel_sdk.h"                                  // Uses Dynamixel SDK library
 
 // Control table address
-#define ADDR_PRO_TORQUE_ENABLE          562                 // Control table address is different in Dynamixel model
-#define ADDR_PRO_GOAL_POSITION          596
-#define ADDR_PRO_PRESENT_POSITION       611
+#define ADDR_PRO_TORQUE_ENABLE          24                // Control table address is different in Dynamixel model
+#define ADDR_PRO_GOAL_POSITION          30
+#define ADDR_PRO_PRESENT_POSITION       37
 
 // Protocol version
 #define PROTOCOL_VERSION                2.0                 // See which protocol version is used in the Dynamixel
 
 // Default setting
 #define DXL_ID                          1                   // Dynamixel ID: 1
-#define BAUDRATE                        57600
-#define DEVICENAME                      "/dev/tty.usbmodem14201%"      // Check which port is being used on your controller
+#define BAUDRATE                        1000000
+#define DEVICENAME                      "/dev/ttyACM0"      // Check which port is being used on your controller
                                                             // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0" Mac: "/dev/tty.usbserial-*"
 
 #define TORQUE_ENABLE                   1                   // Value for enabling the torque
 #define TORQUE_DISABLE                  0                   // Value for disabling the torque
-#define DXL_MINIMUM_POSITION_VALUE      -150000             // Dynamixel will rotate between this value
-#define DXL_MAXIMUM_POSITION_VALUE      150000              // and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
-#define DXL_MOVING_STATUS_THRESHOLD     20                  // Dynamixel moving status threshold
+#define DXL_MINIMUM_POSITION_VALUE      0             // Dynamixel will rotate between this value
+#define DXL_MAXIMUM_POSITION_VALUE      1023             // and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+#define DXL_MOVING_STATUS_THRESHOLD     5                // Dynamixel moving status threshold
 
 #define ESC_ASCII_VALUE                 0x1b
 
@@ -159,11 +159,13 @@ int main()
 	{
 		// printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
 		printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+		printf("Error 1\n");
 	}
 	else if (dxl_error != 0)
 	{
 		// printf("%s\n", packetHandler->getRxPacketError(dxl_error));
 		printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+		printf("Error 2\n");
 	}
 	else
 	{
