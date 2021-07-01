@@ -21,6 +21,7 @@ class XL320 : public Motor
 
         void start();
         bool openPort();
+        bool setLed(const LED color);
         bool move(unsigned int newPos);
         bool enableTorque();
         bool disableTorque();
