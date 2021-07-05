@@ -13,7 +13,8 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
 
     _Protocol       	= 2.0;
 
-	_Speed				= 2047;
+	_PosMax				= 2047;
+	_Speed				= _MaxPos;
     _TorqueEnable   	= true;
     _MinPos         	= 0;
     _MaxPos         	= 1023;
@@ -84,12 +85,12 @@ bool XL320::openPort()
 /**
  * Makes the motor turn
  * @param newPos New position of the motor
+ * @param blocking Should the movment be blocking ? (False by default)
  * @returns true if moved correctly, else false
  */
-bool XL320::move(const unsigned newPos)
+bool XL320::move(const unsigned newPos, const bool blocking, const bool debug)
 {
     _GoalPos = newPos % 1023;
-	_PresentPos = _GoalPos;
 
     // Write goal position
     _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
@@ -103,6 +104,36 @@ bool XL320::move(const unsigned newPos)
         printf("%s\n", _PacketHandler->getRxPacketError(_Error));
 		return false;
     }
+
+	if (blocking)
+	{
+		int dif = 0;
+		do
+		{
+			// Reads present position
+			_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _PresentPosAddr, (uint16_t*)&_PresentPos, &_Error);
+			if (debug)
+			{
+				if (_ComResult != COMM_SUCCESS)
+				{
+					printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+				}
+				else if (_Error != 0)
+				{
+					printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+				}
+
+				printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", _ID, _GoalPos, _PresentPos);
+			}
+			
+			if (_PresentPos < 0)
+				_PresentPos = 0;
+			if (_PresentPos > _MaxPos)
+				_PresentPos = _MaxPos;
+
+			dif = _GoalPos - _PresentPos;
+		} while((abs(dif) > _Threshold));
+	}
 	return true;
 }
 

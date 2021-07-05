@@ -5,17 +5,16 @@ int main(int argc, char const *argv[])
 {
     XL320 moteur(atoi(argv[1]));
 
-    moteur.move(1000);
+    moteur.move(1000, true);
     moteur.setLed(YELLOW);
-    sleep(1);
-    moteur.move(0);
+    moteur.move(0, true);
     moteur.setLed(BLUE);
-    sleep(1);
-    moteur.move(500);
+    moteur.move(500, true);
     moteur.setLed(RED);
-    sleep(1);
-    moteur.move(0);
+
+    moteur.move(0, true);
     moteur.setSpeed(200);
+    moteur.move(2047);
     cout << "Current pos : " << moteur.getPosition() << endl;
     moteur.disableTorque();
 
