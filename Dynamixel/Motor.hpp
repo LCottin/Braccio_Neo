@@ -12,7 +12,6 @@
 using namespace std;
 using namespace dynamixel;
 
-enum LED {OFF, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE};
 
 class Motor
 {
@@ -35,7 +34,7 @@ class Motor
         unsigned char _I;
         unsigned char _D;
         bool  _TorqueEnable;
-        LED _ColorLed;
+        bool _Led;
 
         //addreses attributs
         unsigned char _PresentPosAddr;
@@ -62,10 +61,12 @@ class Motor
         unsigned getD() const;
         unsigned getSpeed() const;
         bool     getTorque() const;
+
+        virtual bool ledOn(); //not for XL
+        virtual bool ledOff(); //not for XL
         
         virtual void start() = 0;
         virtual bool openPort() = 0;
-        virtual bool setLed(const LED color) = 0;
         virtual bool move(const unsigned newPos, const bool blocking = false, const bool debug = false) = 0;
         virtual bool enableTorque() = 0;
         virtual bool disableTorque() = 0;

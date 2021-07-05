@@ -20,7 +20,7 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
     _TorqueEnable   	= true;
     _MinPos         	= 0;
     _MaxPos         	= 1023;
-	_ColorLed			= OFF;
+	_LedColor			= OFF;
 
     start();
 }
@@ -222,7 +222,7 @@ bool XL320::setBaudrate(const unsigned baudrate)
  */
 bool XL320::setLed(const LED color)
 {
-	_ColorLed = color;
+	_LedColor = color;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, color, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
@@ -353,6 +353,17 @@ bool XL320::setSpeed(const unsigned speed)
 		cout << "Velocity successfully changed " << endl;
 		return true;
 	}
+}
+
+bool XL320::ledOff()
+{
+	return true;
+}
+
+
+bool XL320::ledOn()
+{
+	return true;
 }
 
 XL320::~XL320()

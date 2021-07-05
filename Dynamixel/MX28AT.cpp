@@ -20,7 +20,7 @@ MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
     _TorqueEnable   	= true;
     _MinPos         	= 0;
     _MaxPos         	= 1023;
-	_ColorLed			= OFF;
+    _Led                = false;
 
     start();
 }
@@ -216,29 +216,55 @@ bool MX28AT::setBaudrate(const unsigned baudrate)
 }
 
 /**
- * Changes the color of the led
- * @param color New color of the led
- * @returns true if correctly changed, else false
+ * Turns the led on
+ * @returns true if correctly turned on, else false
  */
-bool MX28AT::setLed(const LED color)
+bool MX28AT::ledOn()
 {
-	_ColorLed = color;
-	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, color, &_Error);
+	_Led = true;
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, _Led ? 1 : 0, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		cout << "Set Led : Error 1\n" << endl;
+		cout << "Led On : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		cout << "Set Led : Error 2\n" << endl;
+		cout << "Led On: Error 2\n" << endl;
 		return false;
 	}
 	else
 	{
-		cout << "Led color successfully changed " << endl;
+		cout << "Led successfully turned on" << endl;
+		return true;
+	}
+}
+
+/**
+ * Turns the led off
+ * @returns true if correctly turned off, else false
+ */
+bool MX28AT::ledOff()
+{
+	_Led = false;
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, _Led ? 1 : 0, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		cout << "Led On : Error 1\n" << endl;
+		return false;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		cout << "Led On: Error 2\n" << endl;
+		return false;
+	}
+	else
+	{
+		cout << "Led successfully turned off" << endl;
 		return true;
 	}
 }

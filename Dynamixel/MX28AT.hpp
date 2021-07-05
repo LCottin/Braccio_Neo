@@ -21,7 +21,7 @@ class MX28AT : public Motor
 
         void start();
         bool openPort();
-        bool setLed(const LED color);
+        bool setLed(const bool on);
         bool enableTorque();
         bool disableTorque();
         bool setBaudrate(const unsigned baudrate);
@@ -30,6 +30,8 @@ class MX28AT : public Motor
         bool setI(const unsigned char i);
         bool setD(const unsigned char d);
         bool setSpeed(const unsigned speed);
+        bool ledOn();
+        bool ledOff();
 
         ~MX28AT();
 };

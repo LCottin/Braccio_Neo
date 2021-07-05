@@ -12,10 +12,15 @@
 using namespace std;
 using namespace dynamixel;
 
+enum LED {OFF, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE};
+
 class XL320 : public Motor
 {
     private:
-        
+        LED _LedColor;
+        bool ledOn(); //not used
+        bool ledOff(); //not used
+
     public:
         XL320(const unsigned char ID);
 

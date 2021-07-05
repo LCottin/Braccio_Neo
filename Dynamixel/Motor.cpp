@@ -76,6 +76,18 @@ bool Motor::getTorque() const
     return _TorqueEnable;
 }
 
+bool Motor::ledOff()
+{
+    _Led = false;
+	return false;
+}
+
+bool Motor::ledOn()
+{
+    _Led = true;
+	return true;
+}
+
 Motor::~Motor()
 {
 
