@@ -3,19 +3,20 @@
 XL320::XL320(const unsigned char ID) : Motor(ID)
 {
     _TorqueEnableAddr   = 24;
-    _GoalPosAddr    	= 30;
-    _PresentPosAddr 	= 37;
 	_LedAddr			= 25;
-	_PAddr				= 29;
 	_DAddr				= 27;
 	_IAddr				= 28;
+	_PAddr				= 29;
+    _GoalPosAddr    	= 30;
 	_SpeedAddr			= 32;
+    _PresentPosAddr 	= 37;
 
     _Protocol       	= 2.0;
 
+	_MaxSpeed			= 2047;
 	_MinPos				= 0;
 	_MaxPos				= 2047;
-	_Speed				= _MaxPos;
+	_Speed				= _MaxSpeed;
     _TorqueEnable   	= true;
     _MinPos         	= 0;
     _MaxPos         	= 1023;
