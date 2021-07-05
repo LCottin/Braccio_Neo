@@ -15,7 +15,6 @@ using namespace dynamixel;
 class XL320 : public Motor
 {
     private:
-        unsigned _PosMax;
         
     public:
         XL320(const unsigned char ID);

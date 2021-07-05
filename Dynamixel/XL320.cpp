@@ -13,7 +13,8 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
 
     _Protocol       	= 2.0;
 
-	_PosMax				= 2047;
+	_MinPos				= 0;
+	_MaxPos				= 2047;
 	_Speed				= _MaxPos;
     _TorqueEnable   	= true;
     _MinPos         	= 0;
@@ -57,7 +58,7 @@ void XL320::start()
 	if (!move(0))
 		return;
 
-	cout << "Motor "<< _ID << " correctl initialized. Press any key to continue ! \n" << endl;
+	cout << "Motor " << _ID << " correctly initialized. Press any key to continue ! \n" << endl;
     getch();
 	return;
 }
@@ -126,8 +127,8 @@ bool XL320::move(const unsigned newPos, const bool blocking, const bool debug)
 				printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", _ID, _GoalPos, _PresentPos);
 			}
 			
-			if (_PresentPos < 0)
-				_PresentPos = 0;
+			if (_PresentPos < _MinPos)
+				_PresentPos = _MinPos;
 			if (_PresentPos > _MaxPos)
 				_PresentPos = _MaxPos;
 
