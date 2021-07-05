@@ -11,7 +11,7 @@ Motor::Motor(const unsigned char ID)
     #endif
 
     _Baudrate   = 1000000;
-    _Threshold  = 10;
+    _Threshold  = 0;
     _GoalPos    = 0;   
     _Error      = 0;
     _ComResult  = COMM_TX_FAIL; 
