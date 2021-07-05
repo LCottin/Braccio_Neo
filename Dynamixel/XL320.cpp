@@ -22,13 +22,13 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
     _MaxPos         	= 1023;
 	_LedColor			= OFF;
 
-    start();
+    //start();
 }
 
 /**
  * Initialises the communication with the port handler
  */
-void XL320::start()
+bool XL320::start()
 {
     // Initializes PortHandler instance
 	// Sets the port path
@@ -42,26 +42,25 @@ void XL320::start()
 
 	// Opens port
 	if (!openPort())
-		return;
+		return false;
 
 	// Set port baudrate
 	if (!setBaudrate(_Baudrate))
-		return;
+		return false;
 
 	// Enables torque
 	if (!enableTorque())
-		return;
+		return false;
 
 	// Sets speed
 	if (!setSpeed(2047))
-		return;
+		return false;
 
 	if (!move(0))
-		return;
+		return false;
 
-	cout << "Motor " << _ID << " correctly initialized. Press any key to continue ! \n" << endl;
-    getch();
-	return;
+	cout << "Motor " << _ID << " correctly started. \n" << endl;
+	return true;
 }
 
 /**

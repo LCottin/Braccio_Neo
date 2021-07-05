@@ -65,7 +65,7 @@ class Motor
         virtual bool ledOn(); //not for XL
         virtual bool ledOff(); //not for XL
         
-        virtual void start() = 0;
+        virtual bool start() = 0;
         virtual bool openPort() = 0;
         virtual bool move(const unsigned newPos, const bool blocking = false, const bool debug = false) = 0;
         virtual bool enableTorque() = 0;

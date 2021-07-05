@@ -22,13 +22,13 @@ MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
     _MaxPos         	= 1023;
     _Led                = false;
 
-    start();
+    //start();
 }
 
 /**
  * Initialises the communication with the port handler
  */
-void MX28AT::start()
+bool MX28AT::start()
 {
     // Initializes PortHandler instance
 	// Sets the port path
@@ -42,26 +42,26 @@ void MX28AT::start()
 
 	// Opens port
 	if (!openPort())
-		return;
+		return false;
 
 	// Set port baudrate
 	if (!setBaudrate(_Baudrate))
-		return;
+		return false;
 
 	// Enables torque
 	if (!enableTorque())
-		return;
+		return false;
 
 	// Sets speed
 	if (!setSpeed(_Speed))
-		return;
+		return false;
 
 	if (!move(0))
-		return;
+		return false;
 
-	printf("Motor %d correctly initialized. Press any key to continue ! \n", _ID);
-    getch();
-	return;
+	printf("Motor %d correctly started.\n", _ID);
+
+	return true;
 }
 
 /**

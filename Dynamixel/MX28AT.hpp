@@ -19,7 +19,7 @@ class MX28AT : public Motor
     public:
         MX28AT(const unsigned char ID);
 
-        void start();
+        bool start();
         bool openPort();
         bool enableTorque();
         bool disableTorque();
