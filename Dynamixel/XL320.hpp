@@ -22,13 +22,14 @@ class XL320 : public Motor
         void start();
         bool openPort();
         bool setLed(const LED color);
-        bool move(unsigned int newPos);
         bool enableTorque();
         bool disableTorque();
         bool setBaudrate(const unsigned baudrate);
+        bool move(const unsigned newPos);
         bool setP(const unsigned char p);
         bool setI(const unsigned char i);
         bool setD(const unsigned char d);
+        bool setSpeed(const unsigned speed);
 
         ~XL320();
 };

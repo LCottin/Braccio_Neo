@@ -29,6 +29,7 @@ class Motor
         //users attributs
         unsigned _PresentPos;
         unsigned _GoalPos;
+        unsigned _Speed;
         unsigned char _P;
         unsigned char _I;
         unsigned char _D;
@@ -39,6 +40,7 @@ class Motor
         unsigned char _PresentPosAddr;
         unsigned char _GoalPosAddr;
         unsigned char _TorqueEnableAddr;
+        unsigned char _SpeedAddr;
         unsigned char _LedAddr;
         unsigned char _PAddr;
         unsigned char _IAddr;
@@ -57,6 +59,7 @@ class Motor
         unsigned getP() const;
         unsigned getI() const;
         unsigned getD() const;
+        unsigned getSpeed() const;
         
         virtual void start() = 0;
         virtual bool openPort() = 0;
@@ -68,6 +71,7 @@ class Motor
         virtual bool setP(const unsigned char p) = 0;
         virtual bool setI(const unsigned char i) = 0;
         virtual bool setD(const unsigned char d) = 0;
+        virtual bool setSpeed(const unsigned speed) = 0;
 
         virtual ~Motor() = 0;
 };
