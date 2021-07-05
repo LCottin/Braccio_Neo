@@ -59,6 +59,14 @@ unsigned Motor::getD() const
     return _D;
 }
 
+/**
+ * Shows current motor speed
+ */
+unsigned Motor::getSpeed() const
+{
+    return _Speed;
+}
+
 Motor::~Motor()
 {
 

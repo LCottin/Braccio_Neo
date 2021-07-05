@@ -9,9 +9,11 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
 	_PAddr				= 29;
 	_DAddr				= 27;
 	_IAddr				= 28;
+	_SpeedAddr			= 32;
 
     _Protocol       	= 2.0;
 
+	_Speed				= 2047;
     _TorqueEnable   	= true;
     _MinPos         	= 0;
     _MaxPos         	= 1023;
@@ -56,13 +58,13 @@ bool XL320::openPort()
 {
 	if (_PortHandler->openPort())
 	{
-		printf("Succeeded to open the port!\n");
+		cout << "Succeeded to open the port!\n" << endl;
 		return true;
 	}
 	else
 	{
-		printf("Failed to open the port!\n");
-		printf("Press any key to terminate...\n");
+		cout << "Failed to open the port!\n" << endl;
+		cout << "Press any key to terminate...\n" << endl;
 		getch();
 		return false;
 	}
@@ -73,10 +75,9 @@ bool XL320::openPort()
  * @param newPos New position of the motor
  * @returns true if moved correctly, else false
  */
-bool XL320::move(unsigned newPos)
+bool XL320::move(const unsigned newPos)
 {
-    newPos = newPos % 1023;
-    _GoalPos = newPos;
+    _GoalPos = newPos % 1023;
 
     printf("Press any key to continue! (or press ESC to quit!)\n");
     if (getch() == ESC_ASCII_VALUE)
@@ -95,7 +96,7 @@ bool XL320::move(unsigned newPos)
 		return false;
     }
 
-	long dif;
+	unsigned dif = 0;
     do
     {
         // Read present position
@@ -119,7 +120,7 @@ bool XL320::move(unsigned newPos)
 
 /**
  * Enable the torque
- * @returns true if correctly enable, else false
+ * @returns true if correctly enabled, else false
  */
 bool XL320::enableTorque()
 {
@@ -128,13 +129,13 @@ bool XL320::enableTorque()
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Disable Torque : Error 1\n");
+		cout << "Enable Torque : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Enable Torque : Error 2\n");
+		cout << "Enable Torque : Error 2\n" << endl;
 		return false;
 	}
 	else
@@ -155,13 +156,13 @@ bool XL320::disableTorque()
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Disable Torque : Error 1\n");
+		cout << "Disable Torque : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Disable Torque : Error 2\n");
+		cout << "Disable Torque : Error 2\n" << endl;
 		return false;
 	}
 	else
@@ -180,13 +181,14 @@ bool XL320::setBaudrate(const unsigned baudrate)
 {
 	if (_PortHandler->setBaudRate(_Baudrate))
 	{
-		printf("Succeeded to change the baudrate!\n");
+		_Baudrate = baudrate;
+		cout << "Succeeded to change the baudrate!\n" << endl;
 		return true;
 	}
 	else
 	{
-		printf("Failed to change the baudrate!\n");
-		printf("Press any key to terminate...\n");
+		cout << "Failed to change the baudrate!\n" << endl;
+		cout << "Press any key to terminate...\n" << endl;
 		getch();
 		return false;
 	}
@@ -204,13 +206,13 @@ bool XL320::setLed(const LED color)
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Set Led : Error 1\n");
+		cout << "Set Led : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Set Led : Error 2\n");
+		cout << "Set Led : Error 2\n" << endl;
 		return false;
 	}
 	else
@@ -232,13 +234,13 @@ bool XL320::setP(const unsigned char p)
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Set P : Error 1\n");
+		cout << "Set P : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Set P : Error 2\n");
+		cout << "Set P : Error 2\n" << endl;
 		return false;
 	}
 	else
@@ -260,13 +262,13 @@ bool XL320::setI(const unsigned char i)
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Set I : Error 1\n");
+		cout << "Set I : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Set I : Error 2\n");
+		cout << "Set I : Error 2\n" << endl;
 		return false;
 	}
 	else
@@ -288,18 +290,46 @@ bool XL320::setD(const unsigned char d)
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		printf("Set D : Error 1\n");
+		cout << "Set D : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		printf("Set D : Error 2\n");
+		cout << "Set D : Error 2\n" << endl;
 		return false;
 	}
 	else
 	{
 		cout << "Derivative gain successfully changed " << endl;
+		return true;
+	}
+}
+
+/**
+ * Changes the velocity
+ * @param speed New velocity
+ * @returns true if correctly changed, else false
+ */
+bool XL320::setSpeed(const unsigned speed)
+{
+	_Speed = speed < 2047 ? speed : 2047;
+	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		cout << "Set Speed : Error 1\n" << endl;
+		return false;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		cout << "Set Speed : Error 2\n" << endl;
+		return false;
+	}
+	else
+	{
+		cout << "Velocity successfully changed " << endl;
 		return true;
 	}
 }
