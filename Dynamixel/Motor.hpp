@@ -65,7 +65,7 @@ class Motor
         virtual void start() = 0;
         virtual bool openPort() = 0;
         virtual bool setLed(const LED color) = 0;
-        virtual bool move(unsigned newPos) = 0;
+        virtual bool move(const unsigned newPos, const bool blocking = false, const bool debug = false) = 0;
         virtual bool enableTorque() = 0;
         virtual bool disableTorque() = 0;
         virtual bool setBaudrate(const unsigned baudrate) = 0;

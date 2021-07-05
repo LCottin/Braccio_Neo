@@ -15,7 +15,8 @@ using namespace dynamixel;
 class XL320 : public Motor
 {
     private:
-
+        unsigned _PosMax;
+        
     public:
         XL320(const unsigned char ID);
 
@@ -25,7 +26,7 @@ class XL320 : public Motor
         bool enableTorque();
         bool disableTorque();
         bool setBaudrate(const unsigned baudrate);
-        bool move(const unsigned newPos);
+        bool move(const unsigned newPos, const bool blocking = false, const bool debug = false);
         bool setP(const unsigned char p);
         bool setI(const unsigned char i);
         bool setD(const unsigned char d);
