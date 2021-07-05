@@ -55,6 +55,10 @@ void XL320::start()
 
 	if (!move(0))
 		return;
+
+	cout << "Motor "<< _ID << " correctl initialized. Press any key to continue ! \n" << endl;
+    getch();
+	return;
 }
 
 /**
@@ -86,10 +90,6 @@ bool XL320::move(const unsigned newPos)
 {
     _GoalPos = newPos % 1023;
 	_PresentPos = _GoalPos;
-	
-    printf("Press any key to continue! (or press ESC to quit!)\n");
-    if (getch() == ESC_ASCII_VALUE)
-        return true;
 
     // Write goal position
     _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
