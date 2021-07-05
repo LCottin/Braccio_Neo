@@ -25,6 +25,7 @@ class Motor
         unsigned _Baudrate;
         unsigned _MinPos;
         unsigned _MaxPos;
+        unsigned _MaxSpeed;
 
         //users attributs
         unsigned _PresentPos;

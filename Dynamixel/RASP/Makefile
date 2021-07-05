@@ -26,6 +26,7 @@ LIBRARIES  += -lrt -lm
 SOURCES = XL320.cpp \
 		  functions.cpp \
 		  Motor.cpp \
+		  MX28AT.cpp \
 		  main.cpp \
     # *** OTHER SOURCES GO HERE ***
 

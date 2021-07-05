@@ -1,9 +1,10 @@
 #include "XL320.hpp"
+#include "MX28AT.hpp"
 #include <unistd.h>
 
 int main(int argc, char const *argv[])
 {
-    XL320 moteur(atoi(argv[1]));
+    MX28AT moteur(atoi(argv[1]));
 
     moteur.move(1000, true);
     moteur.setLed(YELLOW);

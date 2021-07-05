@@ -1,21 +1,21 @@
-#include "XL320.hpp"
+#include "MX28AT.hpp"
 
-XL320::XL320(const unsigned char ID) : Motor(ID)
+MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
 {
     _TorqueEnableAddr   = 24;
 	_LedAddr			= 25;
-	_DAddr				= 27;
-	_IAddr				= 28;
-	_PAddr				= 29;
+	_DAddr				= 26;
+	_IAddr				= 27;
+	_PAddr				= 28;
     _GoalPosAddr    	= 30;
 	_SpeedAddr			= 32;
-    _PresentPosAddr 	= 37;
+    _PresentPosAddr 	= 36;
 
-    _Protocol       	= 2.0;
+    _Protocol       	= 1.0;
 
-	_MaxSpeed			= 2047;
+    _MaxSpeed           = 2047;
 	_MinPos				= 0;
-	_MaxPos				= 2047;
+	_MaxPos				= 4096;
 	_Speed				= _MaxSpeed;
     _TorqueEnable   	= true;
     _MinPos         	= 0;
@@ -28,7 +28,7 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
 /**
  * Initialises the communication with the port handler
  */
-void XL320::start()
+void MX28AT::start()
 {
     // Initializes PortHandler instance
 	// Sets the port path
@@ -53,7 +53,7 @@ void XL320::start()
 		return;
 
 	// Sets speed
-	if (!setSpeed(2047))
+	if (!setSpeed(_Speed))
 		return;
 
 	if (!move(0))
@@ -68,7 +68,7 @@ void XL320::start()
  * Opens the USB port
  * @returns true if correctly opened, else false
  */
-bool XL320::openPort()
+bool MX28AT::openPort()
 {
 	if (_PortHandler->openPort())
 	{
@@ -90,7 +90,7 @@ bool XL320::openPort()
  * @param blocking Should the movment be blocking ? (False by default)
  * @returns true if moved correctly, else false
  */
-bool XL320::move(const unsigned newPos, const bool blocking, const bool debug)
+bool MX28AT::move(const unsigned newPos, const bool blocking, const bool debug)
 {
     _GoalPos = newPos % 1023;
 
@@ -143,7 +143,7 @@ bool XL320::move(const unsigned newPos, const bool blocking, const bool debug)
  * Enable the torque
  * @returns true if correctly enabled, else false
  */
-bool XL320::enableTorque()
+bool MX28AT::enableTorque()
 {
 	_TorqueEnable = true;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TorqueEnableAddr, _TorqueEnable ? 1:0, &_Error);
@@ -170,7 +170,7 @@ bool XL320::enableTorque()
  * Disable the torque
  * @returns true if correctly disabled, else false
  */
-bool XL320::disableTorque()
+bool MX28AT::disableTorque()
 {
 	_TorqueEnable = false;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TorqueEnableAddr, _TorqueEnable ? 1:0, &_Error);
@@ -198,7 +198,7 @@ bool XL320::disableTorque()
  * @param baudrate New baudrate
  * @returns true if the baudrate is correctly changed, else false
  */
-bool XL320::setBaudrate(const unsigned baudrate)
+bool MX28AT::setBaudrate(const unsigned baudrate)
 {
 	if (_PortHandler->setBaudRate(_Baudrate))
 	{
@@ -220,7 +220,7 @@ bool XL320::setBaudrate(const unsigned baudrate)
  * @param color New color of the led
  * @returns true if correctly changed, else false
  */
-bool XL320::setLed(const LED color)
+bool MX28AT::setLed(const LED color)
 {
 	_ColorLed = color;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, color, &_Error);
@@ -248,7 +248,7 @@ bool XL320::setLed(const LED color)
  * @param p New value
  * @returns true if correctly changed, else false
  */
-bool XL320::setP(const unsigned char p)
+bool MX28AT::setP(const unsigned char p)
 {
 	_P = p;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _PAddr, _P, &_Error);
@@ -276,7 +276,7 @@ bool XL320::setP(const unsigned char p)
  * @param i New value
  * @returns true if correctly changed, else false
  */
-bool XL320::setI(const unsigned char i)
+bool MX28AT::setI(const unsigned char i)
 {
 	_I = i;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _IAddr, _I, &_Error);
@@ -304,7 +304,7 @@ bool XL320::setI(const unsigned char i)
  * @param d New value
  * @returns true if correctly changed, else false
  */
-bool XL320::setD(const unsigned char d)
+bool MX28AT::setD(const unsigned char d)
 {
 	_D = d;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _DAddr, _D, &_Error);
@@ -332,9 +332,9 @@ bool XL320::setD(const unsigned char d)
  * @param speed New velocity
  * @returns true if correctly changed, else false
  */
-bool XL320::setSpeed(const unsigned speed)
+bool MX28AT::setSpeed(const unsigned speed)
 {
-	_Speed = speed < 2047 ? speed : 2047;
+	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
@@ -355,7 +355,7 @@ bool XL320::setSpeed(const unsigned speed)
 	}
 }
 
-XL320::~XL320()
+MX28AT::~MX28AT()
 {
     // Close port
 	_PortHandler->closePort();
