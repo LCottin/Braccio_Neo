@@ -15,15 +15,15 @@ using namespace dynamixel;
 class MX28AT : public Motor
 {
     private:
+        bool start();
+        bool openPort();
+        bool setBaudrate(const unsigned baudrate);
         
     public:
         MX28AT(const unsigned char ID);
 
-        bool start();
-        bool openPort();
         bool enableTorque();
         bool disableTorque();
-        bool setBaudrate(const unsigned baudrate);
         bool move(const unsigned newPos, const bool blocking = false, const bool debug = false);
         bool setP(const unsigned char p);
         bool setI(const unsigned char i);

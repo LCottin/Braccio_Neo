@@ -27,12 +27,11 @@ int main(int argc, char const *argv[])
     // cout << "Current pos : " << moteur.getPosition() << endl;
 
     MX28AT moteur(atoi(argv[1]));
-    if (moteur.start()) cout << "ok" << endl;
-    else                cout << "not ok " << endl;
+
 
     moteur.move(1000, true);
-    if(moteur.ledOff()) cout << "led off" << endl;
-    else                cout << "failed to light led" << endl;
+    moteur.ledOff();
+
     moteur.move(0, true);
     moteur.ledOn();
     moteur.move(500, true);

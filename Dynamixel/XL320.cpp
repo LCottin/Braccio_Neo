@@ -22,7 +22,7 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
     _MaxPos         	= 1023;
 	_LedColor			= OFF;
 
-    //start();
+    start();
 }
 
 /**

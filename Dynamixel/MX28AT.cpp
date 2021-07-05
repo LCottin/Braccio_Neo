@@ -20,9 +20,9 @@ MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
     _TorqueEnable   	= true;
     _MinPos         	= 0;
     _MaxPos         	= 1023;
-    _Led                = false;
+    _Led                = true;
 
-    //start();
+    start();
 }
 
 /**
@@ -92,7 +92,7 @@ bool MX28AT::openPort()
  */
 bool MX28AT::move(const unsigned newPos, const bool blocking, const bool debug)
 {
-    _GoalPos = newPos % 1023;
+    _GoalPos = newPos % _MaxPos;
 
     // Write goal position
     _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
@@ -259,7 +259,7 @@ bool MX28AT::ledOff()
 		cout << "Led Off: Error 2\n" << endl;
 		return false;
 	}
-    cout << "Led successfully turned on" << endl;
+    cout << "Led successfully turned off" << endl;
     return true;
 }
 
