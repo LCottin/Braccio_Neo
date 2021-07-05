@@ -59,7 +59,7 @@ void MX28AT::start()
 	if (!move(0))
 		return;
 
-	cout << "Motor " << _ID << " correctly initialized. Press any key to continue ! \n" << endl;
+	printf("Motor %d correctly initialized. Press any key to continue ! \n", _ID);
     getch();
 	return;
 }
@@ -235,11 +235,8 @@ bool MX28AT::ledOn()
 		cout << "Led On: Error 2\n" << endl;
 		return false;
 	}
-	else
-	{
-		cout << "Led successfully turned on" << endl;
-		return true;
-	}
+    cout << "Led successfully turned on" << endl;
+    return true;
 }
 
 /**
@@ -253,20 +250,17 @@ bool MX28AT::ledOff()
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-		cout << "Led On : Error 1\n" << endl;
+		cout << "Led Off : Error 1\n" << endl;
 		return false;
 	}
 	else if (_Error != 0)
 	{
 		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-		cout << "Led On: Error 2\n" << endl;
+		cout << "Led Off: Error 2\n" << endl;
 		return false;
 	}
-	else
-	{
-		cout << "Led successfully turned off" << endl;
-		return true;
-	}
+    cout << "Led successfully turned on" << endl;
+    return true;
 }
 
 /**

@@ -357,7 +357,7 @@ bool XL320::setSpeed(const unsigned speed)
 
 bool XL320::ledOff()
 {
-	return true;
+	return false;
 }
 
 

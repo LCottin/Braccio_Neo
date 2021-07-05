@@ -29,7 +29,8 @@ int main(int argc, char const *argv[])
     MX28AT moteur(atoi(argv[1]));
 
     moteur.move(1000, true);
-    moteur.ledOff();
+    if(moteur.ledOff()) cout << "led off" << endl;
+    else                cout << "failed to light led" << endl;
     moteur.move(0, true);
     moteur.ledOn();
     moteur.move(500, true);

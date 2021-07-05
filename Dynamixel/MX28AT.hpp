@@ -21,7 +21,6 @@ class MX28AT : public Motor
 
         void start();
         bool openPort();
-        bool setLed(const bool on);
         bool enableTorque();
         bool disableTorque();
         bool setBaudrate(const unsigned baudrate);
