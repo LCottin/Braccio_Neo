@@ -60,6 +60,7 @@ class Motor
         unsigned getI() const;
         unsigned getD() const;
         unsigned getSpeed() const;
+        bool     getTorque() const;
         
         virtual void start() = 0;
         virtual bool openPort() = 0;

@@ -67,6 +67,15 @@ unsigned Motor::getSpeed() const
     return _Speed;
 }
 
+/**
+ * Tells if the torque is enabled
+ * @returns true if enabled, else false
+ */
+bool Motor::getTorque() const
+{
+    return _TorqueEnable;
+}
+
 Motor::~Motor()
 {
 

@@ -27,17 +27,17 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
  */
 void XL320::start()
 {
-    // Initialize PortHandler instance
-	// Set the port path
-	// Get methods and members of PortHandlerLinux or PortHandlerWindows
+    // Initializes PortHandler instance
+	// Sets the port path
+	// Gets methods and members of PortHandlerLinux or PortHandlerWindows
 	_PortHandler = PortHandler::getPortHandler(_PortName.c_str());
 
-	// Initialize PacketHandler instance
-	// Set the protocol version
-	// Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
+	// Initializes PacketHandler instance
+	// Sets the protocol version
+	// Gets methods and members of Protocol1PacketHandler or Protocol2PacketHandler
 	_PacketHandler = PacketHandler::getPacketHandler(_Protocol);
 
-	// Open port
+	// Opens port
 	if (!openPort())
 		return;
 
@@ -45,8 +45,15 @@ void XL320::start()
 	if (!setBaudrate(_Baudrate))
 		return;
 
-	//enable torque
+	// Enables torque
 	if (!enableTorque())
+		return;
+
+	// Sets speed
+	if (!setSpeed(2047))
+		return;
+
+	if (!move(0))
 		return;
 }
 
@@ -78,7 +85,8 @@ bool XL320::openPort()
 bool XL320::move(const unsigned newPos)
 {
     _GoalPos = newPos % 1023;
-
+	_PresentPos = _GoalPos;
+	
     printf("Press any key to continue! (or press ESC to quit!)\n");
     if (getch() == ESC_ASCII_VALUE)
         return true;
@@ -95,26 +103,6 @@ bool XL320::move(const unsigned newPos)
         printf("%s\n", _PacketHandler->getRxPacketError(_Error));
 		return false;
     }
-
-	unsigned dif = 0;
-    do
-    {
-        // Read present position
-        _ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _PresentPosAddr, (uint16_t*)&_PresentPos, &_Error);
-        if (_ComResult != COMM_SUCCESS)
-        {
-            printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
-			return false;
-        }
-        else if (_Error != 0)
-        {
-            printf("%s\n", _PacketHandler->getRxPacketError(_Error));
-			return false;
-        }
-
-        printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", _ID, _GoalPos, _PresentPos);
-		dif = _GoalPos - _PresentPos;
-    } while((abs(dif) > _Threshold));
 	return true;
 }
 
