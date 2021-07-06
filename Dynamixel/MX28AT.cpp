@@ -389,7 +389,7 @@ bool MX28AT::setSpeed(const unsigned speed)
  */
 double MX28AT::getVoltage()
 {
-	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _VoltageAddr, _Voltage, &_Error);
+	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _VoltageAddr, (uint8_t*)&_Voltage, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -415,7 +415,7 @@ double MX28AT::getVoltage()
  */
 double MX28AT::getTemperature()
 {
-	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, _Temperature, &_Error);
+	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, (uint8_t*)&_Temperature, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -441,7 +441,7 @@ double MX28AT::getTemperature()
  */
 double MX28AT::getLoad()
 {
-	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _LoadAddr, _Load, &_Error);
+	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _LoadAddr, (uint16_t*)&_Load, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));

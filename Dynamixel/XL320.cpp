@@ -380,7 +380,7 @@ bool XL320::ledOn()
  */
 double XL320::getVoltage()
 {
-	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _VoltageAddr, _Voltage, &_Error);
+	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _VoltageAddr, (uint8_t*)&_Voltage, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -406,7 +406,7 @@ double XL320::getVoltage()
  */
 double XL320::getTemperature()
 {
-	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, _Temperature, &_Error);
+	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, (uint8_t*)&_Temperature, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -432,7 +432,7 @@ double XL320::getTemperature()
  */
 double XL320::getLoad()
 {
-	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _LoadAddr, _Load, &_Error);
+	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _LoadAddr, (uint16_t*)&_Load, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
