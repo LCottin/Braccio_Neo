@@ -10,6 +10,9 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
     _GoalPosAddr    	= 30;
 	_SpeedAddr			= 32;
     _PresentPosAddr 	= 37;
+	_LoadAddr  			= 41;
+	_VoltageAddr		= 45;
+	_TemperatureAddr	= 46;
 
     _Protocol       	= 2.0;
 
@@ -59,7 +62,13 @@ bool XL320::start()
 	if (!move(0))
 		return false;
 
-	cout << "Motor " << _ID << " correctly started. \n" << endl;
+	//sets initial volatge, temperature and load
+	getVoltage();
+	getTemperature();
+	getLoad();
+
+	printf("Motor %d correctly started.\n", _ID);
+
 	return true;
 }
 
@@ -362,6 +371,127 @@ bool XL320::ledOff()
 
 bool XL320::ledOn()
 {
+	return true;
+}
+
+/**
+ * Tells under what voltage the motor is 
+ * @returns Motor voltage
+ */
+double XL320::getVoltage()
+{
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _VoltageAddr, _Voltage, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		cout << "Read voltage : Error 1\n" << endl;
+		return -1;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		cout << "Read voltage : Error 2\n" << endl;
+		return -1;
+	}
+	else
+	{
+		cout << "Voltage successfully read " << endl;
+		return _Voltage;
+	}
+} 
+
+/**
+ * Tells how hot he motor is
+ * @returns Motor temperature
+ */
+double XL320::getTemperature()
+{
+	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, _Temperature, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		cout << "Read temperature : Error 1\n" << endl;
+		return -1;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		cout << "Read temperature : Error 2\n" << endl;
+		return -1;
+	}
+	else
+	{
+		cout << "Temperature successfully read " << endl;
+		return _Temperature;
+	}
+}
+
+/**
+ * Tells how loaded the motor is
+ * @returns Motor load
+ */
+double XL320::getLoad()
+{
+	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _LoadAddr, _Load, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		cout << "Read load : Error 1\n" << endl;
+		return -1;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		cout << "Read load : Error 2\n" << endl;
+		return -1;
+	}
+	else
+	{
+		cout << "Load successfully read " << endl;
+		if (_Load > 2047) _Load = 2047;
+
+		if (_Load < 1024)
+		{
+			cout << "The motor is loaded counter clock wise" << endl;
+			_Load *= (double)100 / (double)1023;
+		}
+		else if (_Load > 1024)
+		{
+			cout << "The motor is loaded clock wise" << endl;
+			_Load -= 1024;
+			_Load *= (double)100 / (double)1023;
+		}
+		return _Load;
+	}
+}
+
+/**
+ * Prints all information about the motor
+ * @returns true if everything went normal, else false
+ */
+bool XL320::Infos()
+{
+	if (getVoltage() == -1) return false;
+	if (getTemperature() == -1) return false;
+	if (getLoad() == -1) return false;
+
+	char* torque;
+	char allume[] = "allumé";
+	char eteint[] = "éteint";
+	if (_TorqueEnable) torque = allume;
+	else 			   torque = eteint;
+
+	cout<< "*********************************" << endl;
+	printf("Position 	: %d", _PresentPos);
+	printf("Température : %lf", _Temperature);
+	printf("Charge 		: %lf", _Load);
+	printf("Voltage 	: %lf", _Voltage);
+	printf("Gain P 		: %d", _P);
+	printf("Gain I 		: %d", _I);
+	printf("Gain D 		: %d", _D);
+	printf("Couple 		: %s", torque);
+	printf("Vitesse 	: %d", _Speed);
+	cout<< "*********************************" << endl;
 	return true;
 }
 
