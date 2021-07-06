@@ -28,6 +28,7 @@ SOURCES = XL320.cpp \
 		  MX28AT.cpp \
 		  MX64AT.cpp \
 		  AX12A.cpp \
+		  AX18A.cpp \
 		  main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
