@@ -2,6 +2,7 @@
 #include "XL320.hpp"
 #include "MX28AT.hpp"
 #include "AX12A.hpp"
+#include "AX18A.hpp"
 
 int main(int argc, char const *argv[])
 {
