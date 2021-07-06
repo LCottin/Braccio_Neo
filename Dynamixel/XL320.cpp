@@ -486,7 +486,7 @@ bool XL320::Infos()
 
 	cout<< "*********************************" << endl;
 	printf("Position 	: %d\n", _PresentPos);
-	printf("Température 	: %lf\n", _Temperature);
+	printf("Température	: %lf\n", _Temperature);
 	printf("Charge 		: %lf\n", _Load);
 	printf("Voltage 	: %lf\n", _Voltage);
 	printf("Gain P 		: %d\n", _P);
