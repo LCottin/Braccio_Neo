@@ -21,8 +21,6 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
 	_MaxPos				= 2047;
 	_Speed				= _MaxSpeed;
     _TorqueEnable   	= true;
-    _MinPos         	= 0;
-    _MaxPos         	= 1023;
 	_LedColor			= OFF;
 
     start();

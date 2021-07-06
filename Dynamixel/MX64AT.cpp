@@ -2,7 +2,7 @@
 
 MX64AT::MX64AT(const unsigned char ID) : Motor(ID)
 {
-    _TorqueEnableAddr   = 64;
+    _TorqueEnableAddr   = 24;
 	_LedAddr			= 25;
 	_DAddr				= 26;
 	_IAddr				= 27;
@@ -21,8 +21,6 @@ MX64AT::MX64AT(const unsigned char ID) : Motor(ID)
 	_MaxPos				= 4096;
 	_Speed				= _MaxSpeed;
     _TorqueEnable   	= true;
-    _MinPos         	= 0;
-    _MaxPos         	= 1023;
     _Led                = true;
 
     start();

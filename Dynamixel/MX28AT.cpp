@@ -21,8 +21,6 @@ MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
 	_MaxPos				= 4096;
 	_Speed				= _MaxSpeed;
     _TorqueEnable   	= true;
-    _MinPos         	= 0;
-    _MaxPos         	= 1023;
     _Led                = true;
 
     start();
