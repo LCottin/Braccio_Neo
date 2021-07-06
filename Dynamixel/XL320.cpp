@@ -380,7 +380,8 @@ bool XL320::ledOn()
  */
 double XL320::getVoltage()
 {
-	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _VoltageAddr, (uint8_t*)&_Voltage, &_Error);
+	uint8_t temp;
+	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _VoltageAddr, (uint8_t*)&temp, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -396,6 +397,7 @@ double XL320::getVoltage()
 	else
 	{
 		cout << "Voltage successfully read " << endl;
+		_Voltage = (double)temp;
 		return _Voltage;
 	}
 } 
@@ -406,7 +408,8 @@ double XL320::getVoltage()
  */
 double XL320::getTemperature()
 {
-	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, (uint8_t*)&_Temperature, &_Error);
+	uint8_t temp;
+	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, (uint8_t*)&temp, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -422,6 +425,7 @@ double XL320::getTemperature()
 	else
 	{
 		cout << "Temperature successfully read " << endl;
+		_Temperature = (double)temp;
 		return _Temperature;
 	}
 }
@@ -432,7 +436,8 @@ double XL320::getTemperature()
  */
 double XL320::getLoad()
 {
-	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _LoadAddr, (uint16_t*)&_Load, &_Error);
+	uint16_t temp;
+	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _LoadAddr, (uint16_t*)&temp, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -448,17 +453,17 @@ double XL320::getLoad()
 	else
 	{
 		cout << "Load successfully read " << endl;
-		if (_Load > 2047) _Load = 2047;
+		if (temp > 2047) temp = 2047;
 
-		if (_Load < 1024)
+		if (temp < 1024)
 		{
 			cout << "The motor is loaded counter clock wise" << endl;
-			_Load *= (double)100 / (double)1023;
+			_Load = (double)temp * (double)100 / (double)1023;
 		}
 		else if (_Load > 1024)
 		{
 			cout << "The motor is loaded clock wise" << endl;
-			_Load -= 1024;
+			_Load = (double)temp - (double)1024;
 			_Load *= (double)100 / (double)1023;
 		}
 		return _Load;
@@ -482,15 +487,15 @@ bool XL320::Infos()
 	else 			   torque = eteint;
 
 	cout<< "*********************************" << endl;
-	printf("Position 	: %d", _PresentPos);
-	printf("Température : %lf", _Temperature);
-	printf("Charge 		: %lf", _Load);
-	printf("Voltage 	: %lf", _Voltage);
-	printf("Gain P 		: %d", _P);
-	printf("Gain I 		: %d", _I);
-	printf("Gain D 		: %d", _D);
-	printf("Couple 		: %s", torque);
-	printf("Vitesse 	: %d", _Speed);
+	printf("Position 	: %d\n", _PresentPos);
+	printf("Température : %lf\n", _Temperature);
+	printf("Charge 		: %lf\n", _Load);
+	printf("Voltage 	: %lf\n", _Voltage);
+	printf("Gain P 		: %d\n", _P);
+	printf("Gain I 		: %d\n", _I);
+	printf("Gain D 		: %d\n", _D);
+	printf("Couple 		: %s\n", torque);
+	printf("Vitesse 	: %d\n", _Speed);
 	cout<< "*********************************" << endl;
 	return true;
 }
