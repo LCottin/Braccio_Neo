@@ -88,6 +88,21 @@ bool Motor::ledOn()
 	return true;
 }
 
+bool Motor::setP(const unsigned char p)
+{
+    return false;
+}
+
+bool Motor::setI(const unsigned char i)
+{
+    return false;
+}
+
+bool Motor::setD(const unsigned char d)
+{
+    return false;
+}
+
 Motor::~Motor()
 {
 
