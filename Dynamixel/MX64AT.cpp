@@ -465,14 +465,14 @@ double MX64AT::getLoad()
 		if (temp < 1024)
 		{
 			cout << "The motor is loaded counter clock wise" << endl;
-			_Load = (double)temp * (double)100 / (double)1023;
 		}
-		else if (_Load > 1024)
+		else if (_Load >= 1024)
 		{
 			cout << "The motor is loaded clock wise" << endl;
 			temp -= 1024;
-			_Load = (double)temp * (double)100 / (double)1023;
 		}
+
+        _Load = (double)temp * (double)100 / (double)1024;
 		return _Load;
 	}
 }
