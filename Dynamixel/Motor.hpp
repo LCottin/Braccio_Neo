@@ -69,8 +69,11 @@ class Motor
         unsigned getSpeed() const;
         bool     getTorque() const;
 
-        virtual bool ledOn(); //not for XL
-        virtual bool ledOff(); //not for XL
+        virtual bool ledOn(); //not for XL320
+        virtual bool ledOff(); //not for XL320
+        virtual bool setP(const unsigned char p); // not for AX12A
+        virtual bool setI(const unsigned char i); // not for AX12A
+        virtual bool setD(const unsigned char d); // not for AX12A
         
         virtual bool start() = 0;
         virtual bool openPort() = 0;
@@ -78,9 +81,6 @@ class Motor
         virtual bool enableTorque() = 0;
         virtual bool disableTorque() = 0;
         virtual bool setBaudrate(const unsigned baudrate) = 0;
-        virtual bool setP(const unsigned char p) = 0;
-        virtual bool setI(const unsigned char i) = 0;
-        virtual bool setD(const unsigned char d) = 0;
         virtual bool setSpeed(const unsigned speed) = 0;
         virtual double getVoltage() = 0;
         virtual double getTemperature() = 0;
