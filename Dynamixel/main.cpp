@@ -1,7 +1,7 @@
 #include "MX64AT.hpp"
 #include "XL320.hpp"
 #include "MX28AT.hpp"
-#include <unistd.h>
+#include "AX12A.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -54,27 +54,51 @@ int main(int argc, char const *argv[])
     //  cout << "Current pos : " << moteur2.getPosition() << endl;
     //  moteur2.Infos();
 
-    MX64AT moteur3(atoi(argv[1]));
+    // MX64AT moteur3(atoi(argv[1]));
 
-    moteur3.move(1000, true);
-    moteur3.ledOff();
+    // moteur3.move(1000, true);
+    // moteur3.ledOff();
 
-    moteur3.move(0, true);
-    moteur3.ledOn();
-    moteur3.move(500, true);
-    moteur3.ledOff();
+    // moteur3.move(0, true);
+    // moteur3.ledOn();
+    // moteur3.move(500, true);
+    // moteur3.ledOff();
 
-    moteur3.move(0, true);
-    moteur3.setSpeed(200);
-    moteur3.move(2047);
-    cout << "Current pos : " << moteur3.getPosition() << endl;
-    moteur3.disableTorque();
+    // moteur3.move(0, true);
+    // moteur3.setSpeed(200);
+    // moteur3.move(2047);
+    // cout << "Current pos : " << moteur3.getPosition() << endl;
+    // moteur3.disableTorque();
 
-    if (moteur3.getTorque())
+    // if (moteur3.getTorque())
+    //     cout << "Torque enabled" << endl;
+    // else
+    //     cout << "Torque disabled" << endl;
+
+    // cout << "Current pos : " << moteur3.getPosition() << endl;
+    // moteur3.Infos();
+
+    AX12A moteur4(atoi(argv[1]));
+
+    moteur4.move(1000, true);
+    moteur4.ledOff();
+
+    moteur4.move(0, true);
+    moteur4.ledOn();
+    moteur4.move(500, true);
+    moteur4.ledOff();
+
+    moteur4.move(0, true);
+    moteur4.setSpeed(200);
+    moteur4.move(2047);
+    cout << "Current pos : " << moteur4.getPosition() << endl;
+    moteur4.disableTorque();
+
+    if (moteur4.getTorque())
         cout << "Torque enabled" << endl;
     else
         cout << "Torque disabled" << endl;
 
-    cout << "Current pos : " << moteur3.getPosition() << endl;
-    moteur3.Infos();
+    cout << "Current pos : " << moteur4.getPosition() << endl;
+    moteur4.Infos();
 }
