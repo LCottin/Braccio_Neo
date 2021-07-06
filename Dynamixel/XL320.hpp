@@ -36,6 +36,10 @@ class XL320 : public Motor
         bool setI(const unsigned char i);
         bool setD(const unsigned char d);
         bool setSpeed(const unsigned speed);
+        double getVoltage();
+        double getTemperature();
+        double getLoad();
+        bool Infos();
 
         ~XL320();
 };

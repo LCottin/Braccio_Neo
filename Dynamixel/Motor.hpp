@@ -30,9 +30,13 @@ class Motor
         unsigned _PresentPos;
         unsigned _GoalPos;
         unsigned _Speed;
+        double _Load;
+        double _Voltage;
+        double _Temperature;
         unsigned char _P;
         unsigned char _I;
         unsigned char _D;
+    
         bool  _TorqueEnable;
         bool _Led;
 
@@ -45,6 +49,9 @@ class Motor
         unsigned char _PAddr;
         unsigned char _IAddr;
         unsigned char _DAddr;
+        unsigned char _VoltageAddr;
+        unsigned char _TemperatureAddr;
+        unsigned char _LoadAddr;
 
         uint8_t _Error;
         int _ComResult;
@@ -75,6 +82,10 @@ class Motor
         virtual bool setI(const unsigned char i) = 0;
         virtual bool setD(const unsigned char d) = 0;
         virtual bool setSpeed(const unsigned speed) = 0;
+        virtual double getVoltage() = 0;
+        virtual double getTemperature() = 0;
+        virtual double getLoad() = 0;
+        virtual bool Infos() = 0;
 
         virtual ~Motor() = 0;
 };

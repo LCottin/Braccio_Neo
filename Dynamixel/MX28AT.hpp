@@ -31,6 +31,10 @@ class MX28AT : public Motor
         bool setSpeed(const unsigned speed);
         bool ledOn();
         bool ledOff();
+        double getVoltage();
+        double getTemperature();
+        double getLoad();
+        bool Infos();
 
         ~MX28AT();
 };
