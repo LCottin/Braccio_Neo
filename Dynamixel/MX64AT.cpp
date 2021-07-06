@@ -1,6 +1,6 @@
-#include "MX28AT.hpp"
+#include "MX64AT.hpp"
 
-MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
+MX64AT::MX64AT(const unsigned char ID) : Motor(ID)
 {
     _TorqueEnableAddr   = 24;
 	_LedAddr			= 25;
@@ -29,7 +29,7 @@ MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
 /**
  * Initialises the communication with the port handler
  */
-bool MX28AT::start()
+bool MX64AT::start()
 {
     // Initializes PortHandler instance
 	// Sets the port path
@@ -74,7 +74,7 @@ bool MX28AT::start()
  * Opens the USB port
  * @returns true if correctly opened, else false
  */
-bool MX28AT::openPort()
+bool MX64AT::openPort()
 {
 	if (_PortHandler->openPort())
 	{
@@ -96,7 +96,7 @@ bool MX28AT::openPort()
  * @param blocking Should the movment be blocking ? (False by default)
  * @returns true if moved correctly, else false
  */
-bool MX28AT::move(const unsigned newPos, const bool blocking, const bool debug)
+bool MX64AT::move(const unsigned newPos, const bool blocking, const bool debug)
 {
     _GoalPos = newPos % _MaxPos;
 
@@ -149,7 +149,7 @@ bool MX28AT::move(const unsigned newPos, const bool blocking, const bool debug)
  * Enable the torque
  * @returns true if correctly enabled, else false
  */
-bool MX28AT::enableTorque()
+bool MX64AT::enableTorque()
 {
 	_TorqueEnable = true;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TorqueEnableAddr, _TorqueEnable ? 1:0, &_Error);
@@ -176,7 +176,7 @@ bool MX28AT::enableTorque()
  * Disable the torque
  * @returns true if correctly disabled, else false
  */
-bool MX28AT::disableTorque()
+bool MX64AT::disableTorque()
 {
 	_TorqueEnable = false;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TorqueEnableAddr, _TorqueEnable ? 1:0, &_Error);
@@ -204,7 +204,7 @@ bool MX28AT::disableTorque()
  * @param baudrate New baudrate
  * @returns true if the baudrate is correctly changed, else false
  */
-bool MX28AT::setBaudrate(const unsigned baudrate)
+bool MX64AT::setBaudrate(const unsigned baudrate)
 {
 	if (_PortHandler->setBaudRate(_Baudrate))
 	{
@@ -225,7 +225,7 @@ bool MX28AT::setBaudrate(const unsigned baudrate)
  * Turns the led on
  * @returns true if correctly turned on, else false
  */
-bool MX28AT::ledOn()
+bool MX64AT::ledOn()
 {
 	_Led = true;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, _Led ? 1 : 0, &_Error);
@@ -249,7 +249,7 @@ bool MX28AT::ledOn()
  * Turns the led off
  * @returns true if correctly turned off, else false
  */
-bool MX28AT::ledOff()
+bool MX64AT::ledOff()
 {
 	_Led = false;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, _Led ? 1 : 0, &_Error);
@@ -274,7 +274,7 @@ bool MX28AT::ledOff()
  * @param p New value
  * @returns true if correctly changed, else false
  */
-bool MX28AT::setP(const unsigned char p)
+bool MX64AT::setP(const unsigned char p)
 {
 	_P = p;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _PAddr, _P, &_Error);
@@ -302,7 +302,7 @@ bool MX28AT::setP(const unsigned char p)
  * @param i New value
  * @returns true if correctly changed, else false
  */
-bool MX28AT::setI(const unsigned char i)
+bool MX64AT::setI(const unsigned char i)
 {
 	_I = i;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _IAddr, _I, &_Error);
@@ -330,7 +330,7 @@ bool MX28AT::setI(const unsigned char i)
  * @param d New value
  * @returns true if correctly changed, else false
  */
-bool MX28AT::setD(const unsigned char d)
+bool MX64AT::setD(const unsigned char d)
 {
 	_D = d;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _DAddr, _D, &_Error);
@@ -358,7 +358,7 @@ bool MX28AT::setD(const unsigned char d)
  * @param speed New velocity
  * @returns true if correctly changed, else false
  */
-bool MX28AT::setSpeed(const unsigned speed)
+bool MX64AT::setSpeed(const unsigned speed)
 {
 	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
@@ -385,7 +385,7 @@ bool MX28AT::setSpeed(const unsigned speed)
  * Tells under what voltage the motor is 
  * @returns Motor voltage
  */
-double MX28AT::getVoltage()
+double MX64AT::getVoltage()
 {	
 	uint8_t temp;
 	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _VoltageAddr, (uint8_t*)&temp, &_Error);
@@ -413,7 +413,7 @@ double MX28AT::getVoltage()
  * Tells how hot he motor is
  * @returns Motor temperature
  */
-double MX28AT::getTemperature()
+double MX64AT::getTemperature()
 {
 	uint8_t temp;
 	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, (uint8_t*)&temp, &_Error);
@@ -441,7 +441,7 @@ double MX28AT::getTemperature()
  * Tells how loaded the motor is
  * @returns Motor load
  */
-double MX28AT::getLoad()
+double MX64AT::getLoad()
 {
 	uint16_t temp;
 	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _LoadAddr, (uint16_t*)&temp, &_Error);
@@ -481,7 +481,7 @@ double MX28AT::getLoad()
  * Prints all information about the motor
  * @returns true if everything went normal, else false
  */
-bool MX28AT::Infos()
+bool MX64AT::Infos()
 {
 	if (getVoltage() == -1) return false;
 	if (getTemperature() == -1) return false;
@@ -507,7 +507,7 @@ bool MX28AT::Infos()
 	return true;
 }
 
-MX28AT::~MX28AT()
+MX64AT::~MX64AT()
 {
     // Close port
 	_PortHandler->closePort();

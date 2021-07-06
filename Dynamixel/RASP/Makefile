@@ -27,6 +27,7 @@ SOURCES = XL320.cpp \
 		  functions.cpp \
 		  Motor.cpp \
 		  MX28AT.cpp \
+		  MX64AT.cpp \
 		  main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
