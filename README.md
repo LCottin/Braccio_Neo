@@ -6,7 +6,7 @@ The goal here is to recreate the robot arm from scratch using dynamixel motors c
 The arm will be built with : \
     - MX106     : shoulder \
     - MX64AT    : elbow \
-    - MX28AT    : wrist_ver \ 
+    - MX28AT    : wrist_ver \
     - AX18A     : wrist_rot \
     - ???       : gripper 
 
