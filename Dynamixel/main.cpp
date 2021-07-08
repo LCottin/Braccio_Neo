@@ -3,6 +3,7 @@
 #include "MX28AT.hpp"
 #include "AX12A.hpp"
 #include "AX18A.hpp"
+#include "MX106.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -79,27 +80,51 @@ int main(int argc, char const *argv[])
     // cout << "Current pos : " << moteur3.getPosition() << endl;
     // moteur3.Infos();
 
-    AX12A moteur4(atoi(argv[1]));
+    // AX12A moteur4(atoi(argv[1]));
 
-    moteur4.move(1000, true);
-    moteur4.ledOff();
+    // moteur4.move(1000, true);
+    // moteur4.ledOff();
 
-    moteur4.move(0, true);
-    moteur4.ledOn();
-    moteur4.move(500, true);
-    moteur4.ledOff();
+    // moteur4.move(0, true);
+    // moteur4.ledOn();
+    // moteur4.move(500, true);
+    // moteur4.ledOff();
 
-    moteur4.move(0, true);
-    moteur4.setSpeed(200);
-    moteur4.move(2047);
-    cout << "Current pos : " << moteur4.getPosition() << endl;
-    moteur4.disableTorque();
+    // moteur4.move(0, true);
+    // moteur4.setSpeed(200);
+    // moteur4.move(2047);
+    // cout << "Current pos : " << moteur4.getPosition() << endl;
+    // moteur4.disableTorque();
 
-    if (moteur4.getTorque())
+    // if (moteur4.getTorque())
+    //     cout << "Torque enabled" << endl;
+    // else
+    //     cout << "Torque disabled" << endl;
+
+    // cout << "Current pos : " << moteur4.getPosition() << endl;
+    // moteur4.Infos();
+
+    MX106 moteur5(atoi(argv[1]));
+
+    moteur5.move(1000, true);
+    moteur5.ledOff();
+
+    moteur5.move(0, true);
+    moteur5.ledOn();
+    moteur5.move(500, true);
+    moteur5.ledOff();
+
+    moteur5.move(0, true);
+    moteur5.setSpeed(200);
+    moteur5.move(2047);
+    cout << "Current pos : " << moteur5.getPosition() << endl;
+    moteur5.disableTorque();
+
+    if (moteur5.getTorque())
         cout << "Torque enabled" << endl;
     else
         cout << "Torque disabled" << endl;
 
-    cout << "Current pos : " << moteur4.getPosition() << endl;
-    moteur4.Infos();
+    cout << "Current pos : " << moteur5.getPosition() << endl;
+    moteur5.Infos();
 }
