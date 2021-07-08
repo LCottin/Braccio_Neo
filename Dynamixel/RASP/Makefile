@@ -6,9 +6,9 @@ DIR_DXL    = ..
 DIR_OBJS   = ../objects
 
 # compiler options
-CC          = gcc
+#CC          = gcc
 CX          = g++
-CCFLAGS     = -O2 -O3 -D_GNU_SOURCE -Wall $(INCLUDES) -g
+#CCFLAGS     = -O2 -O3 -D_GNU_SOURCE -Wall $(INCLUDES) -g
 CXFLAGS     = -O2 -O3 -D_GNU_SOURCE -Wall $(INCLUDES) -g
 LNKCC       = $(CX)
 LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
@@ -23,13 +23,14 @@ LIBRARIES  += -lrt -lm
 #---------------------------------------------------------------------
 # Files
 #---------------------------------------------------------------------
-SOURCES = XL320.cpp \
-		  functions.cpp \
-		  Motor.cpp \
-		  MX28AT.cpp \
-		  MX64AT.cpp \
-		  AX12A.cpp \
-		  AX18A.cpp \
+SOURCES = src/XL320.cpp \
+		  src/functions.cpp \
+		  src/Motor.cpp \
+		  src/MX28AT.cpp \
+		  src/MX64AT.cpp \
+		  src/AX12A.cpp \
+		  src/AX18A.cpp \
+		  src/MX106.cpp \
 		  main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
@@ -51,10 +52,10 @@ clean:
 make_directory:
 	mkdir -p $(DIR_OBJS)/
 
-$(DIR_OBJS)/%.o: %.c
-	$(CC) $(CCFLAGS) -c $? -o $@
+#$(DIR_OBJS)/%.o: %.c
+#	$(CC) $(CCFLAGS) -c $? -o $@
 
-$(DIR_OBJS)/%.o: ../%.cpp
+$(DIR_OBJS)/%.o: ../src/%.cpp
 	$(CX) $(CXFLAGS) -c $? -o $@
 
 #---------------------------------------------------------------------
