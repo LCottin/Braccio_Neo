@@ -21,6 +21,8 @@ const uint16_t noeudCible = noeudMere;
 RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
 RF24Network network(radio);
 
+// test
+
 int main()
 {
 	radio.begin();
