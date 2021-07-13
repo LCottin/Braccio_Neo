@@ -15,8 +15,8 @@ AX12A::AX12A(const unsigned char ID) : Motor(ID)
 
     _MaxSpeed           = 2047;
 	_MinPos				= 0;
-	_MaxPos				= 2047;
-	_Speed				= _MaxSpeed;
+	_MaxPos				= 1023;
+	_Speed				= 300;
     _TorqueEnable   	= true;
     _Led                = true;
 

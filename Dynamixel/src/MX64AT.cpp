@@ -19,7 +19,7 @@ MX64AT::MX64AT(const unsigned char ID) : Motor(ID)
     _MaxSpeed           = 2047;
 	_MinPos				= 0;
 	_MaxPos				= 4096;
-	_Speed				= _MaxSpeed;
+	_Speed				= 300;
     _TorqueEnable   	= true;
     _Led                = true;
 

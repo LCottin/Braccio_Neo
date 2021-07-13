@@ -8,8 +8,8 @@ DIR_OBJS   = ../objects
 # compiler options
 #CC          = gcc
 CX          = g++
-#CCFLAGS     = -O2 -O3 -D_GNU_SOURCE -Wall $(INCLUDES) -g
-CXFLAGS     = -O2 -O3 -D_GNU_SOURCE -Wall $(INCLUDES) -g
+#CCFLAGS     = -O2 -Wall $(INCLUDES) -g
+CXFLAGS     = -O2 -Wall $(INCLUDES) -g
 LNKCC       = $(CX)
 LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 
@@ -30,7 +30,7 @@ SOURCES = src/XL320.cpp \
 		  src/AX12A.cpp \
 		  src/AX18A.cpp \
 		  src/MX106.cpp \
-		  main.cpp \
+		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
 OBJECTS  = $(addsuffix .o,$(addprefix $(DIR_OBJS)/,$(basename $(notdir $(SOURCES)))))
