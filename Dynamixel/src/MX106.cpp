@@ -19,6 +19,7 @@ MX106::MX106(const unsigned char ID) : Motor(ID)
     _MaxSpeed           = 2047;
 	_MinPos				= 0;
 	_MaxPos				= 4096;
+	_Middle				= (_MinPos + _MaxPos) / 2;
 	_Speed				= 300;
     _TorqueEnable   	= true;
     _Led                = true;
@@ -475,6 +476,15 @@ double MX106::getLoad()
         _Load = (double)temp * (double)100 / (double)1024;
 		return _Load;
 	}
+}
+
+/**
+ * Puts the motor at its middle position
+ * @returns true if successfully moved, else false
+ */
+bool MX106::middle()
+{
+	return move(_Middle, true);
 }
 
 /**

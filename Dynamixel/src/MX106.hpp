@@ -32,6 +32,7 @@ class MX106 : public Motor
         double getVoltage();
         double getTemperature();
         double getLoad();
+        bool middle();
         bool Infos();
 
         ~MX106();

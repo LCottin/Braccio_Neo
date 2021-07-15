@@ -19,6 +19,7 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
 	_MaxSpeed			= 2047;
 	_MinPos				= 0;
 	_MaxPos				= 2047;
+	_Middle				= (_MinPos + _MaxPos) / 2;
 	_Speed				= 300;
     _TorqueEnable   	= true;
 	_LedColor			= OFF;
@@ -466,6 +467,15 @@ double XL320::getLoad()
         _Load = (double)temp * (double)100 / (double)1024;
 		return _Load;
 	}
+}
+
+/**
+ * Puts the motor at its middle position
+ * @returns true if successfully moved, else false
+ */
+bool XL320::middle()
+{
+	return move(_Middle, true);
 }
 
 /**

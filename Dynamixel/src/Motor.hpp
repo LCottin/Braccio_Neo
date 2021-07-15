@@ -24,6 +24,7 @@ class Motor
         unsigned _Baudrate;
         unsigned _MinPos;
         unsigned _MaxPos;
+        unsigned _Middle;
         unsigned _MaxSpeed;
 
         //users attributs
@@ -76,6 +77,7 @@ class Motor
         virtual bool setD(const unsigned char d); // not for AX12A
         
         virtual bool start() = 0;
+        virtual bool middle() = 0;
         virtual bool openPort() = 0;
         virtual bool move(const unsigned newPos, const bool blocking = false, const bool debug = false) = 0;
         virtual bool enableTorque() = 0;
