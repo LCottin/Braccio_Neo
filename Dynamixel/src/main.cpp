@@ -4,10 +4,9 @@
 #include "AX12A.hpp"
 #include "AX18A.hpp"
 #include "MX106.hpp"
+#include "Braccio.hpp"
 
-#define RADIO //comment if radio is not used
-
-#ifdef RADIO
+#ifndef __APPLE__
 #include "lib/RF24.h"
 #include "lib/nRF24L01.h"
 #include "lib/RF24Network.h"
@@ -25,15 +24,10 @@ struct x
 	short ID;
 	short x;
 	short y;
-}receive;
+}received_data;
 
 const uint16_t noeudMere = 00;
-const uint16_t noeudsFille[3] = {01, 02, 03};
-
 const uint16_t monNoeud = noeudMere;
-const uint16_t noeudCible = noeudMere;
-
-
 
 int main(int argc, char const *argv[])
 {
@@ -159,7 +153,7 @@ int main(int argc, char const *argv[])
     moteur5.Infos();
     */
 
-   #ifdef RADIO
+   #ifndef __APPLE__
    radio.begin();
 //	radio.setPALevel(RF24_PA_MAX);
 	radio.setDataRate(RF24_2MBPS);
@@ -175,14 +169,16 @@ int main(int argc, char const *argv[])
 		while(network.available())
 		{
 			RF24NetworkHeader nHeader;
-			network.read(nHeader, &receive, sizeof(receive));
+			network.read(nHeader, &received_data, sizeof(received_data));
 		}
 
-		cout << "ID = " << receive.ID << endl;
-		cout << "X =  " << receive.x << endl;
-		cout << "Y =  " << receive.y << endl;
+		cout << "ID = " << received_data.ID << endl;
+		cout << "X =  " << received_data.x << endl;
+		cout << "Y =  " << received_data.y << endl;
 	}	
     #endif
+
+    Braccio braccio();
 
 	return 0;
 }
