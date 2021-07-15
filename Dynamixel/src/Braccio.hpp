@@ -25,6 +25,7 @@ class Braccio
 
     public:
         Braccio();
+        bool stand();
         ~Braccio();
 };
 
