@@ -17,7 +17,7 @@ LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
 INCLUDES   += -I$(DIR_DXL)/include/dynamixel_sdk
-LIBRARIES  += -ldxl_mac_cpp -lm -lrf24 -lf24network
+LIBRARIES  += -ldxl_mac_cpp -lm -lrf24 -lrf24network
 
 #---------------------------------------------------------------------
 # Files
