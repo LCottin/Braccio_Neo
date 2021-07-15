@@ -153,6 +153,11 @@ int main(int argc, char const *argv[])
     moteur5.Infos();
     */
 
+
+    Braccio braccio;
+
+
+
    #ifndef __APPLE__
    radio.begin();
 //	radio.setPALevel(RF24_PA_MAX);
@@ -176,9 +181,7 @@ int main(int argc, char const *argv[])
 		cout << "X =  " << received_data.x << endl;
 		cout << "Y =  " << received_data.y << endl;
 	}	
-    #endif
-
-    Braccio braccio;
+    	#endif
 
 	return 0;
 }
