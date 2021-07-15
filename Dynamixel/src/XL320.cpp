@@ -55,10 +55,10 @@ bool XL320::start()
 		return false;
 
 	// Sets speed
-	if (!setSpeed(2047))
+	if (!setSpeed(_Speed))
 		return false;
 
-	if (!move(0))
+	if (!middle())
 		return false;
 
 	//sets initial volatge, temperature and load

@@ -178,7 +178,7 @@ int main(int argc, char const *argv[])
 	}	
     #endif
 
-    Braccio braccio();
+    Braccio braccio;
 
 	return 0;
 }

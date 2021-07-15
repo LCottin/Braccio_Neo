@@ -58,7 +58,7 @@ bool MX64AT::start()
 	if (!setSpeed(_Speed))
 		return false;
 
-	if (!move(0))
+	if (!middle())
 		return false;
 
 	//sets initial volatge, temperature and load

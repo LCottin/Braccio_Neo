@@ -16,6 +16,21 @@ Braccio::Braccio()
     _Motors.push_back(_WristRot);
 } 
 
+/**
+ * Makes the arm stand
+ * @returns true if the movment went right, else false
+ */
+bool Braccio::stand()
+{
+    for (char i = 0; i < _Motors.size(); i++)
+    {
+        //makes sure each movement is good
+        if (_Motors[i]->middle() == false)
+            return false;
+    }
+    return true;
+}
+
 Braccio::~Braccio()
 {
     for (char i = 0; i < _Motors.size(); i++)
