@@ -17,19 +17,20 @@ LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
 INCLUDES   += -I$(DIR_DXL)/include/dynamixel_sdk
-LIBRARIES  += -ldxl_mac_cpp -lm -lrf24 -lrf24network
+LIBRARIES  += -ldxl_mac_cpp -lm 
 
 #---------------------------------------------------------------------
 # Files
 #---------------------------------------------------------------------
-SOURCES = src/XL320.cpp \
-		  src/functions.cpp \
+SOURCES = src/functions.cpp \
 		  src/Motor.cpp \
+		  src/XL320.cpp \
 		  src/MX28AT.cpp \
 		  src/MX64AT.cpp \
 		  src/AX12A.cpp \
 		  src/AX18A.cpp \
 		  src/MX106.cpp \
+		  src/Braccio.cpp \
 		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
