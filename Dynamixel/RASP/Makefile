@@ -1,5 +1,5 @@
 # *** ENTER THE TARGET NAME HERE ***
-TARGET      = read_write
+TARGET      = Braccio
 
 # important directories used by assorted rules and other variables
 DIR_DXL    = ..
