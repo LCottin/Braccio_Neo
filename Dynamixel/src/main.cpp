@@ -12,8 +12,8 @@
 #include "lib/nRF24L01.h"
 #include "lib/RF24Network.h"
 
-//RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
-RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24);
+RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
+//RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24);
 RF24Network network(radio);
 
 #endif
