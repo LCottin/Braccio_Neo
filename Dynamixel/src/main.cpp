@@ -5,9 +5,39 @@
 #include "AX18A.hpp"
 #include "MX106.hpp"
 
+#define RADIO //comment if radio is not used
+
+#ifdef RADIO
+#include "lib/RF24.h"
+#include "lib/nRF24L01.h"
+#include "lib/RF24Network.h"
+
+//RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
+RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24);
+RF24Network network(radio);
+
+#endif
+
+using namespace std;
+
+struct x
+{
+	short ID;
+	short x;
+	short y;
+}receive;
+
+const uint16_t noeudMere = 00;
+const uint16_t noeudsFille[3] = {01, 02, 03};
+
+const uint16_t monNoeud = noeudMere;
+const uint16_t noeudCible = noeudMere;
+
+
+
 int main(int argc, char const *argv[])
 {
-	/*
+    /*
     XL320 moteur(atoi(argv[1]));
 
     moteur.move(1000, true);
@@ -30,7 +60,7 @@ int main(int argc, char const *argv[])
 
     cout << "Current pos : " << moteur.getPosition() << endl;
     moteur.Infos();
-	*/
+	
 
     //  MX28AT moteur2(atoi(argv[1]));
 
@@ -127,4 +157,32 @@ int main(int argc, char const *argv[])
 
     cout << "Current pos : " << moteur5.getPosition() << endl;
     moteur5.Infos();
+    */
+
+   #ifdef RADIO
+   radio.begin();
+//	radio.setPALevel(RF24_PA_MAX);
+	radio.setDataRate(RF24_2MBPS);
+
+	radio.startListening();
+	
+	network.begin(108, monNoeud);
+
+	while(1)
+	{
+		network.update();
+
+		while(network.available())
+		{
+			RF24NetworkHeader nHeader;
+			network.read(nHeader, &receive, sizeof(receive));
+		}
+
+		cout << "ID = " << receive.ID << endl;
+		cout << "X =  " << receive.x << endl;
+		cout << "Y =  " << receive.y << endl;
+	}	
+    #endif
+
+	return 0;
 }
