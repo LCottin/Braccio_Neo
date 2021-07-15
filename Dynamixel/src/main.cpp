@@ -31,28 +31,24 @@ const uint16_t monNoeud = noeudMere;
 
 int main(int argc, char const *argv[])
 {
-    /*
-    XL320 moteur(atoi(argv[1]));
+    
+   /* AX12A moteur(3);
 
     moteur.move(1000, true);
-    moteur.setLed(YELLOW);
-    moteur.move(0, true);
-    moteur.setLed(BLUE);
-    moteur.move(500, true);
-    moteur.setLed(RED);
+    moteur.move(2000, true);
+    moteur.move(3000, true);
 
-    moteur.move(0, true);
-    moteur.setSpeed(200);
-    moteur.move(2047);
+    moteur.move(1000, true);
+    moteur.middle();
     cout << "Current pos : " << moteur.getPosition() << endl;
-    moteur.disableTorque();
+   // moteur.disableTorque();
 
     if (moteur.getTorque())
         cout << "Torque enabled" << endl;
     else
         cout << "Torque disabled" << endl;
 
-    cout << "Current pos : " << moteur.getPosition() << endl;
+   // cout << "Current pos : " << moteur.getPosition() << endl;
     moteur.Infos();
 	
 
