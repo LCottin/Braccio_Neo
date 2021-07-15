@@ -17,10 +17,10 @@ enum MOTORS {SHOULDER, ELBOW, WRISTVER, WRISTROT};
 class Braccio
 {
     private:
-        Motor* _Shoulder;
-        Motor* _Elbow;
-        Motor* _WristVer;
-        Motor* _WristRot;
+        // Motor* _Shoulder;
+        // Motor* _Elbow;
+        // Motor* _WristVer;
+        // Motor* _WristRot;
         vector<Motor*> _Motors;
 
     public:

@@ -18,7 +18,7 @@ MX106::MX106(const unsigned char ID) : Motor(ID)
 
     _MaxSpeed           = 2047;
 	_MinPos				= 0;
-	_MaxPos				= 4096;
+	_MaxPos				= 4095;
 	_Middle				= (_MinPos + _MaxPos) / 2;
 	_Speed				= 300;
     _TorqueEnable   	= true;

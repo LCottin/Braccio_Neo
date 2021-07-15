@@ -4,10 +4,10 @@
 Braccio::Braccio()
 {
     //declares motors
-    _Shoulder   = new MX106(SHOULDER);
-    _Elbow      = new MX64AT(ELBOW);
-    _WristVer   = new MX28AT(WRISTVER);
-    _WristRot   = new AX18A(WRISTROT);
+    MX64AT* _Shoulder   = new MX64AT(SHOULDER);
+    MX64AT* _Elbow      = new MX64AT(ELBOW);
+    MX28AT* _WristVer   = new MX28AT(WRISTVER);
+    AX18A*  _WristRot   = new AX18A(WRISTROT);
 
     //pushes them into the vector
     _Motors.push_back(_Shoulder);
