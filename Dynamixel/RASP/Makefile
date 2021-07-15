@@ -1,5 +1,5 @@
 # *** ENTER THE TARGET NAME HERE ***
-TARGET      = read_write
+TARGET      = Braccio
 
 # important directories used by assorted rules and other variables
 DIR_DXL    = ..
@@ -23,14 +23,15 @@ LIBRARIES  += -lrt -lm -lrf24-bcm -lrf24network
 #---------------------------------------------------------------------
 # Files
 #---------------------------------------------------------------------
-SOURCES = src/XL320.cpp \
-		  src/functions.cpp \
+SOURCES = src/functions.cpp \
 		  src/Motor.cpp \
+		  src/XL320.cpp \
 		  src/MX28AT.cpp \
 		  src/MX64AT.cpp \
 		  src/AX12A.cpp \
 		  src/AX18A.cpp \
 		  src/MX106.cpp \
+		  src/Braccio.cpp \
 		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***
 

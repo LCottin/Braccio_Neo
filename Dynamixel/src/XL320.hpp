@@ -37,6 +37,7 @@ class XL320 : public Motor
         double getVoltage();
         double getTemperature();
         double getLoad();
+        bool middle();
         bool Infos();
 
         ~XL320();

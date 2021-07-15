@@ -16,6 +16,7 @@ AX12A::AX12A(const unsigned char ID) : Motor(ID)
     _MaxSpeed           = 2047;
 	_MinPos				= 0;
 	_MaxPos				= 1023;
+	_Middle				= (_MinPos + _MaxPos) / 2;
 	_Speed				= 300;
     _TorqueEnable   	= true;
     _Led                = true;
@@ -54,7 +55,7 @@ bool AX12A::start()
 	if (!setSpeed(_Speed))
 		return false;
 
-	if (!move(0))
+	if (!middle())
 		return false;
 
 	//sets initial volatge, temperature and load
@@ -388,6 +389,15 @@ double AX12A::getLoad()
         _Load = (double)temp * (double)100 / (double)1024;
 		return _Load;
 	}
+}
+
+/**
+ * Puts the motor at its middle position
+ * @returns true if successfully moved, else false
+ */
+bool AX12A::middle()
+{
+	return move(_Middle, true);
 }
 
 /**

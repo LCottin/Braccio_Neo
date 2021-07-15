@@ -29,6 +29,7 @@ class AX18A : public Motor
         double getVoltage();
         double getTemperature();
         double getLoad();
+        bool middle();
         bool Infos();
 
         ~AX18A();
