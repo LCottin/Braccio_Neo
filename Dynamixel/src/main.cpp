@@ -156,7 +156,7 @@ int main(int argc, char const *argv[])
 
     Braccio braccio;
 
-
+/*
 
    #ifndef __APPLE__
    radio.begin();
@@ -182,6 +182,6 @@ int main(int argc, char const *argv[])
 		cout << "Y =  " << received_data.y << endl;
 	}	
     	#endif
-
+*/
 	return 0;
 }
