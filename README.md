@@ -11,3 +11,4 @@ The arm will be built with : \
     - ???       : gripper 
 
 The folder src contains each class used for the robot.
+The folder PCB contains PCB we made for the project.
