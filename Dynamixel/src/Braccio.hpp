@@ -26,6 +26,7 @@ class Braccio
     public:
         Braccio();
         bool stand();
+        bool Infos();
         bool moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot);
         bool moveShoulder(const unsigned shoulder);
         bool moveElbow(const unsigned elbow);

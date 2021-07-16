@@ -32,6 +32,20 @@ bool Braccio::stand()
 }
 
 /**
+ * Prints infos about each motor
+ * @returns true if every info is pwell printed, else false
+ */
+bool Braccio::Infos()
+{
+    bool success = true;
+    for (char i = 0; i < _Motors.size(); i++)
+    {
+        success &= _Motors[i]->Infos();
+    }
+    return success;
+}
+
+/**
  * Moves all the motor
  * @param shoulder New position for the shoulder
  * @param elbow New position for the elbow
