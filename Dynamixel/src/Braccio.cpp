@@ -53,14 +53,23 @@ bool Braccio::Infos()
  * @param wristrot New position for the wrist rot
  * @returns true if every motor moved well, else false
  */
-bool Braccio::moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot)
+bool Braccio::moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot, const bool degree)
 {
     //puts position in an array
-    unsigned* position = new unsigned[_Motors.size()];
-    position[SHOULDER] =  shoulder;
-    position[ELBOW] = elbow;
-    position[WRISTVER] = wristver;
-    position[WRISTROT] = wristrot;
+    unsigned* position  = new unsigned[_Motors.size()];
+    position[SHOULDER]  =  shoulder;
+    position[ELBOW]     = elbow;
+    position[WRISTVER]  = wristver;
+    position[WRISTROT]  = wristrot;
+
+    //maps positions if they are given in degree
+    if (degree)
+    {
+        position[SHOULDER]  = mapping(position[shoulder], 0, 360, 0, 4095);
+        position[ELBOW]     = mapping(position[elbow], 0, 360, 0, 4095);
+        position[WRISTVER]  = mapping(position[wristver], 0, 360, 0, 4095);
+        position[WRISTROT]  = mapping(position[wristrot], 0, 360, 0, 1023);
+    }
 
     //indicates if there is an error
     bool success = true;
@@ -79,9 +88,9 @@ bool Braccio::moveAll(const unsigned shoulder, const unsigned elbow, const unsig
  * @param shoulder New position of the shoudler
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveShoulder(const unsigned shoulder)
+bool Braccio::moveShoulder(const unsigned shoulder, const bool degree)
 {
-    return _Motors[SHOULDER]->move(shoulder);
+    return _Motors[SHOULDER]->move(shoulder, degree);
 }
 
 /**
@@ -89,9 +98,9 @@ bool Braccio::moveShoulder(const unsigned shoulder)
  * @param elbow New position of the elbow
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveElbow(const unsigned elbow)
+bool Braccio::moveElbow(const unsigned elbow, const bool degree)
 {
-    return _Motors[ELBOW]->move(elbow);
+    return _Motors[ELBOW]->move(elbow, degree);
 }
 
 /**
@@ -99,9 +108,9 @@ bool Braccio::moveElbow(const unsigned elbow)
  * @param wristver New position of the wrist vertically
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveWristVer(const unsigned wristver)
+bool Braccio::moveWristVer(const unsigned wristver, const bool degree)
 {
-    return _Motors[WRISTVER]->move(wristver);
+    return _Motors[WRISTVER]->move(wristver, degree);
 }
 
 /**
@@ -109,9 +118,9 @@ bool Braccio::moveWristVer(const unsigned wristver)
  * @param wristrot New position of the wrist 
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveWristRot(const unsigned wristrot)
+bool Braccio::moveWristRot(const unsigned wristrot, const bool degree)
 {
-    return _Motors[WRISTROT]->move(wristrot);
+    return _Motors[WRISTROT]->move(wristrot, degree);
 }
 
 Braccio::~Braccio()

@@ -22,7 +22,7 @@ class AX18A : public Motor
 
         bool enableTorque();
         bool disableTorque();
-        bool move(const unsigned newPos, const bool blocking = true, const bool debug = false);
+        bool move(const unsigned newPos, const bool degree = true, const bool blocking = true, const bool debug = false);
         bool setSpeed(const unsigned speed);
         bool ledOn();
         bool ledOff();

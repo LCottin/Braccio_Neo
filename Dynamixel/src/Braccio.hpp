@@ -27,11 +27,11 @@ class Braccio
         Braccio();
         bool stand();
         bool Infos();
-        bool moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot);
-        bool moveShoulder(const unsigned shoulder);
-        bool moveElbow(const unsigned elbow);
-        bool moveWristVer(const unsigned wirstver);
-        bool moveWristRot(const unsigned wirstrot);
+        bool moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot, const bool degree = true);
+        bool moveShoulder(const unsigned shoulder, const bool degree = true);
+        bool moveElbow(const unsigned elbow, const bool degree = true);
+        bool moveWristVer(const unsigned wirstver, const bool degree = true);
+        bool moveWristRot(const unsigned wirstrot, const bool degree = true);
         ~Braccio();
 };
 

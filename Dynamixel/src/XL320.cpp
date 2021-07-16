@@ -94,12 +94,16 @@ bool XL320::openPort()
 /**
  * Makes the motor turn
  * @param newPos New position of the motor
+ * @param degree Indicates if the position is given in degree
  * @param blocking Should the movment be blocking ? (False by default)
  * @returns true if moved correctly, else false
  */
-bool XL320::move(const unsigned newPos, const bool blocking, const bool debug)
+bool XL320::move(const unsigned newPos, const bool degree, const bool blocking, const bool debug)
 {
-    _GoalPos = newPos % 1023;
+    if (degree)
+		_GoalPos = mapping(newPos, 0, 360, _MinPos, _MaxPos);
+
+    _GoalPos = newPos % _MaxPos;
 
     // Write goal position
     _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
@@ -475,7 +479,7 @@ double XL320::getLoad()
  */
 bool XL320::middle()
 {
-	return move(_Middle, true);
+	return move(_Middle, false);
 }
 
 /**

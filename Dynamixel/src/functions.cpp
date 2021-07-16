@@ -57,7 +57,7 @@ int kbhit(void)
  * @param stopMax Min value at the end
  * @returns The value mapped
  */
-unsigned map (const unsigned value, const unsigned startMin, const unsigned startMax, const unsigned stopMin, const unsigned stopMax)
+unsigned mapping (const unsigned value, const unsigned startMin, const unsigned startMax, const unsigned stopMin, const unsigned stopMax)
 {
 	return (value - startMin) * (stopMax - stopMin) / (startMax - startMin) + stopMin;
 }
