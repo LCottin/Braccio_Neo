@@ -94,11 +94,15 @@ bool MX106::openPort()
 /**
  * Makes the motor turn
  * @param newPos New position of the motor
+ * @param degree Indicates if the position is given in degree
  * @param blocking Should the movment be blocking ? (False by default)
  * @returns true if moved correctly, else false
  */
-bool MX106::move(const unsigned newPos, const bool blocking, const bool debug)
+bool MX106::move(const unsigned newPos, const bool degree, const bool blocking, const bool debug)
 {
+    if (degree)
+		_GoalPos = mapping(newPos, 0, 360, _MinPos, _MaxPos);
+
     _GoalPos = newPos % _MaxPos;
 
     // Write goal position

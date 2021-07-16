@@ -94,8 +94,11 @@ bool AX18A::openPort()
  * @param blocking Should the movment be blocking ? (False by default)
  * @returns true if moved correctly, else false
  */
-bool AX18A::move(const unsigned newPos, const bool blocking, const bool debug)
+bool AX18A::move(const unsigned newPos, const bool degree, const bool blocking, const bool debug)
 {
+	if (degree)
+		_GoalPos = mapping(newPos, 0, 360, _MinPos, _MaxPos);
+
     _GoalPos = newPos % _MaxPos;
 
     // Write goal position
@@ -397,7 +400,7 @@ double AX18A::getLoad()
  */
 bool AX18A::middle()
 {
-	return move(_Middle, true);
+	return move(_Middle, false);
 }
 
 /**

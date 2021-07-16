@@ -22,7 +22,7 @@ class MX106 : public Motor
 
         bool enableTorque();
         bool disableTorque();
-        bool move(const unsigned newPos, const bool blocking = true, const bool debug = false);
+        bool move(const unsigned newPos, const bool degree = true, const bool blocking = true, const bool debug = false);
         bool setP(const unsigned char p);
         bool setI(const unsigned char i);
         bool setD(const unsigned char d);
