@@ -33,8 +33,14 @@ int main(int argc, char const *argv[])
 {
     Braccio braccio;
 
+    braccio.Infos();
     braccio.stand();
     braccio.moveAll(2000, 2000, 2000, 1000);
+    braccio.moveAll(1200, 3000, 1200, 1200);
+    braccio.moveWristVer(3000);
+    braccio.moveElbow(1000);
+    braccio.moveAll(3000, 1000, 3000, 3000);
+    braccio.Infos();
 
 /*
 
