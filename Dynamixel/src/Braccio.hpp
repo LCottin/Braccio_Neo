@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Motor.hpp"
-#include "MX106.hpp"
+#include "MX106T.hpp"
 #include "MX28AT.hpp"
 #include "MX64AT.hpp"
 #include "AX18A.hpp"
