@@ -1,7 +1,8 @@
-#include "Braccio.hpp"
+#include "BraccioNeo.hpp"
 
+_BraccioNeo BraccioNeo;
 
-Braccio::Braccio()
+_BraccioNeo::_BraccioNeo()
 {
     //declares motors
     MX64AT* _Shoulder   = new MX64AT(SHOULDER);
@@ -14,13 +15,15 @@ Braccio::Braccio()
     _Motors.push_back(_Elbow);
     _Motors.push_back(_WristVer);
     _Motors.push_back(_WristRot);
+
+    _NbMotors = (short)_Motors.size();
 } 
 
 /**
  * Makes the arm stand
  * @returns true if the movment went right, else false
  */
-bool Braccio::stand()
+bool _BraccioNeo::stand()
 {
     for (char i = 0; i < _Motors.size(); i++)
     {
@@ -35,7 +38,7 @@ bool Braccio::stand()
  * Prints infos about each motor
  * @returns true if every info is pwell printed, else false
  */
-bool Braccio::Infos()
+bool _BraccioNeo::Infos() const
 {
     bool success = true;
     for (char i = 0; i < _Motors.size(); i++)
@@ -46,6 +49,15 @@ bool Braccio::Infos()
 }
 
 /**
+ * Returns how many motors are connected
+ * @returns The number of motor
+ */
+const short _BraccioNeo::getMotors() const
+{
+    return _NbMotors; 
+}
+
+/**
  * Moves all the motor
  * @param shoulder New position for the shoulder
  * @param elbow New position for the elbow
@@ -53,7 +65,7 @@ bool Braccio::Infos()
  * @param wristrot New position for the wrist rot
  * @returns true if every motor moved well, else false
  */
-bool Braccio::moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot, const bool degree)
+bool _BraccioNeo::moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot, const bool degree)
 {
     //puts position in an array
     unsigned* position  = new unsigned[_Motors.size()];
@@ -74,7 +86,7 @@ bool Braccio::moveAll(const unsigned shoulder, const unsigned elbow, const unsig
     //indicates if there is an error
     bool success = true;
 
-    for (int i = 0; i < _Motors.size(); i++)   
+    for (int i = 0; i < (int)_Motors.size(); i++)   
     {
         success &= _Motors[i]->move(position[i]);
     }
@@ -88,7 +100,7 @@ bool Braccio::moveAll(const unsigned shoulder, const unsigned elbow, const unsig
  * @param shoulder New position of the shoudler
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveShoulder(const unsigned shoulder, const bool degree)
+bool _BraccioNeo::moveShoulder(const unsigned shoulder, const bool degree)
 {
     return _Motors[SHOULDER]->move(shoulder, degree);
 }
@@ -98,7 +110,7 @@ bool Braccio::moveShoulder(const unsigned shoulder, const bool degree)
  * @param elbow New position of the elbow
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveElbow(const unsigned elbow, const bool degree)
+bool _BraccioNeo::moveElbow(const unsigned elbow, const bool degree)
 {
     return _Motors[ELBOW]->move(elbow, degree);
 }
@@ -108,7 +120,7 @@ bool Braccio::moveElbow(const unsigned elbow, const bool degree)
  * @param wristver New position of the wrist vertically
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveWristVer(const unsigned wristver, const bool degree)
+bool _BraccioNeo::moveWristVer(const unsigned wristver, const bool degree)
 {
     return _Motors[WRISTVER]->move(wristver, degree);
 }
@@ -118,12 +130,12 @@ bool Braccio::moveWristVer(const unsigned wristver, const bool degree)
  * @param wristrot New position of the wrist 
  * @returns true if correctly moved, else false
  */
-bool Braccio::moveWristRot(const unsigned wristrot, const bool degree)
+bool _BraccioNeo::moveWristRot(const unsigned wristrot, const bool degree)
 {
     return _Motors[WRISTROT]->move(wristrot, degree);
 }
 
-Braccio::~Braccio()
+_BraccioNeo::~_BraccioNeo()
 {
     for (char i = 0; i < _Motors.size(); i++)
     {
