@@ -6,6 +6,15 @@
 #include "BraccioNeo.hpp"
 
 // ---------------------------------------- //
+// -             ENUMERATIONS             - //
+// ---------------------------------------- //
+//Tells which bracelet is speaking and with which order
+enum BRACELETS  {Bracelet1, Bracelet2, Bracelet3, Telecommande};
+enum ACTIONS    {PLAY = 11, PAUSE = 12, STOP = 13};
+enum MODES      {COLERE = 20, JOIE = 21, SURPRISE = 22, CONTROLE = 23, RIEN = 24};
+
+
+// ---------------------------------------- //
 // -               STRUCTURES             - //
 // ---------------------------------------- //
 //Values received by the radio
@@ -40,17 +49,9 @@ struct localData
 	short posWristVer = vMax.XMOY;
 	short posGripper  = vMax.YMOY;
 	char mode;
-	char _action;
+	char _action = RIEN;
 } localData;
 
-
-// ---------------------------------------- //
-// -             ENUMERATIONS             - //
-// ---------------------------------------- //
-//Tells which bracelet is speaking and with which order
-enum BRACELETS  {Bracelet1, Bracelet2, Bracelet3, Telecommande};
-enum ACTIONS    {PLAY = 11, PAUSE = 12, STOP = 13};
-enum MODES      {COLERE = 20, JOIE = 21, SURPRISE = 22, CONTROLE = 23, RIEN = 24};
 
 // ---------------------------------------- //
 // -                AVERAGING             - //

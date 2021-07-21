@@ -25,7 +25,6 @@ using namespace std;
 #endif
 
 
-//
 int main(int argc, char const *argv[])
 {
     BraccioNeo.Infos();
@@ -54,6 +53,50 @@ int main(int argc, char const *argv[])
 		{
 			RF24NetworkHeader nHeader;
 			network.read(nHeader, &receivedData, sizeof(receivedData));
+
+            switch (receivedData.mode)
+            {
+                case COLERE :
+                    cout << "Colère" << endl;
+                    break;
+                
+                case JOIE : 
+                    cout << "JOIE" << endl;
+                    break;
+
+                case SURPRISE :
+                    cout << "SURPRISE" << endl;
+                    break;
+
+                case CONTROLE : 
+                    cout << "CONTROLE" << endl;
+                    localData._action = receivedData._action;
+                    switch (receivedData.ID)
+                    {
+                        case Bracelet1 :
+                            localData.posBase       = receivedData.x;
+                            localData.posShoulder     = receivedData.y;
+                            break;
+                
+                        case Bracelet2 :
+                            localData.posElbow      = receivedData.x;
+                            localData.posWristRot = receivedData.y;
+                            break;
+                        
+                        case Bracelet3 :
+                            localData.posWristVer = receivedData.x;
+                            localData.posGripper      = receivedData.y;
+                            break;
+                    }
+                    dataShapping();
+                    //Braccio.moveAll(baseControle, shoulderControle, elbowControle, wristRotControle, wristVerControle, gripperControle, speedMove);
+                    break;
+
+                case RIEN :
+                default:
+                    cout << "Droit" << endl;
+                    break;
+            }
 		}
 
 		cout << "ID = " << receivedData.ID << endl;
@@ -83,10 +126,10 @@ int compare (const void * a, const void * b)
 void dataShapping()
 {
     cout << "Controle ..." << endl;
-    //mise à jour comteur
+    //updates counter
     counter = (counter + 1) % AVERAGE_NB;
 
-    //lecture des donnees
+    //reads data
     _x1[counter] = localData.posBase;
     _y1[counter] = localData.posShoulder;
     _x2[counter] = localData.posElbow;
@@ -94,7 +137,7 @@ void dataShapping()
     _x3[counter] = localData.posWristVer;
     _y3[counter] = localData.posGripper;
 
-    //tri des tableaux
+    //sorts arrays
     qsort(_x1, AVERAGE_NB, sizeof(short), compare);
     qsort(_y1, AVERAGE_NB, sizeof(short), compare);
     qsort(_x2, AVERAGE_NB, sizeof(short), compare);
@@ -102,7 +145,7 @@ void dataShapping()
     qsort(_x3, AVERAGE_NB, sizeof(short), compare);
     qsort(_y3, AVERAGE_NB, sizeof(short), compare);
 
-    //recupération de la valeur médiane
+    //gets median value
     averageX1 = _x1[median];
     averageX2 = _x2[median];
     averageX3 = _x3[median];
@@ -110,7 +153,7 @@ void dataShapping()
     averageY2 = _y2[median];
     averageY3 = _y3[median];
     
-    //affecte les positions des moteurs avec un mapping
+    //gets value to send to motor thanks to a map
     baseControle       = mapping(averageX1, vMax.XMIN, vMax.XMAX, 0, 180);
     shoulderControle   = mapping(averageY1, vMax.YMIN, vMax.YMAX, 20, 160);
     elbowControle      = mapping(averageX2, vMax.XMIN, vMax.XMAX, 0, 180);
@@ -118,7 +161,7 @@ void dataShapping()
     wristVerControle   = mapping(averageX3, vMax.XMIN, vMax.XMAX, 0, 180);
     gripperControle    = mapping(averageY3, vMax.YMIN, vMax.YMAX, 25, 90);
     
-    //sature en cas de valeurs trop importantes pour proteger les moteurs
+    //makes sure values are not breaking the arm
     if (baseControle > 180) baseControle = 180;
     
     if (shoulderControle > 165) shoulderControle = 165;
