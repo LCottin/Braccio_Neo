@@ -27,8 +27,8 @@ SOURCES = src/functions.cpp \
 		  src/MX64AT.cpp \
 		  src/AX12A.cpp \
 		  src/AX18A.cpp \
-		  src/MX106.cpp \
-		  src/Braccio.cpp \
+		  src/MX106T.cpp \
+		  src/BraccioNeo.cpp \
 		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
