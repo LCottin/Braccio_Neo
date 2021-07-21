@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Motor.hpp"
-#include "MX106.hpp"
+#include "MX106T.hpp"
 #include "MX28AT.hpp"
 #include "MX64AT.hpp"
 #include "AX18A.hpp"
@@ -13,8 +13,9 @@
 using namespace std;
 
 enum MOTORS {SHOULDER, ELBOW, WRISTVER, WRISTROT};
+enum MINMAX {MIN, MAX};
 
-class Braccio
+class _BraccioNeo
 {
     private:
         // Motor* _Shoulder;
@@ -22,18 +23,21 @@ class Braccio
         // Motor* _WristVer;
         // Motor* _WristRot;
         vector<Motor*> _Motors;
+        short _NbMotors;
 
     public:
-        Braccio();
+        _BraccioNeo();
         bool stand();
-        bool Infos();
+        bool Infos() const;
+        const short getMotors() const;
         bool moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot, const bool degree = true);
         bool moveShoulder(const unsigned shoulder, const bool degree = true);
         bool moveElbow(const unsigned elbow, const bool degree = true);
         bool moveWristVer(const unsigned wirstver, const bool degree = true);
         bool moveWristRot(const unsigned wirstrot, const bool degree = true);
-        ~Braccio();
+        ~_BraccioNeo();
 };
 
+extern _BraccioNeo BraccioNeo;
 
 #endif

@@ -6,10 +6,8 @@ DIR_DXL    = ..
 DIR_OBJS   = ../objects
 
 # compiler options
-#CC          = gcc
 CX          = g++
-#CCFLAGS     = -O2 -Wall $(INCLUDES) -g
-CXFLAGS     = -O2 -Wall $(INCLUDES) -g
+CXFLAGS     = -O2 -Wall $(INCLUDES) -std=c++14
 LNKCC       = $(CX)
 LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 
@@ -30,8 +28,8 @@ SOURCES = src/functions.cpp \
 		  src/MX64AT.cpp \
 		  src/AX12A.cpp \
 		  src/AX18A.cpp \
-		  src/MX106.cpp \
-		  src/Braccio.cpp \
+		  src/MX106T.cpp \
+		  src/BraccioNeo.cpp \
 		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***
 
@@ -52,9 +50,6 @@ clean:
 
 make_directory:
 	mkdir -p $(DIR_OBJS)/
-
-#$(DIR_OBJS)/%.o: %.c
-#	$(CC) $(CCFLAGS) -c $? -o $@
 
 $(DIR_OBJS)/%.o: ../src/%.cpp
 	$(CX) $(CXFLAGS) -c $? -o $@

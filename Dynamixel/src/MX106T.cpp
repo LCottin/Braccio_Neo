@@ -1,4 +1,4 @@
-#include "MX106.hpp"
+#include "MX106T.hpp"
 
 MX106::MX106(const unsigned char ID) : Motor(ID)
 {
