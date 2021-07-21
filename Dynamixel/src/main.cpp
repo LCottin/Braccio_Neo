@@ -46,19 +46,19 @@ int main(int argc, char const *argv[])
 
 	network.begin(108, monNoeud);
 
-	for (int i = 0, i < 1000, i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		network.update();
 
 		while(network.available())
 		{
 			RF24NetworkHeader nHeader;
-			network.read(nHeader, &received_data, sizeof(received_data));
+			network.read(nHeader, &receivedData, sizeof(receivedData));
 		}
 
-		cout << "ID = " << received_data.ID << endl;
-		cout << "X =  " << received_data.x << endl;
-		cout << "Y =  " << received_data.y << endl;
+		cout << "ID = " << receivedData.ID << endl;
+		cout << "X =  " << receivedData.x << endl;
+		cout << "Y =  " << receivedData.y << endl;
 	}	
 	#endif
 
