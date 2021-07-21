@@ -6,10 +6,8 @@ DIR_DXL    = ..
 DIR_OBJS   = ../objects
 
 # compiler options
-#CC          = gcc
 CX          = g++
-#CCFLAGS     = -O2 -Wall $(INCLUDES) -g
-CXFLAGS     = -O2 -Wall $(INCLUDES) -g
+CXFLAGS     = -O2 -Wall $(INCLUDES) -std=c++14
 LNKCC       = $(CX)
 LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 
@@ -51,9 +49,6 @@ clean:
 
 make_directory:
 	mkdir -p $(DIR_OBJS)/
-
-#$(DIR_OBJS)/%.o: %.c
-#	$(CC) $(CCFLAGS) -c $? -o $@
 
 $(DIR_OBJS)/%.o: ../src/%.cpp
 	$(CX) $(CXFLAGS) -c $? -o $@
