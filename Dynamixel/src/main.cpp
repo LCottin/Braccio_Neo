@@ -25,6 +25,76 @@ using namespace std;
 #endif
 
 
+// ---------------------------------------- //
+// -              COMPARAISON             - //
+// ---------------------------------------- //
+/**
+ * Compares two values using pointers
+ */
+int compare (const void * a, const void * b) 
+{
+   return ( *(int*)a - *(int*)b );
+}
+
+
+// ---------------------------------------- //
+// -            DATA SHAPPING             - //
+// ---------------------------------------- //
+void dataShapping()
+{
+    cout << "Controle ..." << endl;
+    //updates counter
+    counter = (counter + 1) % AVERAGE_NB;
+
+    //reads data
+    _x1[counter] = localData.posBase;
+    _y1[counter] = localData.posShoulder;
+    _x2[counter] = localData.posElbow;
+    _y2[counter] = localData.posWristRot;
+    _x3[counter] = localData.posWristVer;
+    _y3[counter] = localData.posGripper;
+
+    //sorts arrays
+    qsort(_x1, AVERAGE_NB, sizeof(short), compare);
+    qsort(_y1, AVERAGE_NB, sizeof(short), compare);
+    qsort(_x2, AVERAGE_NB, sizeof(short), compare);
+    qsort(_y2, AVERAGE_NB, sizeof(short), compare);
+    qsort(_x3, AVERAGE_NB, sizeof(short), compare);
+    qsort(_y3, AVERAGE_NB, sizeof(short), compare);
+
+    //gets median value
+    averageX1 = _x1[median];
+    averageX2 = _x2[median];
+    averageX3 = _x3[median];
+    averageY1 = _y1[median];
+    averageY2 = _y2[median];
+    averageY3 = _y3[median];
+    
+    //gets value to send to motor thanks to a map
+    baseControle       = mapping(averageX1, vMax.XMIN, vMax.XMAX, 0, 180);
+    shoulderControle   = mapping(averageY1, vMax.YMIN, vMax.YMAX, 20, 160);
+    elbowControle      = mapping(averageX2, vMax.XMIN, vMax.XMAX, 0, 180);
+    wristRotControle   = mapping(averageY2, vMax.YMIN, vMax.YMAX, 0, 180);
+    wristVerControle   = mapping(averageX3, vMax.XMIN, vMax.XMAX, 0, 180);
+    gripperControle    = mapping(averageY3, vMax.YMIN, vMax.YMAX, 25, 90);
+    
+    //makes sure values are not breaking the arm
+    if (baseControle > 180) baseControle = 180;
+    
+    if (shoulderControle > 165) shoulderControle = 165;
+    if (shoulderControle < 15)  shoulderControle = 15;
+    
+    if (elbowControle > 180) elbowControle = 180;
+    
+    if (wristRotControle > 180) wristRotControle = 180;
+    
+    if (wristVerControle > 180) wristVerControle = 180;
+    
+    if (gripperControle > 90) gripperControle = 90;
+    if (gripperControle < 25) gripperControle = 25;
+}
+
+
 int main(int argc, char const *argv[])
 {
     BraccioNeo.Infos();
@@ -106,73 +176,4 @@ int main(int argc, char const *argv[])
 	#endif
 
 	return 0;
-}
-
-// ---------------------------------------- //
-// -              COMPARAISON             - //
-// ---------------------------------------- //
-/**
- * Compares two values using pointers
- */
-int compare (const void * a, const void * b) 
-{
-   return ( *(int*)a - *(int*)b );
-}
-
-
-// ---------------------------------------- //
-// -            DATA SHAPPING             - //
-// ---------------------------------------- //
-void dataShapping()
-{
-    cout << "Controle ..." << endl;
-    //updates counter
-    counter = (counter + 1) % AVERAGE_NB;
-
-    //reads data
-    _x1[counter] = localData.posBase;
-    _y1[counter] = localData.posShoulder;
-    _x2[counter] = localData.posElbow;
-    _y2[counter] = localData.posWristRot;
-    _x3[counter] = localData.posWristVer;
-    _y3[counter] = localData.posGripper;
-
-    //sorts arrays
-    qsort(_x1, AVERAGE_NB, sizeof(short), compare);
-    qsort(_y1, AVERAGE_NB, sizeof(short), compare);
-    qsort(_x2, AVERAGE_NB, sizeof(short), compare);
-    qsort(_y2, AVERAGE_NB, sizeof(short), compare);
-    qsort(_x3, AVERAGE_NB, sizeof(short), compare);
-    qsort(_y3, AVERAGE_NB, sizeof(short), compare);
-
-    //gets median value
-    averageX1 = _x1[median];
-    averageX2 = _x2[median];
-    averageX3 = _x3[median];
-    averageY1 = _y1[median];
-    averageY2 = _y2[median];
-    averageY3 = _y3[median];
-    
-    //gets value to send to motor thanks to a map
-    baseControle       = mapping(averageX1, vMax.XMIN, vMax.XMAX, 0, 180);
-    shoulderControle   = mapping(averageY1, vMax.YMIN, vMax.YMAX, 20, 160);
-    elbowControle      = mapping(averageX2, vMax.XMIN, vMax.XMAX, 0, 180);
-    wristRotControle   = mapping(averageY2, vMax.YMIN, vMax.YMAX, 0, 180);
-    wristVerControle   = mapping(averageX3, vMax.XMIN, vMax.XMAX, 0, 180);
-    gripperControle    = mapping(averageY3, vMax.YMIN, vMax.YMAX, 25, 90);
-    
-    //makes sure values are not breaking the arm
-    if (baseControle > 180) baseControle = 180;
-    
-    if (shoulderControle > 165) shoulderControle = 165;
-    if (shoulderControle < 15)  shoulderControle = 15;
-    
-    if (elbowControle > 180) elbowControle = 180;
-    
-    if (wristRotControle > 180) wristRotControle = 180;
-    
-    if (wristVerControle > 180) wristVerControle = 180;
-    
-    if (gripperControle > 90) gripperControle = 90;
-    if (gripperControle < 25) gripperControle = 25;
 }
