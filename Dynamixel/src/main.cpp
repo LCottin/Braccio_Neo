@@ -92,11 +92,15 @@ int main(int argc, char const *argv[])
 {
     BraccioNeo.Infos();
     BraccioNeo.stand();
-    BraccioNeo.moveAll(2000, 2000, 2000, 1000, false);
-    BraccioNeo.moveAll(1200, 3000, 1200, 1200, false);
+    BraccioNeo.moveAll(2000, 2000, 2000, 1000, 2000, false);
+    BraccioNeo.moveAll(1200, 3000, 1200, 1200, 2000, false);
     BraccioNeo.moveWristVer(3000, false);
     BraccioNeo.moveElbow(1000, false);
-    BraccioNeo.moveAll(3000, 1000, 3000, 3000, false);
+    BraccioNeo.moveAll(3000, 1000, 3000, 3000, 2000, false);
+    BraccioNeo.moveGripper(500);
+    BraccioNeo.moveGripper(200);
+    BraccioNeo.moveGripper(1500);
+    BraccioNeo.moveGripper(1000);    
     BraccioNeo.Infos();
 
    	#ifndef __APPLE__
