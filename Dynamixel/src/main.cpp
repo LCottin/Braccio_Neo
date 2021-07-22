@@ -1,11 +1,4 @@
-#include "MX64AT.hpp"
-#include "XL320.hpp"
-#include "MX28AT.hpp"
-#include "AX12A.hpp"
-#include "AX18A.hpp"
-#include "MX106T.hpp"
 #include "BraccioNeo.hpp"
-
 #include "Variables.hpp"
 
 #include <cstdlib>
@@ -25,53 +18,13 @@ using namespace std;
 #endif
 
 
-//
-int main(int argc, char const *argv[])
-{
-    BraccioNeo.Infos();
-    BraccioNeo.stand();
-    BraccioNeo.moveAll(2000, 2000, 2000, 1000, false);
-    BraccioNeo.moveAll(1200, 3000, 1200, 1200, false);
-    BraccioNeo.moveWristVer(3000, false);
-    BraccioNeo.moveElbow(1000, false);
-    BraccioNeo.moveAll(3000, 1000, 3000, 3000, false);
-    BraccioNeo.Infos();
-
-   	#ifndef __APPLE__
-	radio.begin();
-	//	radio.setPALevel(RF24_PA_MAX);
-	radio.setDataRate(RF24_2MBPS);
-
-	radio.startListening();
-
-	network.begin(108, monNoeud);
-
-	for (int i = 0; i < 1000; i++)
-	{
-		network.update();
-
-		while(network.available())
-		{
-			RF24NetworkHeader nHeader;
-			network.read(nHeader, &receivedData, sizeof(receivedData));
-		}
-
-		cout << "ID = " << receivedData.ID << endl;
-		cout << "X =  " << receivedData.x << endl;
-		cout << "Y =  " << receivedData.y << endl;
-	}	
-	#endif
-
-	return 0;
-}
-
 // ---------------------------------------- //
 // -              COMPARAISON             - //
 // ---------------------------------------- //
 /**
  * Compares two values using pointers
  */
-int compare (const void * a, const void * b) 
+int compare(const void * a, const void * b) 
 {
    return ( *(int*)a - *(int*)b );
 }
@@ -132,4 +85,45 @@ void dataShapping()
     
     if (gripperControle > 90) gripperControle = 90;
     if (gripperControle < 25) gripperControle = 25;
+}
+
+
+int main(int argc, char const *argv[])
+{
+    BraccioNeo.Infos();
+    BraccioNeo.stand();
+    BraccioNeo.moveAll(2000, 2000, 2000, 1000, false);
+    BraccioNeo.moveAll(1200, 3000, 1200, 1200, false);
+    BraccioNeo.moveWristVer(3000, false);
+    BraccioNeo.moveElbow(1000, false);
+    BraccioNeo.moveAll(3000, 1000, 3000, 3000, false);
+    BraccioNeo.Infos();
+
+    /*
+   	#ifndef __APPLE__    
+	radio.begin();
+	//	radio.setPALevel(RF24_PA_MAX);
+	radio.setDataRate(RF24_2MBPS);
+
+	radio.startListening();
+
+	network.begin(108, monNoeud);
+
+	for (int i = 0; i < 1000; i++)
+	{
+		network.update();
+
+		while(network.available())
+		{
+			RF24NetworkHeader nHeader;
+			network.read(nHeader, &receivedData, sizeof(receivedData));
+		}
+
+		cout << "ID = " << receivedData.ID << endl;
+		cout << "X =  " << receivedData.x << endl;
+		cout << "Y =  " << receivedData.y << endl;
+	}	
+	#endif
+    */
+	return 0;
 }
