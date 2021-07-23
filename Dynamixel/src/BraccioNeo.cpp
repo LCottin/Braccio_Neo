@@ -135,6 +135,15 @@ bool _BraccioNeo::moveWristRot(const unsigned wristrot, const bool degree)
     return _Motors[WRISTROT]->move(wristrot, degree);
 }
 
+
+
+
+
+
+
+
+
+
 /**
  * Takes a picture and saves it
  * @param cam Camera to take the picture with

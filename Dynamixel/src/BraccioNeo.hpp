@@ -38,6 +38,7 @@ class _BraccioNeo
         bool moveElbow(const unsigned elbow, const bool degree = true);
         bool moveWristVer(const unsigned wirstver, const bool degree = true);
         bool moveWristRot(const unsigned wirstrot, const bool degree = true);
+        
         bool takePicture(RaspiCam& cam, string filename);
         ~_BraccioNeo();
 };
