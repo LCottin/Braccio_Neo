@@ -8,13 +8,18 @@ _BraccioNeo::_BraccioNeo()
     MX64AT* _Shoulder   = new MX64AT(SHOULDER);
     MX64AT* _Elbow      = new MX64AT(ELBOW);
     MX28AT* _WristVer   = new MX28AT(WRISTVER);
-    AX18A*  _WristRot   = new AX18A(WRISTROT);
-
+    //AX18A*  _WristRot   = new AX18A(WRISTROT);
+    //we don't have an AX18A right now, so we use an AX12A !
+    AX12A*  _WristRot   = new AX12A(WRISTROT);
+    //we don't have an AX18A right now, so we use an MX12W instead !
+    MX12W* _Gripper     = new MX12W(GRIPPER);
+    
     //pushes them into the vector
     _Motors.push_back(_Shoulder);
     _Motors.push_back(_Elbow);
     _Motors.push_back(_WristVer);
     _Motors.push_back(_WristRot);
+    _Motors.push_back(_Gripper);
 
     _NbMotors = (short)_Motors.size();
 } 
@@ -65,14 +70,15 @@ const short _BraccioNeo::getMotors() const
  * @param wristrot New position for the wrist rot
  * @returns true if every motor moved well, else false
  */
-bool _BraccioNeo::moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot, const bool degree)
+bool _BraccioNeo::moveAll(const unsigned shoulder, const unsigned elbow, const unsigned wristver, const unsigned wristrot, const unsigned gripper, const bool degree)
 {
     //puts position in an array
     unsigned* position  = new unsigned[_Motors.size()];
-    position[SHOULDER]  =  shoulder;
+    position[SHOULDER]  = shoulder;
     position[ELBOW]     = elbow;
     position[WRISTVER]  = wristver;
     position[WRISTROT]  = wristrot;
+    position[GRIPPER]    = gripper;
 
     //maps positions if they are given in degree
     if (degree)
@@ -81,6 +87,7 @@ bool _BraccioNeo::moveAll(const unsigned shoulder, const unsigned elbow, const u
         position[ELBOW]     = mapping(position[elbow], 0, 360, 0, 4095);
         position[WRISTVER]  = mapping(position[wristver], 0, 360, 0, 4095);
         position[WRISTROT]  = mapping(position[wristrot], 0, 360, 0, 1023);
+	position[GRIPPER]  = mapping(position[gripper], 0, 360, 0, 4095);
     }
 
     //indicates if there is an error
@@ -133,6 +140,16 @@ bool _BraccioNeo::moveWristVer(const unsigned wristver, const bool degree)
 bool _BraccioNeo::moveWristRot(const unsigned wristrot, const bool degree)
 {
     return _Motors[WRISTROT]->move(wristrot, degree);
+}
+
+/**
+ * Makes the gripper catch
+ * @param gripper New position of the wrist 
+ * @returns true if correctly moved, else false
+ */
+bool _BraccioNeo::moveGripper(const unsigned gripper, const bool degree)
+{
+  return _Motors[GRIPPER]->move(gripper, degree);
 }
 
 _BraccioNeo::~_BraccioNeo()
