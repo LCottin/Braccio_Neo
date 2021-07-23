@@ -2,7 +2,6 @@
 TARGET      = Braccio
 
 # important directories used by assorted rules and other variables
-DIR_DXL    = ..
 DIR_OBJS   = ../objects
 
 # compiler options
@@ -14,7 +13,7 @@ LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 #---------------------------------------------------------------------
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
-INCLUDES   += -I$(DIR_DXL)/include/dynamixel_sdk
+INCLUDES   += -I../src/lib/SDK
 LIBRARIES  += -ldxl_mac_cpp -lm 
 
 #---------------------------------------------------------------------
