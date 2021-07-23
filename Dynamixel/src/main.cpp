@@ -1,21 +1,25 @@
 #include "BraccioNeo.hpp"
 #include "Variables.hpp"
 
+#include <iostream>
+#include <fstream>
 #include <cstdlib>
-
-using namespace std;
 
 #ifndef __APPLE__
 	#include "lib/RF24.h"
 	#include "lib/nRF24L01.h"
 	#include "lib/RF24Network.h"
-
+	#include "./lib/raspicam.h"
+	
 	RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
 	RF24Network network(radio);
 	const uint16_t noeudMere = 00;
 	const uint16_t monNoeud = noeudMere;
 
+	using namespace raspicam;
 #endif
+
+using namespace std;
 
 
 // ---------------------------------------- //
@@ -99,7 +103,26 @@ int main(int argc, char const *argv[])
     BraccioNeo.moveAll(3000, 1000, 3000, 3000, false);
     BraccioNeo.Infos();
 
-   	#ifndef __APPLE__
+	#ifndef __APPLE__
+	RaspiCam Camera; //Cmaera object
+	cout << "Ouverture camera" << endl;
+	if (Camera.open() == false)
+		cout << "Erreur ouverture" << endl;
+
+	//take picture
+	Camera.grab();
+
+	unsigned char* data = new unsigned char [Camera.getImageTypeSize(RASPICAM_FORMAT_RGB) ];
+
+	//extract image
+	Camera.retrieve(data, RASPICAM_FORMAT_RGB);
+	ofstream outfile( "raspicam_test.ppm", std::ios::binary);
+
+	outfile << "P6\n" << Camera.getWidth() << " " << Camera.getHeight() << " 255\n";
+	outfile.write( (char*)data, Camera.getImageTypeSize(RASPICAM_FORMAT_RGB) );
+	cout << "Image saved" << endl;
+	delete data;
+	
 	radio.begin();
 	//	radio.setPALevel(RF24_PA_MAX);
 	radio.setDataRate(RF24_2MBPS);
