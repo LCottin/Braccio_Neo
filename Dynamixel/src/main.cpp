@@ -6,10 +6,10 @@
 #include <cstdlib>
 
 #ifndef __APPLE__
-	#include "lib/RF24.h"
-	#include "lib/nRF24L01.h"
-	#include "lib/RF24Network.h"
-	#include "./lib/raspicam.h"
+	#include "lib/RF24/RF24.h"
+	#include "lib/RF24/nRF24L01.h"
+	#include "lib/RF24/RF24Network.h"
+	#include "lib/RASPICAM/raspicam.h"
 	
 	RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
 	RF24Network network(radio);
