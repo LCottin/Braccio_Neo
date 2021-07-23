@@ -142,6 +142,16 @@ bool _BraccioNeo::moveWristRot(const unsigned wristrot, const bool degree)
     return _Motors[WRISTROT]->move(wristrot, degree);
 }
 
+/*
+ * Makes the gripper catch
+ * @param gripper New position of the wrist 
+ * @returns true if correctly moved, else false
+ */
+bool _BraccioNeo::moveGripper(const unsigned gripper, const bool degree)
+{
+  return _Motors[GRIPPER]->move(gripper, degree);
+}
+
 /**
  * Takes a picture and saves it
  * @param cam Camera to take the picture with
@@ -174,16 +184,8 @@ bool _BraccioNeo::takePicture(RaspiCam& cam, string filename)
 	
     delete[] data;
 	return true;
-
-/*
- * Makes the gripper catch
- * @param gripper New position of the wrist 
- * @returns true if correctly moved, else false
- */
-bool _BraccioNeo::moveGripper(const unsigned gripper, const bool degree)
-{
-  return _Motors[GRIPPER]->move(gripper, degree);
 }
+
 
 _BraccioNeo::~_BraccioNeo()
 {
