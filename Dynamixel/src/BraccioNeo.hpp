@@ -3,14 +3,17 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #include "Motor.hpp"
 #include "MX106T.hpp"
 #include "MX28AT.hpp"
 #include "MX64AT.hpp"
 #include "AX18A.hpp"
+#include "lib/RASPICAM/raspicam.h"
 
 using namespace std;
+using namespace raspicam;
 
 enum MOTORS {SHOULDER, ELBOW, WRISTVER, WRISTROT};
 enum MINMAX {MIN, MAX};
@@ -35,6 +38,7 @@ class _BraccioNeo
         bool moveElbow(const unsigned elbow, const bool degree = true);
         bool moveWristVer(const unsigned wirstver, const bool degree = true);
         bool moveWristRot(const unsigned wirstrot, const bool degree = true);
+        bool takePicture(RaspiCam& cam, string filename);
         ~_BraccioNeo();
 };
 

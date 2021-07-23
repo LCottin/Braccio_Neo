@@ -135,6 +135,40 @@ bool _BraccioNeo::moveWristRot(const unsigned wristrot, const bool degree)
     return _Motors[WRISTROT]->move(wristrot, degree);
 }
 
+/**
+ * Takes a picture and saves it
+ * @param cam Camera to take the picture with
+ * @param filename Name of the saved picture
+ * @returns true if successfully taken and saved, else false
+ */
+bool _BraccioNeo::takePicture(RaspiCam& cam, string filename)
+{
+    if (cam.open() == false)
+    {
+        cout << "Erreur lors de l'ouverture" << endl;
+        return false;
+    }
+
+	//takes picture
+	cam.grab();
+
+	unsigned char* data;
+    data = new unsigned char [cam.getImageTypeSize(RASPICAM_FORMAT_RGB) ];
+
+	//extracts image
+	cam.retrieve(data, RASPICAM_FORMAT_RGB);
+
+    //saves it
+    filename += ".jpg";
+	ofstream outfile(filename, std::ios::binary);
+	outfile << "P6\n" << cam.getWidth() << " " << cam.getHeight() << " 255\n";
+	outfile.write( (char*)data, cam.getImageTypeSize(RASPICAM_FORMAT_RGB) );
+	cout << "Image saved" << endl;
+	
+    delete[] data;
+	return true;
+}
+
 _BraccioNeo::~_BraccioNeo()
 {
     for (char i = 0; i < _Motors.size(); i++)
