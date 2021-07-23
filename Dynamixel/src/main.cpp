@@ -1,21 +1,22 @@
 #include "BraccioNeo.hpp"
 #include "Variables.hpp"
 
+#include <iostream>
+#include <fstream>
 #include <cstdlib>
 
-using namespace std;
-
 #ifndef __APPLE__
-	#include "lib/RF24.h"
-	#include "lib/nRF24L01.h"
-	#include "lib/RF24Network.h"
-
+	#include "lib/RF24/RF24.h"
+	#include "lib/RF24/nRF24L01.h"
+	#include "lib/RF24/RF24Network.h"
+	
 	RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
 	RF24Network network(radio);
 	const uint16_t noeudMere = 00;
 	const uint16_t monNoeud = noeudMere;
-
 #endif
+
+using namespace std;
 
 
 // ---------------------------------------- //
@@ -103,7 +104,7 @@ int main(int argc, char const *argv[])
     BraccioNeo.moveGripper(1000);    
     BraccioNeo.Infos();
 
-   	#ifndef __APPLE__
+	#ifndef __APPLE__
 	radio.begin();
 	//	radio.setPALevel(RF24_PA_MAX);
 	radio.setDataRate(RF24_2MBPS);
