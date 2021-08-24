@@ -6,7 +6,7 @@
 #include <fstream>
 
 #include "Motor.hpp"
-#include "MX106T.hpp"
+#include "MX106AT.hpp"
 #include "MX28AT.hpp"
 #include "MX64AT.hpp"
 #include "AX18A.hpp"
@@ -18,21 +18,27 @@
 using namespace std;
 using namespace raspicam;
 
-enum MOTORS {SHOULDER, ELBOW, WRISTVER, WRISTROT, GRIPPER};
-enum MINMAX {MIN, MAX};
+enum MOTORS {BASE, SHOULDER, ELBOW, WRISTVER, WRISTROT, GRIPPER};
+enum EXTREM {MINPOS, MINANGLE, MIDDLEPOS, MIDDLEANGLE, MAXPOS, MAXANGLE};
 
 class _BraccioNeo
 {
     private:
-        // Motor* _Shoulder;
-        // Motor* _Elbow;
-        // Motor* _WristVer;
-        // Motor* _WristRot;
+        Motor* _Base;
+        Motor* _Shoulder;
+        Motor* _Elbow;
+        Motor* _WristVer;
+        Motor* _WristRot;
+        Motor* _Gripper;
+
         vector<Motor*> _Motors;
+        
         short _NbMotors;
+        short** _Limits;
 
     public:
         _BraccioNeo();
+        void initValues();
         bool stand();
         bool Infos() const;
         const short getMotors() const;
@@ -40,7 +46,9 @@ class _BraccioNeo
         bool moveShoulder(const unsigned shoulder, const bool degree = true);
         bool moveElbow(const unsigned elbow, const bool degree = true);
         bool moveWristVer(const unsigned wirstver, const bool degree = true);
-        bool takePicture(RaspiCam& cam, string filename);
+        #ifndef __APPLE__
+            bool takePicture(RaspiCam& cam, string filename);
+        #endif
         bool moveWristRot(const unsigned wirstrot, const bool degree = true);
         bool moveGripper(const unsigned gripper, const bool degree = true);
         ~_BraccioNeo();

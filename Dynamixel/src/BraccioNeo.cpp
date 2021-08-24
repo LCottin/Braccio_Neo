@@ -5,16 +5,15 @@ _BraccioNeo BraccioNeo;
 _BraccioNeo::_BraccioNeo()
 {
     //declares motors
-    MX64AT* _Shoulder   = new MX64AT(SHOULDER);
-    MX64AT* _Elbow      = new MX64AT(ELBOW);
-    MX28AT* _WristVer   = new MX28AT(WRISTVER);
-    //AX18A*  _WristRot   = new AX18A(WRISTROT);
-    //we don't have an AX18A right now, so we use an AX12A !
-    AX12A*  _WristRot   = new AX12A(WRISTROT);
-    //we don't have an AX18A right now, so we use an MX12W instead !
-    MX12W* _Gripper     = new MX12W(GRIPPER);
+    _Base       = new MX106AT(BASE);
+    _Shoulder   = new MX106AT(SHOULDER);
+    _Elbow      = new MX64AT(ELBOW);
+    _WristVer   = new MX28AT(WRISTVER);
+    _WristRot   = new AX12A(WRISTROT);
+    _Gripper    = new MX12W(GRIPPER);
     
     //pushes them into the vector
+    _Motors.push_back(_Base);
     _Motors.push_back(_Shoulder);
     _Motors.push_back(_Elbow);
     _Motors.push_back(_WristVer);
@@ -22,7 +21,70 @@ _BraccioNeo::_BraccioNeo()
     _Motors.push_back(_Gripper);
 
     _NbMotors = (short)_Motors.size();
+
+    initValues();
 } 
+
+/**
+ * Initializes extrem values of each motor
+ */
+void _BraccioNeo::initValues()
+{
+    //creates an array to store extrems positions of each motor
+    _Limits = new short* [_NbMotors];
+    for (int i = 0; i < _NbMotors; i++)
+    {
+        _Limits[i] = new short[6];
+    }
+
+    //limits for the base
+    _Limits[BASE][MINPOS]       = 0;
+    _Limits[BASE][MINANGLE]     = 0;
+    _Limits[BASE][MIDDLEPOS]    = 2047;
+    _Limits[BASE][MIDDLEANGLE]  = 180;
+    _Limits[BASE][MAXPOS]       = 4095;
+    _Limits[BASE][MAXPOS]       = 360;
+
+    //limits for the shoulder
+    _Limits[SHOULDER][MINPOS]       = 1024;
+    _Limits[SHOULDER][MINANGLE]     = 90;
+    _Limits[SHOULDER][MIDDLEPOS]    = 2047;
+    _Limits[SHOULDER][MIDDLEANGLE]  = 180;
+    _Limits[SHOULDER][MAXPOS]       = 3072;
+    _Limits[SHOULDER][MAXPOS]       = 270;
+
+    //limits for the elbow
+    _Limits[ELBOW][MINPOS]       = 683;
+    _Limits[ELBOW][MINANGLE]     = 60;
+    _Limits[ELBOW][MIDDLEPOS]    = 2047;
+    _Limits[ELBOW][MIDDLEANGLE]  = 180;
+    _Limits[ELBOW][MAXPOS]       = 3412;
+    _Limits[ELBOW][MAXPOS]       = 300;
+
+    //limits for the wrist rot
+    _Limits[WRISTROT][MINPOS]       = 683;
+    _Limits[WRISTROT][MINANGLE]     = 60;
+    _Limits[WRISTROT][MIDDLEPOS]    = 2047;
+    _Limits[WRISTROT][MIDDLEANGLE]  = 180;
+    _Limits[WRISTROT][MAXPOS]       = 3412;
+    _Limits[WRISTROT][MAXPOS]       = 300;
+
+    //limits for the wrist ver
+    _Limits[WRISTVER][MINPOS]       = 0;
+    _Limits[WRISTVER][MINANGLE]     = 0;
+    _Limits[WRISTVER][MIDDLEPOS]    = 512;
+    _Limits[WRISTVER][MIDDLEANGLE]  = 180;
+    _Limits[WRISTVER][MAXPOS]       = 1023;
+    _Limits[WRISTVER][MAXPOS]       = 300;
+    
+    //limits for the gripper
+    _Limits[GRIPPER][MINPOS]       = 0;
+    _Limits[GRIPPER][MINANGLE]     = 0;
+    _Limits[GRIPPER][MIDDLEPOS]    = 512;
+    _Limits[GRIPPER][MIDDLEANGLE]  = 180;
+    _Limits[GRIPPER][MAXPOS]       = 1023;
+    _Limits[GRIPPER][MAXPOS]       = 300;
+}
 
 /**
  * Makes the arm stand
@@ -87,7 +149,7 @@ bool _BraccioNeo::moveAll(const unsigned shoulder, const unsigned elbow, const u
         position[ELBOW]     = mapping(position[elbow], 0, 360, 0, 4095);
         position[WRISTVER]  = mapping(position[wristver], 0, 360, 0, 4095);
         position[WRISTROT]  = mapping(position[wristrot], 0, 360, 0, 1023);
-	position[GRIPPER]  = mapping(position[gripper], 0, 360, 0, 4095);
+	    position[GRIPPER]   = mapping(position[gripper], 0, 360, 0, 4095);
     }
 
     //indicates if there is an error
@@ -152,6 +214,7 @@ bool _BraccioNeo::moveGripper(const unsigned gripper, const bool degree)
   return _Motors[GRIPPER]->move(gripper, degree);
 }
 
+#ifndef __APPLE__
 /**
  * Takes a picture and saves it
  * @param cam Camera to take the picture with
@@ -185,13 +248,15 @@ bool _BraccioNeo::takePicture(RaspiCam& cam, string filename)
     delete[] data;
 	return true;
 }
-
+#endif
 
 _BraccioNeo::~_BraccioNeo()
 {
-    for (char i = 0; i < _Motors.size(); i++)
+    for (int i = 0; i < _NbMotors; i++)
     {
+        delete _Limits[i];
         delete _Motors[i];
     }
+    delete _Limits;
 }
 
