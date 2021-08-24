@@ -91,6 +91,11 @@ void dataShapping()
 
 int main(int argc, char const *argv[])
 {
+
+    BraccioNeo.Infos();
+    BraccioNeo.moveWristRot(300);
+    
+    /*
     BraccioNeo.Infos();
     BraccioNeo.stand();
     BraccioNeo.moveAll(2000, 2000, 2000, 1000, 2000, false);
@@ -172,6 +177,6 @@ int main(int argc, char const *argv[])
 		cout << "Y =  " << receivedData.y << endl;
 	}	
 	#endif
-
+    */
 	return 0;
 }
