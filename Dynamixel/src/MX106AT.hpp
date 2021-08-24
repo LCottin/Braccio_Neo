@@ -10,7 +10,7 @@
 using namespace std;
 using namespace dynamixel;
 
-class MX106 : public Motor
+class MX106AT : public Motor
 {
     private:
         bool start();
@@ -18,7 +18,7 @@ class MX106 : public Motor
         bool setBaudrate(const unsigned baudrate);
         
     public:
-        MX106(const unsigned char ID);
+        MX106AT(const unsigned char ID);
 
         bool enableTorque();
         bool disableTorque();
@@ -35,7 +35,7 @@ class MX106 : public Motor
         bool middle();
         bool Infos();
 
-        ~MX106();
+        ~MX106AT();
 };
 
 #endif

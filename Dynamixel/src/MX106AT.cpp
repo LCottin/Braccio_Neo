@@ -1,6 +1,6 @@
-#include "MX106T.hpp"
+#include "MX106AT.hpp"
 
-MX106::MX106(const unsigned char ID) : Motor(ID)
+MX106AT::MX106AT(const unsigned char ID) : Motor(ID)
 {
     _TorqueEnableAddr   = 24;
 	_LedAddr			= 25;
@@ -30,7 +30,7 @@ MX106::MX106(const unsigned char ID) : Motor(ID)
 /**
  * Initialises the communication with the port handler
  */
-bool MX106::start()
+bool MX106AT::start()
 {
     // Initializes PortHandler instance
 	// Sets the port path
@@ -75,7 +75,7 @@ bool MX106::start()
  * Opens the USB port
  * @returns true if correctly opened, else false
  */
-bool MX106::openPort()
+bool MX106AT::openPort()
 {
 	if (_PortHandler->openPort())
 	{
@@ -98,7 +98,7 @@ bool MX106::openPort()
  * @param blocking Should the movment be blocking ? (False by default)
  * @returns true if moved correctly, else false
  */
-bool MX106::move(const unsigned newPos, const bool degree, const bool blocking, const bool debug)
+bool MX106AT::move(const unsigned newPos, const bool degree, const bool blocking, const bool debug)
 {
     if (degree)
 		_GoalPos = mapping(newPos, 0, 360, _MinPos, _MaxPos);
@@ -154,7 +154,7 @@ bool MX106::move(const unsigned newPos, const bool degree, const bool blocking, 
  * Enable the torque
  * @returns true if correctly enabled, else false
  */
-bool MX106::enableTorque()
+bool MX106AT::enableTorque()
 {
 	_TorqueEnable = true;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TorqueEnableAddr, _TorqueEnable ? 1:0, &_Error);
@@ -181,7 +181,7 @@ bool MX106::enableTorque()
  * Disable the torque
  * @returns true if correctly disabled, else false
  */
-bool MX106::disableTorque()
+bool MX106AT::disableTorque()
 {
 	_TorqueEnable = false;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _TorqueEnableAddr, _TorqueEnable ? 1:0, &_Error);
@@ -209,7 +209,7 @@ bool MX106::disableTorque()
  * @param baudrate New baudrate
  * @returns true if the baudrate is correctly changed, else false
  */
-bool MX106::setBaudrate(const unsigned baudrate)
+bool MX106AT::setBaudrate(const unsigned baudrate)
 {
 	if (_PortHandler->setBaudRate(_Baudrate))
 	{
@@ -230,7 +230,7 @@ bool MX106::setBaudrate(const unsigned baudrate)
  * Turns the led on
  * @returns true if correctly turned on, else false
  */
-bool MX106::ledOn()
+bool MX106AT::ledOn()
 {
 	_Led = true;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, _Led ? 1 : 0, &_Error);
@@ -254,7 +254,7 @@ bool MX106::ledOn()
  * Turns the led off
  * @returns true if correctly turned off, else false
  */
-bool MX106::ledOff()
+bool MX106AT::ledOff()
 {
 	_Led = false;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _LedAddr, _Led ? 1 : 0, &_Error);
@@ -279,7 +279,7 @@ bool MX106::ledOff()
  * @param p New value
  * @returns true if correctly changed, else false
  */
-bool MX106::setP(const unsigned char p)
+bool MX106AT::setP(const unsigned char p)
 {
 	_P = p;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _PAddr, _P, &_Error);
@@ -307,7 +307,7 @@ bool MX106::setP(const unsigned char p)
  * @param i New value
  * @returns true if correctly changed, else false
  */
-bool MX106::setI(const unsigned char i)
+bool MX106AT::setI(const unsigned char i)
 {
 	_I = i;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _IAddr, _I, &_Error);
@@ -335,7 +335,7 @@ bool MX106::setI(const unsigned char i)
  * @param d New value
  * @returns true if correctly changed, else false
  */
-bool MX106::setD(const unsigned char d)
+bool MX106AT::setD(const unsigned char d)
 {
 	_D = d;
 	_ComResult = _PacketHandler->write1ByteTxRx(_PortHandler, _ID, _DAddr, _D, &_Error);
@@ -363,7 +363,7 @@ bool MX106::setD(const unsigned char d)
  * @param speed New velocity
  * @returns true if correctly changed, else false
  */
-bool MX106::setSpeed(const unsigned speed)
+bool MX106AT::setSpeed(const unsigned speed)
 {
 	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
@@ -390,7 +390,7 @@ bool MX106::setSpeed(const unsigned speed)
  * Tells under what voltage the motor is 
  * @returns Motor voltage
  */
-double MX106::getVoltage()
+double MX106AT::getVoltage()
 {	
 	uint8_t temp;
 	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _VoltageAddr, (uint8_t*)&temp, &_Error);
@@ -418,7 +418,7 @@ double MX106::getVoltage()
  * Tells how hot he motor is
  * @returns Motor temperature
  */
-double MX106::getTemperature()
+double MX106AT::getTemperature()
 {
 	uint8_t temp;
 	_ComResult = _PacketHandler->read1ByteTxRx(_PortHandler, _ID, _TemperatureAddr, (uint8_t*)&temp, &_Error);
@@ -446,7 +446,7 @@ double MX106::getTemperature()
  * Tells how loaded the motor is
  * @returns Motor load
  */
-double MX106::getLoad()
+double MX106AT::getLoad()
 {
 	uint16_t temp;
 	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _LoadAddr, (uint16_t*)&temp, &_Error);
@@ -486,7 +486,7 @@ double MX106::getLoad()
  * Puts the motor at its middle position
  * @returns true if successfully moved, else false
  */
-bool MX106::middle()
+bool MX106AT::middle()
 {
 	return move(_Middle, true);
 }
@@ -495,7 +495,7 @@ bool MX106::middle()
  * Prints all information about the motor
  * @returns true if everything went normal, else false
  */
-bool MX106::Infos()
+bool MX106AT::Infos()
 {
 	if (getVoltage() == -1) return false;
 	if (getTemperature() == -1) return false;
@@ -521,7 +521,7 @@ bool MX106::Infos()
 	return true;
 }
 
-MX106::~MX106()
+MX106AT::~MX106AT()
 {
     // Close port
 	_PortHandler->closePort();
