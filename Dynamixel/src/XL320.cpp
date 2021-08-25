@@ -16,7 +16,6 @@ XL320::XL320(const unsigned char ID) : Motor(ID)
 
     _Protocol       	= 2.0;
 
-	_MaxSpeed			= 2047;
 	_MinPos				= 0;
 	_MaxPos				= 2047;
 	_Middle				= (_MinPos + _MaxPos) / 2;

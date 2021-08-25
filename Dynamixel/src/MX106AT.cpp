@@ -16,7 +16,6 @@ MX106AT::MX106AT(const unsigned char ID) : Motor(ID)
 
     _Protocol       	= 1.0;
 
-    _MaxSpeed           = 2047;
 	_MinPos				= 0;
 	_MaxPos				= 4095;
 	_Middle				= (_MinPos + _MaxPos) / 2;

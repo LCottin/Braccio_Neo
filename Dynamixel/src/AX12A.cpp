@@ -13,7 +13,6 @@ AX12A::AX12A(const unsigned char ID) : Motor(ID)
 
     _Protocol       	= 1.0;
 
-    _MaxSpeed           = 2047;
 	_MinPos				= 0;
 	_MaxPos				= 1023;
 	_Middle				= (_MinPos + _MaxPos) / 2;

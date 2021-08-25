@@ -11,6 +11,7 @@ Motor::Motor(const unsigned char ID)
     #endif
 
     _Baudrate   = 1000000;
+    _MaxSpeed   = 1023;
     _Threshold  = 5;
     _GoalPos    = 0;   
     _Error      = 0;
