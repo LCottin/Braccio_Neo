@@ -68,6 +68,14 @@ unsigned Motor::getSpeed() const
 }
 
 /**
+ * Shows motor maximum speed
+ */
+unsigned Motor::getMaxSpeed() const
+{
+    return _MaxSpeed;
+}
+
+/**
  * Tells if the torque is enabled
  * @returns true if enabled, else false
  */

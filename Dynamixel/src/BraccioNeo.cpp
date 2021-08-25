@@ -125,6 +125,33 @@ const short _BraccioNeo::getMotors() const
 }
 
 /**
+ * Change motor speed
+ * @param Motor choose motor
+ * @param percentage New percentage speed
+ * @returns true if every speed motor changed well, else false
+ */
+
+bool _BraccioNeo::changeSpeed(MOTORS Motor, unsigned percentage)
+{
+  
+  unsigned speed = 300;
+  switch(Motor)
+    {
+    case BASE :
+    case SHOULDER :
+    case ELBOW :
+    case WRISTVER :
+    case WRISTROT :
+    case GRIPPER :
+      speed = mapping (percentage, 0, 100, 0, _Motors[Motor]->getMaxSpeed());
+      break;
+    default : printf("Error : wrong motor selected !\n");
+    }
+  return _Motors[Motor]->setSpeed(speed);
+  
+}
+
+/**
  * Moves all the motor
  * @param base New position for the base
  * @param shoulder New position for the shoulder
@@ -133,10 +160,12 @@ const short _BraccioNeo::getMotors() const
  * @param wristrot New position for the wrist rot
  * @returns true if every motor moved well, else false
  */
+
 bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool blocking, const bool degree)
 {
     //puts position in an array
     unsigned* position  = new unsigned[_Motors.size()];
+    position[BASE]      = base;
     position[SHOULDER]  = shoulder;
     position[ELBOW]     = elbow;
     position[WRISTVER]  = wristver;

@@ -69,6 +69,7 @@ class Motor
         unsigned getD() const;
         unsigned getSpeed() const;
         bool     getTorque() const;
+        unsigned getMaxSpeed() const;
 
         virtual bool ledOn(); //not for XL320
         virtual bool ledOff(); //not for XL320
