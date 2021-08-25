@@ -133,7 +133,7 @@ const short _BraccioNeo::getMotors() const
  * @param wristrot New position for the wrist rot
  * @returns true if every motor moved well, else false
  */
-bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool degree)
+bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool blocking, const bool degree)
 {
     //puts position in an array
     unsigned* position  = new unsigned[_Motors.size()];
@@ -190,7 +190,10 @@ bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsi
 
     for (int i = 0; i < (int)_Motors.size(); i++)   
     {
-        success &= _Motors[i]->move(position[i]);
+      if(blocking)
+        success &= _Motors[i]->move(position[i], degree, blocking);
+      else
+	success &= _Motors[i]->move(position[i], degree, blocking));
     }
 
     delete[] position;

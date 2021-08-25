@@ -42,7 +42,7 @@ class _BraccioNeo
         bool stand();
         bool Infos() const;
         const short getMotors() const;
-        bool moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool degree = true);
+        bool moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool blocking = true, const bool degree = true);
         bool moveBase(unsigned base, const bool degree = true);
         bool moveShoulder(unsigned shoulder, const bool degree = true);
         bool moveElbow(unsigned elbow, const bool degree = true);
