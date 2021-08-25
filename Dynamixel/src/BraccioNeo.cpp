@@ -193,7 +193,7 @@ bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsi
       if(blocking)
         success &= _Motors[i]->move(position[i], degree, blocking);
       else
-	success &= _Motors[i]->move(position[i], degree, blocking));
+	success &= _Motors[i]->move(position[i], degree, blocking);
     }
 
     delete[] position;
