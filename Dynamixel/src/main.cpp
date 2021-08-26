@@ -91,7 +91,7 @@ void dataShapping()
 
 int main(int argc, char const *argv[])
 {
-
+    
     BraccioNeo.Infos();
     BraccioNeo.moveWristRot(300);
     unsigned base = 80;
@@ -110,7 +110,11 @@ int main(int argc, char const *argv[])
     BraccioNeo.moveWristVer(80, true);
     BraccioNeo.setSpeed(WRISTVER, 25);
     BraccioNeo.moveWristVer(270, true);
+    BraccioNeo.moveShoulder(45, true);
+    BraccioNeo.moveShoulder(2500, false);
     
+
+    cout << mapping(87, 10, 100, 30, 90) << endl;
     
     /*
     BraccioNeo.Infos();
