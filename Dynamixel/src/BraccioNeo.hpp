@@ -34,7 +34,7 @@ class _BraccioNeo
         vector<Motor*> _Motors;
         
         short _NbMotors;
-        short** _Limits;
+        unsigned** _Limits;
 
     public:
         _BraccioNeo();
