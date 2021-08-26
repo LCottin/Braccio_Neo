@@ -16,6 +16,6 @@
 
 extern int getch();
 extern int kbhit(void);
-extern unsigned mapping (const unsigned value, const unsigned startMin, const unsigned startMax, const unsigned stopMin, const unsigned stopMax);
+extern unsigned mapping (unsigned value, const unsigned startMin, const unsigned startMax, const unsigned stopMin, const unsigned stopMax);
 
 #endif
