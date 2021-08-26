@@ -125,16 +125,14 @@ const short _BraccioNeo::getMotors() const
 }
 
 /**
- * Change motor speed
+ * Changes motor speed
  * @param Motor choose motor
  * @param percentage New percentage speed (Warning ! Setting percentage to 0 set the motor speed to max speed) 
  * @returns true if every speed motor changed well, else false
  */
-
-bool _BraccioNeo::changeSpeed(MOTORS Motor, unsigned percentage)
+bool _BraccioNeo::setSpeed(MOTORS Motor, unsigned percentage)
 {
-  
-    unsigned speed = 300;
+    unsigned speed;
     switch(Motor)
     {
         case BASE :

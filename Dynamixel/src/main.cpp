@@ -100,15 +100,15 @@ int main(int argc, char const *argv[])
     unsigned wristver = 50;
     unsigned wristrot = 100;
     unsigned gripper = 90;
-    BraccioNeo.changeSpeed(BASE, 20);
-    BraccioNeo.changeSpeed(SHOULDER, 10);
-    BraccioNeo.changeSpeed(ELBOW, 10);
-    BraccioNeo.changeSpeed(WRISTVER, 10);
-    BraccioNeo.changeSpeed(WRISTROT, 10);
-    BraccioNeo.changeSpeed(GRIPPER, 10);
+    BraccioNeo.setSpeed(BASE, 20);
+    BraccioNeo.setSpeed(SHOULDER, 10);
+    BraccioNeo.setSpeed(ELBOW, 10);
+    BraccioNeo.setSpeed(WRISTVER, 10);
+    BraccioNeo.setSpeed(WRISTROT, 10);
+    BraccioNeo.setSpeed(GRIPPER, 10);
     //BraccioNeo.moveAll(base, shoulder, elbow, wristver, wristrot, gripper, true, true);
     BraccioNeo.moveWristVer(80, true);
-    BraccioNeo.changeSpeed(WRISTVER, 25);
+    BraccioNeo.setSpeed(WRISTVER, 25);
     BraccioNeo.moveWristVer(270, true);
     
     
