@@ -12,7 +12,7 @@ Motor::Motor(const unsigned char ID)
 
     _Baudrate   = 1000000;
     _MaxSpeed   = 1023;
-    _Threshold  = 5;
+    _Threshold  = 8;
     _GoalPos    = 0;   
     _Error      = 0;
     _ComResult  = COMM_TX_FAIL; 
