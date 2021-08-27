@@ -24,12 +24,12 @@ enum EXTREM {MINPOS, MINANGLE, MIDDLEPOS, MIDDLEANGLE, MAXPOS, MAXANGLE};
 class _BraccioNeo
 {
     private:
-        Motor* _Base;
-        Motor* _Shoulder;
-        Motor* _Elbow;
-        Motor* _WristVer;
-        Motor* _WristRot;
-        Motor* _Gripper;
+        MX64AT* _Base;
+        MX64AT* _Shoulder;
+        MX64AT* _Elbow;
+        MX28AT* _WristVer;
+        AX12A* _WristRot;
+        MX12W* _Gripper;
 
         vector<Motor*> _Motors;
         
