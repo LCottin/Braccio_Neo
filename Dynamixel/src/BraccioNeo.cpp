@@ -19,14 +19,6 @@ _BraccioNeo::_BraccioNeo()
     _Motors.push_back(_WristVer);
     _Motors.push_back(_WristRot);
     _Motors.push_back(_Gripper);
-
-    _NbMotors = (unsigned)_Motors.size();
-
-    _CurrentPosition = new unsigned[_NbMotors];
-    for (int i = 0; i < (int)_NbMotors; i++)
-    {
-        _CurrentPosition[i] = _Motors[i]->getPosition();
-    }
     
     initValues();
 } 
@@ -36,6 +28,16 @@ _BraccioNeo::_BraccioNeo()
  */
 void _BraccioNeo::initValues()
 {
+
+    _NbMotors = (unsigned)_Motors.size();
+
+    //creates an array to store current position of each motor
+    _CurrentPosition = new unsigned[_NbMotors];
+    for (int i = 0; i < (int)_NbMotors; i++)
+    {
+        _CurrentPosition[i] = _Motors[i]->getPosition();
+    }
+
     //creates an array to store extrems positions of each motor
     _Limits = new unsigned* [_NbMotors];
     for (int i = 0; i < (int)_NbMotors; i++)
