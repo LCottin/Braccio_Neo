@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <ctime>
 
 #include "Motor.hpp"
 #include "MX106AT.hpp"
@@ -37,6 +38,12 @@ class _BraccioNeo
         unsigned _NbMotors;
         unsigned** _Limits;
 
+        clock_t _Start;
+        clock_t _Stop;
+        SPEED _Speed;  
+
+        unsigned* _CurrentPosition;
+
     public:
         _BraccioNeo();
         void initValues();
@@ -51,6 +58,9 @@ class _BraccioNeo
         bool moveWristVer(unsigned wirstver, const bool degree = true);
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
+        
+        bool angry();
+
         #ifndef __APPLE__
             bool takePicture(RaspiCam& cam, string filename);
         #endif

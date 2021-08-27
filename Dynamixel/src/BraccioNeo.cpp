@@ -22,6 +22,12 @@ _BraccioNeo::_BraccioNeo()
 
     _NbMotors = (unsigned)_Motors.size();
 
+    _CurrentPosition = new unsigned[_NbMotors];
+    for (int i = 0; i < (int)_NbMotors; i++)
+    {
+        _CurrentPosition[i] = _Motors[i]->getPosition();
+    }
+    
     initValues();
 } 
 
@@ -94,11 +100,13 @@ void _BraccioNeo::initValues()
  */
 bool _BraccioNeo::stand()
 {
-    for (char i = 0; i < _Motors.size(); i++)
+    for (int i = 0; i < (int)_NbMotors; i++)
     {
         //makes sure each movement is good
         if (_Motors[i]->middle() == false)
             return false;
+
+        _CurrentPosition[i] = _Motors[i]->getPosition();
     }
     return true;
 }
@@ -110,7 +118,7 @@ bool _BraccioNeo::stand()
 bool _BraccioNeo::Infos() const
 {
     bool success = true;
-    for (char i = 0; i < _Motors.size(); i++)
+    for (int i = 0; i < (int)_NbMotors; i++)
     {
         success &= _Motors[i]->Infos();
     }
@@ -165,66 +173,55 @@ bool _BraccioNeo::setSpeed(MOTORS Motor, unsigned percentage)
 
 bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool blocking, const bool degree)
 {
-    //puts position in an array
-    unsigned* position  = new unsigned[_Motors.size()];
-
     //maps positions if they are given in degree
     if (degree)
     {
-        base = (base < _Limits[BASE][MINANGLE]) ? _Limits[BASE][MINANGLE] : base;
-        base = (base > _Limits[BASE][MAXANGLE]) ? _Limits[BASE][MAXANGLE] : base;
+        _CurrentPosition[BASE]      = (base < _Limits[BASE][MINANGLE]) ? _Limits[BASE][MINANGLE] : base;
+        _CurrentPosition[BASE]      = (base > _Limits[BASE][MAXANGLE]) ? _Limits[BASE][MAXANGLE] : base;
 
-        shoulder    = (shoulder < _Limits[SHOULDER][MINANGLE]) ? _Limits[SHOULDER][MINANGLE] : shoulder;
-        shoulder    = (shoulder > _Limits[SHOULDER][MAXANGLE]) ? _Limits[SHOULDER][MAXANGLE] : shoulder;
+        _CurrentPosition[SHOULDER]  = (shoulder < _Limits[SHOULDER][MINANGLE]) ? _Limits[SHOULDER][MINANGLE] : shoulder;
+        _CurrentPosition[SHOULDER]  = (shoulder > _Limits[SHOULDER][MAXANGLE]) ? _Limits[SHOULDER][MAXANGLE] : shoulder;
 
-        elbow       = (elbow < _Limits[ELBOW][MINANGLE]) ? _Limits[ELBOW][MINANGLE] : elbow;
-        elbow       = (elbow > _Limits[ELBOW][MAXANGLE]) ? _Limits[ELBOW][MAXANGLE] : elbow;
+        _CurrentPosition[ELBOW]     = (elbow < _Limits[ELBOW][MINANGLE]) ? _Limits[ELBOW][MINANGLE] : elbow;
+        _CurrentPosition[ELBOW]     = (elbow > _Limits[ELBOW][MAXANGLE]) ? _Limits[ELBOW][MAXANGLE] : elbow;
 
-        wristver    = (wristver < _Limits[WRISTVER][MINANGLE]) ? _Limits[WRISTVER][MINANGLE] : wristver;
-        wristver    = (wristver > _Limits[WRISTVER][MAXANGLE]) ? _Limits[WRISTVER][MAXANGLE] : wristver;
+        _CurrentPosition[WRISTVER]  = (wristver < _Limits[WRISTVER][MINANGLE]) ? _Limits[WRISTVER][MINANGLE] : wristver;
+        _CurrentPosition[WRISTVER]  = (wristver > _Limits[WRISTVER][MAXANGLE]) ? _Limits[WRISTVER][MAXANGLE] : wristver;
 
-        wristrot    = (wristrot < _Limits[WRISTROT][MINANGLE]) ? _Limits[WRISTROT][MINANGLE] : wristrot;
-        wristrot    = (wristrot > _Limits[WRISTROT][MAXANGLE]) ? _Limits[WRISTROT][MAXANGLE] : wristrot;
+        _CurrentPosition[WRISTROT]  = (wristrot < _Limits[WRISTROT][MINANGLE]) ? _Limits[WRISTROT][MINANGLE] : wristrot;
+        _CurrentPosition[WRISTROT]  = (wristrot > _Limits[WRISTROT][MAXANGLE]) ? _Limits[WRISTROT][MAXANGLE] : wristrot;
 
-        gripper     = (gripper < _Limits[GRIPPER][MINANGLE]) ? _Limits[GRIPPER][MINANGLE] : gripper;
-        gripper     = (gripper > _Limits[GRIPPER][MAXANGLE]) ? _Limits[GRIPPER][MAXANGLE] : gripper;
+        _CurrentPosition[GRIPPER]   = (gripper < _Limits[GRIPPER][MINANGLE]) ? _Limits[GRIPPER][MINANGLE] : gripper;
+        _CurrentPosition[GRIPPER]   = (gripper > _Limits[GRIPPER][MAXANGLE]) ? _Limits[GRIPPER][MAXANGLE] : gripper;
     }
     else
     {
-        base = (base < _Limits[BASE][MINPOS]) ? _Limits[BASE][MINPOS] : base;
-        base = (base > _Limits[BASE][MAXPOS]) ? _Limits[BASE][MAXPOS] : base;
+        _CurrentPosition[BASE]      = (base < _Limits[BASE][MINPOS]) ? _Limits[BASE][MINPOS] : base;
+        _CurrentPosition[BASE]      = (base > _Limits[BASE][MAXPOS]) ? _Limits[BASE][MAXPOS] : base;
 
-        shoulder    = (shoulder < _Limits[SHOULDER][MINPOS]) ? _Limits[SHOULDER][MINPOS] : shoulder;
-        shoulder    = (shoulder > _Limits[SHOULDER][MAXPOS]) ? _Limits[SHOULDER][MAXPOS] : shoulder;
+        _CurrentPosition[SHOULDER]  = (shoulder < _Limits[SHOULDER][MINPOS]) ? _Limits[SHOULDER][MINPOS] : shoulder;
+        _CurrentPosition[SHOULDER]  = (shoulder > _Limits[SHOULDER][MAXPOS]) ? _Limits[SHOULDER][MAXPOS] : shoulder;
 
-        elbow       = (elbow < _Limits[ELBOW][MINPOS]) ? _Limits[ELBOW][MINPOS] : elbow;
-        elbow       = (elbow > _Limits[ELBOW][MAXPOS]) ? _Limits[ELBOW][MAXPOS] : elbow;
+        _CurrentPosition[ELBOW]     = (elbow < _Limits[ELBOW][MINPOS]) ? _Limits[ELBOW][MINPOS] : elbow;
+        _CurrentPosition[ELBOW]     = (elbow > _Limits[ELBOW][MAXPOS]) ? _Limits[ELBOW][MAXPOS] : elbow;
 
-        wristver    = (wristver < _Limits[WRISTVER][MINPOS]) ? _Limits[WRISTVER][MINPOS] : wristver;
-        wristver    = (wristver > _Limits[WRISTVER][MAXPOS]) ? _Limits[WRISTVER][MAXPOS] : wristver;
+        _CurrentPosition[WRISTVER]  = (wristver < _Limits[WRISTVER][MINPOS]) ? _Limits[WRISTVER][MINPOS] : wristver;
+        _CurrentPosition[WRISTVER]  = (wristver > _Limits[WRISTVER][MAXPOS]) ? _Limits[WRISTVER][MAXPOS] : wristver;
 
-        wristrot    = (wristrot < _Limits[WRISTROT][MINPOS]) ? _Limits[WRISTROT][MINPOS] : wristrot;
-        wristrot    = (wristrot > _Limits[WRISTROT][MAXPOS]) ? _Limits[WRISTROT][MAXPOS] : wristrot;
+        _CurrentPosition[WRISTROT]  = (wristrot < _Limits[WRISTROT][MINPOS]) ? _Limits[WRISTROT][MINPOS] : wristrot;
+        _CurrentPosition[WRISTROT]  = (wristrot > _Limits[WRISTROT][MAXPOS]) ? _Limits[WRISTROT][MAXPOS] : wristrot;
 
-        gripper     = (gripper < _Limits[GRIPPER][MINPOS]) ? _Limits[GRIPPER][MINPOS] : gripper;
-        gripper     = (gripper > _Limits[GRIPPER][MAXPOS]) ? _Limits[GRIPPER][MAXPOS] : gripper;
+        _CurrentPosition[GRIPPER]   = (gripper < _Limits[GRIPPER][MINPOS]) ? _Limits[GRIPPER][MINPOS] : gripper;
+        _CurrentPosition[GRIPPER]   = (gripper > _Limits[GRIPPER][MAXPOS]) ? _Limits[GRIPPER][MAXPOS] : gripper;
     }
-
-    position[BASE]      = base;
-    position[SHOULDER]  = shoulder;
-    position[ELBOW]     = elbow;
-    position[WRISTVER]  = wristver;
-    position[WRISTROT]  = wristrot;
-    position[GRIPPER]   = gripper;
 
     //indicates if there is an error
     bool success = true;
     for (int i = 0; i < (int)_Motors.size(); i++)   
     {
-	    success &= _Motors[i]->move(position[i], degree, blocking);
+	    success &= _Motors[i]->move(_CurrentPosition[i], degree, blocking);
     }
 
-    delete[] position;
     return success;
 }
 
@@ -237,15 +234,15 @@ bool _BraccioNeo::moveBase(unsigned base, const bool degree)
 {
     if (degree)
     {
-        base = (base < _Limits[BASE][MINANGLE]) ? _Limits[BASE][MINANGLE] : base;
-        base = (base > _Limits[BASE][MAXANGLE]) ? _Limits[BASE][MAXANGLE] : base;
+        _CurrentPosition[BASE] = (base < _Limits[BASE][MINANGLE]) ? _Limits[BASE][MINANGLE] : base;
+        _CurrentPosition[BASE] = (base > _Limits[BASE][MAXANGLE]) ? _Limits[BASE][MAXANGLE] : base;
     }
     else 
     {
-        base = (base < _Limits[BASE][MINPOS]) ? _Limits[BASE][MINPOS] : base;
-        base = (base > _Limits[BASE][MAXPOS]) ? _Limits[BASE][MAXPOS] : base;
+        _CurrentPosition[BASE] = (base < _Limits[BASE][MINPOS]) ? _Limits[BASE][MINPOS] : base;
+        _CurrentPosition[BASE] = (base > _Limits[BASE][MAXPOS]) ? _Limits[BASE][MAXPOS] : base;
     }
-    return _Motors[BASE]->move(base, degree);
+    return _Motors[BASE]->move(_CurrentPosition[BASE], degree);
 }
 
 /**
@@ -257,15 +254,15 @@ bool _BraccioNeo::moveShoulder(unsigned shoulder, const bool degree)
 {
     if (degree)
     {
-        shoulder = (shoulder < _Limits[SHOULDER][MINANGLE]) ? _Limits[SHOULDER][MINANGLE] : shoulder;
-        shoulder = (shoulder > _Limits[SHOULDER][MAXANGLE]) ? _Limits[SHOULDER][MAXANGLE] : shoulder;
+        _CurrentPosition[SHOULDER] = (shoulder < _Limits[SHOULDER][MINANGLE]) ? _Limits[SHOULDER][MINANGLE] : shoulder;
+        _CurrentPosition[SHOULDER] = (shoulder > _Limits[SHOULDER][MAXANGLE]) ? _Limits[SHOULDER][MAXANGLE] : shoulder;
     }
     else 
     {
-        shoulder = (shoulder < _Limits[SHOULDER][MINPOS]) ? _Limits[SHOULDER][MINPOS] : shoulder;
-        shoulder = (shoulder > _Limits[SHOULDER][MAXPOS]) ? _Limits[SHOULDER][MAXPOS] : shoulder;
+        _CurrentPosition[SHOULDER] = (shoulder < _Limits[SHOULDER][MINPOS]) ? _Limits[SHOULDER][MINPOS] : shoulder;
+        _CurrentPosition[SHOULDER] = (shoulder > _Limits[SHOULDER][MAXPOS]) ? _Limits[SHOULDER][MAXPOS] : shoulder;
     }
-    return _Motors[SHOULDER]->move(shoulder, degree);
+    return _Motors[SHOULDER]->move(_CurrentPosition[SHOULDER], degree);
 }
 
 /**
@@ -277,15 +274,15 @@ bool _BraccioNeo::moveElbow(unsigned elbow, const bool degree)
 {
     if (degree)
     {
-        elbow = (elbow < _Limits[ELBOW][MINANGLE]) ? _Limits[ELBOW][MINANGLE] : elbow;
-        elbow = (elbow > _Limits[ELBOW][MAXANGLE]) ? _Limits[ELBOW][MAXANGLE] : elbow;
+        _CurrentPosition[ELBOW] = (elbow < _Limits[ELBOW][MINANGLE]) ? _Limits[ELBOW][MINANGLE] : elbow;
+        _CurrentPosition[ELBOW] = (elbow > _Limits[ELBOW][MAXANGLE]) ? _Limits[ELBOW][MAXANGLE] : elbow;
     }
     else 
     {
-        elbow = (elbow < _Limits[ELBOW][MINPOS]) ? _Limits[ELBOW][MINPOS] : elbow;
-        elbow = (elbow > _Limits[ELBOW][MAXPOS]) ? _Limits[ELBOW][MAXPOS] : elbow;
+        _CurrentPosition[ELBOW] = (elbow < _Limits[ELBOW][MINPOS]) ? _Limits[ELBOW][MINPOS] : elbow;
+        _CurrentPosition[ELBOW] = (elbow > _Limits[ELBOW][MAXPOS]) ? _Limits[ELBOW][MAXPOS] : elbow;
     }
-    return _Motors[ELBOW]->move(elbow, degree);
+    return _Motors[ELBOW]->move(_CurrentPosition[ELBOW], degree);
 }
 
 /**
@@ -297,15 +294,15 @@ bool _BraccioNeo::moveWristVer(unsigned wristver, const bool degree)
 {
     if (degree)
     {
-        wristver = (wristver < _Limits[WRISTVER][MINANGLE]) ? _Limits[WRISTVER][MINANGLE] : wristver;
-        wristver = (wristver > _Limits[WRISTVER][MAXANGLE]) ? _Limits[WRISTVER][MAXANGLE] : wristver;
+        _CurrentPosition[WRISTVER] = (wristver < _Limits[WRISTVER][MINANGLE]) ? _Limits[WRISTVER][MINANGLE] : wristver;
+        _CurrentPosition[WRISTVER] = (wristver > _Limits[WRISTVER][MAXANGLE]) ? _Limits[WRISTVER][MAXANGLE] : wristver;
     }
     else 
     {
-        wristver = (wristver < _Limits[WRISTVER][MINPOS]) ? _Limits[WRISTVER][MINPOS] : wristver;
-        wristver = (wristver > _Limits[WRISTVER][MAXPOS]) ? _Limits[WRISTVER][MAXPOS] : wristver;
+        _CurrentPosition[WRISTVER] = (wristver < _Limits[WRISTVER][MINPOS]) ? _Limits[WRISTVER][MINPOS] : wristver;
+        _CurrentPosition[WRISTVER] = (wristver > _Limits[WRISTVER][MAXPOS]) ? _Limits[WRISTVER][MAXPOS] : wristver;
     }
-    return _Motors[WRISTVER]->move(wristver, degree);
+    return _Motors[WRISTVER]->move(_CurrentPosition[WRISTVER], degree);
 }
 
 /**
@@ -317,15 +314,15 @@ bool _BraccioNeo::moveWristRot(unsigned wristrot, const bool degree)
 {
     if (degree)
     {
-        wristrot = (wristrot < _Limits[WRISTROT][MINANGLE]) ? _Limits[WRISTROT][MINANGLE] : wristrot;
-        wristrot = (wristrot > _Limits[WRISTROT][MAXANGLE]) ? _Limits[WRISTROT][MAXANGLE] : wristrot;
+        _CurrentPosition[WRISTROT] = (wristrot < _Limits[WRISTROT][MINANGLE]) ? _Limits[WRISTROT][MINANGLE] : wristrot;
+        _CurrentPosition[WRISTROT] = (wristrot > _Limits[WRISTROT][MAXANGLE]) ? _Limits[WRISTROT][MAXANGLE] : wristrot;
     }
     else 
     {
-        wristrot = (wristrot < _Limits[WRISTROT][MINPOS]) ? _Limits[WRISTROT][MINPOS] : wristrot;
-        wristrot = (wristrot > _Limits[WRISTROT][MAXPOS]) ? _Limits[WRISTROT][MAXPOS] : wristrot;
+        _CurrentPosition[WRISTROT] = (wristrot < _Limits[WRISTROT][MINPOS]) ? _Limits[WRISTROT][MINPOS] : wristrot;
+        _CurrentPosition[WRISTROT] = (wristrot > _Limits[WRISTROT][MAXPOS]) ? _Limits[WRISTROT][MAXPOS] : wristrot;
     }
-    return _Motors[WRISTROT]->move(wristrot, degree);
+    return _Motors[WRISTROT]->move(_CurrentPosition[WRISTROT], degree);
 }
 
 /*
@@ -337,15 +334,15 @@ bool _BraccioNeo::moveGripper(unsigned gripper, const bool degree)
 {
     if (degree)
     {
-        gripper = (gripper < _Limits[GRIPPER][MINANGLE]) ? _Limits[GRIPPER][MINANGLE] : gripper;
-        gripper = (gripper > _Limits[GRIPPER][MAXANGLE]) ? _Limits[GRIPPER][MAXANGLE] : gripper;
+        _CurrentPosition[GRIPPER] = (gripper < _Limits[GRIPPER][MINANGLE]) ? _Limits[GRIPPER][MINANGLE] : gripper;
+        _CurrentPosition[GRIPPER] = (gripper > _Limits[GRIPPER][MAXANGLE]) ? _Limits[GRIPPER][MAXANGLE] : gripper;
     }
     else 
     {
-        gripper = (gripper < _Limits[GRIPPER][MINPOS]) ? _Limits[GRIPPER][MINPOS] : gripper;
-        gripper = (gripper > _Limits[GRIPPER][MAXPOS]) ? _Limits[GRIPPER][MAXPOS] : gripper;
+        _CurrentPosition[GRIPPER] = (gripper < _Limits[GRIPPER][MINPOS]) ? _Limits[GRIPPER][MINPOS] : gripper;
+        _CurrentPosition[GRIPPER] = (gripper > _Limits[GRIPPER][MAXPOS]) ? _Limits[GRIPPER][MAXPOS] : gripper;
     }
-  return _Motors[GRIPPER]->move(gripper, degree);
+  return _Motors[GRIPPER]->move(_CurrentPosition[GRIPPER], degree);
 }
 
 #ifndef __APPLE__
@@ -392,5 +389,6 @@ _BraccioNeo::~_BraccioNeo()
         delete _Motors[i];
     }
     delete _Limits;
+    delete _CurrentPosition;
 }
 
