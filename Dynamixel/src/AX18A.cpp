@@ -98,7 +98,8 @@ bool AX18A::move(const unsigned newPos, const bool degree, const bool blocking, 
 	if (degree)
 		_GoalPos = mapping(newPos, 0, 300, _MinPos, _MaxPos);
 
-    //_GoalPos = newPos % _MaxPos;
+	else
+	       	_GoalPos = newPos % _MaxPos;
 
     // Write goal position
     _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
