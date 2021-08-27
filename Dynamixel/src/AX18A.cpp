@@ -276,7 +276,7 @@ bool AX18A::ledOff()
  */
 bool AX18A::setSpeed(const unsigned speed)
 {
-	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
+	_Speed = (speed < _MaxSpeed) ? speed : _MaxSpeed;
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{

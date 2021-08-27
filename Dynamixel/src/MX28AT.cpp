@@ -364,8 +364,10 @@ bool MX28AT::setD(const unsigned char d)
  */
 bool MX28AT::setSpeed(const unsigned speed)
 {
-	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
+	_Speed = (speed < _MaxSpeed) ? speed : _MaxSpeed;
+	
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
+	
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));

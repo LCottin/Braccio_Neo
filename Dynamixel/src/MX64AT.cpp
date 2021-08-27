@@ -19,6 +19,7 @@ MX64AT::MX64AT(const unsigned char ID) : Motor(ID)
 	_MinPos				= 0;
 	_MaxPos				= 4095;
 	_Middle				= (_MinPos + _MaxPos) / 2;
+	_MaxSpeed			= 300;
 	_Speed				= 300;
     _TorqueEnable   	= true;
     _Led                = true;
@@ -364,8 +365,10 @@ bool MX64AT::setD(const unsigned char d)
  */
 bool MX64AT::setSpeed(const unsigned speed)
 {
-	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
+	_Speed = (speed < _MaxSpeed) ? speed : _MaxSpeed;
+	
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
+	
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));

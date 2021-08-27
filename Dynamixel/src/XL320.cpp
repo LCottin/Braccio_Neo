@@ -344,7 +344,7 @@ bool XL320::setD(const unsigned char d)
  */
 bool XL320::setSpeed(const unsigned speed)
 {
-	_Speed = speed < 2047 ? speed : 2047;
+	_Speed = (speed < _MaxSpeed) ? speed : _MaxSpeed;
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
 	if (_ComResult != COMM_SUCCESS)
 	{
