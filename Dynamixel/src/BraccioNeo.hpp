@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <ctime>
+#include <unistd.h>
 
 #include "Motor.hpp"
 #include "MX106AT.hpp"
