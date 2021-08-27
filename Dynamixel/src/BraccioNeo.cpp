@@ -121,7 +121,7 @@ bool _BraccioNeo::Infos() const
  * Returns how many motors are connected
  * @returns The number of motor
  */
-const short _BraccioNeo::getMotors() const
+short _BraccioNeo::getMotors() const
 {
     return _NbMotors; 
 }

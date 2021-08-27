@@ -20,6 +20,7 @@ using namespace raspicam;
 
 enum MOTORS {BASE, SHOULDER, ELBOW, WRISTVER, WRISTROT, GRIPPER};
 enum EXTREM {MINPOS, MINANGLE, MIDDLEPOS, MIDDLEANGLE, MAXPOS, MAXANGLE};
+enum SPEED {V_SLOW = 10, SLOW = 25, NORMAL = 50, FAST = 75, V_FAST = 90};
 
 class _BraccioNeo
 {
@@ -41,7 +42,7 @@ class _BraccioNeo
         void initValues();
         bool stand();
         bool Infos() const;
-        const short getMotors() const;
+        short getMotors() const;
         bool setSpeed(MOTORS Motor, unsigned percentage);
         bool moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool blocking = true, const bool degree = true);
         bool moveBase(unsigned base, const bool degree = true);
