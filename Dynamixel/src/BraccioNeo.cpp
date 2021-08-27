@@ -32,7 +32,7 @@ void _BraccioNeo::initValues()
 {
     //creates an array to store extrems positions of each motor
     _Limits = new unsigned* [_NbMotors];
-    for (int i = 0; i < _NbMotors; i++)
+    for (int i = 0; i < (int)_NbMotors; i++)
     {
         _Limits[i] = new unsigned[6];
     }
@@ -386,7 +386,7 @@ bool _BraccioNeo::takePicture(RaspiCam& cam, string filename)
 
 _BraccioNeo::~_BraccioNeo()
 {
-    for (int i = 0; i < _NbMotors; i++)
+    for (int i = 0; i < (int)_NbMotors; i++)
     {
         delete _Limits[i];
         delete _Motors[i];
