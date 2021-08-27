@@ -16,7 +16,6 @@ MX28AT::MX28AT(const unsigned char ID) : Motor(ID)
 
     _Protocol       	= 1.0;
 
-    _MaxSpeed           = 2047;
 	_MinPos				= 0;
 	_MaxPos				= 4095;
 	_Middle				= (_MinPos + _MaxPos) / 2;
@@ -103,7 +102,8 @@ bool MX28AT::move(const unsigned newPos, const bool degree, const bool blocking,
     if (degree)
 		_GoalPos = mapping(newPos, 0, 360, _MinPos, _MaxPos);
 
-    _GoalPos = newPos % _MaxPos;
+    else
+	    _GoalPos = newPos % _MaxPos;
 
     // Write goal position
     _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
@@ -365,8 +365,10 @@ bool MX28AT::setD(const unsigned char d)
  */
 bool MX28AT::setSpeed(const unsigned speed)
 {
-	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
+	_Speed = (speed < _MaxSpeed) ? speed : _MaxSpeed;
+	
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
+	
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));

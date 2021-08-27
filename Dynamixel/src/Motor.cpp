@@ -11,7 +11,8 @@ Motor::Motor(const unsigned char ID)
     #endif
 
     _Baudrate   = 1000000;
-    _Threshold  = 5;
+    _MaxSpeed   = 1023;
+    _Threshold  = 8;
     _GoalPos    = 0;   
     _Error      = 0;
     _ComResult  = COMM_TX_FAIL; 
@@ -65,6 +66,14 @@ unsigned Motor::getD() const
 unsigned Motor::getSpeed() const
 {
     return _Speed;
+}
+
+/**
+ * Shows motor maximum speed
+ */
+unsigned Motor::getMaxSpeed() const
+{
+    return _MaxSpeed;
 }
 
 /**

@@ -16,10 +16,10 @@ MX64AT::MX64AT(const unsigned char ID) : Motor(ID)
 
     _Protocol       	= 1.0;
 
-    _MaxSpeed           = 2047;
 	_MinPos				= 0;
 	_MaxPos				= 4095;
 	_Middle				= (_MinPos + _MaxPos) / 2;
+	_MaxSpeed			= 300;
 	_Speed				= 300;
     _TorqueEnable   	= true;
     _Led                = true;
@@ -101,9 +101,10 @@ bool MX64AT::openPort()
 bool MX64AT::move(const unsigned newPos, const bool degree, const bool blocking, const bool debug)
 {
     if (degree)
-		_GoalPos = mapping(newPos, 0, 360, _MinPos, _MaxPos);
-
-    _GoalPos = newPos % _MaxPos;
+ 
+		_GoalPos = mapping(newPos, 0, 360, _MinPos, _MaxPos);		
+    else
+    	_GoalPos = newPos % _MaxPos;
 
     // Write goal position
     _ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _GoalPosAddr, _GoalPos, &_Error);
@@ -365,8 +366,10 @@ bool MX64AT::setD(const unsigned char d)
  */
 bool MX64AT::setSpeed(const unsigned speed)
 {
-	_Speed = speed < _MaxSpeed ? speed : _MaxSpeed;
+	_Speed = (speed < _MaxSpeed) ? speed : _MaxSpeed;
+	
 	_ComResult = _PacketHandler->write2ByteTxRx(_PortHandler, _ID, _SpeedAddr, _Speed, &_Error);
+	
 	if (_ComResult != COMM_SUCCESS)
 	{
 		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
@@ -488,7 +491,7 @@ double MX64AT::getLoad()
  */
 bool MX64AT::middle()
 {
-	return move(_Middle, false);
+	return move(2048, false);
 }
 
 /**

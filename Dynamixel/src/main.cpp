@@ -91,16 +91,37 @@ void dataShapping()
 
 int main(int argc, char const *argv[])
 {
-
-    BraccioNeo.Infos();
-    BraccioNeo.moveWristRot(300);
+   cout << "bras initialisé" << endl; 
+//    BraccioNeo.Infos();
+    BraccioNeo.setSpeed(SHOULDER, 10);
+    BraccioNeo.moveShoulder(100, true);
+    BraccioNeo.moveShoulder(200);
+    unsigned base = 80;
+    unsigned shoulder = 120;
+    unsigned elbow = 90;
+    unsigned wristver = 50;
+    unsigned wristrot = 100;
+    unsigned gripper = 90;
+    BraccioNeo.setSpeed(BASE, 20);
+    BraccioNeo.setSpeed(SHOULDER, 10);
+    BraccioNeo.setSpeed(ELBOW, 10);
+    BraccioNeo.setSpeed(WRISTVER, 10);
+    BraccioNeo.setSpeed(WRISTROT, 10);
+    BraccioNeo.setSpeed(GRIPPER, 10);
+    BraccioNeo.moveAll(base, shoulder, elbow, wristver, wristrot, gripper, true, true);
+    BraccioNeo.moveWristVer(80, true);
+    BraccioNeo.setSpeed(WRISTVER, 25);
+    BraccioNeo.moveWristVer(270, true);
+    BraccioNeo.moveShoulder(45, true);
+    BraccioNeo.moveShoulder(2500, false);
+   BraccioNeo.stand(); 
     
     /*
     BraccioNeo.Infos();
     BraccioNeo.stand();
     BraccioNeo.moveAll(2000, 2000, 2000, 1000, 2000, false);
     BraccioNeo.moveAll(1200, 3000, 1200, 1200, 2000, false);
-    BraccioNeo.moveWristVer(3000, false);
+    raccioNeo.moveWristVer(3000, false);
     BraccioNeo.moveElbow(1000, false);
     BraccioNeo.moveAll(3000, 1000, 3000, 3000, 2000, false);
     BraccioNeo.moveGripper(500);

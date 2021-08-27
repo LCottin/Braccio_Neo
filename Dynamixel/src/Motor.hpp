@@ -25,7 +25,7 @@ class Motor
         unsigned _MinPos;
         unsigned _MaxPos;
         unsigned _Middle;
-        unsigned _MaxSpeed;
+        unsigned _MaxSpeed; //correspond to the maximum speed set to the motor
 
         //users attributs
         unsigned _PresentPos;
@@ -69,6 +69,7 @@ class Motor
         unsigned getD() const;
         unsigned getSpeed() const;
         bool     getTorque() const;
+        unsigned getMaxSpeed() const;
 
         virtual bool ledOn(); //not for XL320
         virtual bool ledOff(); //not for XL320

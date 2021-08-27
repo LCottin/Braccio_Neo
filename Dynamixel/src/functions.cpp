@@ -49,7 +49,7 @@ int kbhit(void)
 }
 
 /**
- * Map a value given in degree to a position for the motors
+ * Map a value given from degree to a position for the motors
  * @param value Value in degree
  * @param startMin Min value at the beginning
  * @param startMax Min value at the beginning
@@ -57,7 +57,10 @@ int kbhit(void)
  * @param stopMax Min value at the end
  * @returns The value mapped
  */
-unsigned mapping (const unsigned value, const unsigned startMin, const unsigned startMax, const unsigned stopMin, const unsigned stopMax)
+unsigned mapping (unsigned value, const unsigned startMin, const unsigned startMax, const unsigned stopMin, const unsigned stopMax)
 {
+	value = value < startMin ? startMin : value;
+	value = value > startMax ? startMax : value;
+
 	return (value - startMin) * (stopMax - stopMin) / (startMax - startMin) + stopMin;
 }
