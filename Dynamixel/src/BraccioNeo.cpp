@@ -547,6 +547,55 @@ void _BraccioNeo::angry()
     cout << "Angry emotion lasted " << time << "seconds." << endl;
 }
 
+/**
+ * Plays the surprise emotion
+ */
+void _BraccioNeo::surprise(SPEED speed)
+{
+    _Start = clock();
+    _Speed = NORMAL;
+
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        changeSpeed((MOTORS)i, _Speed);
+    }
+
+    stand();
+
+    moveWristRot(60);
+    usleep(500 * MILLISECOND);
+    moveWristRot(240);
+    usleep(500 * MILLISECOND);
+    moveWristRot(150);
+    usleep(500 * MILLISECOND);
+
+    moveWristVer(110);
+    usleep(500 * MILLISECOND);
+    moveWristRot(60);
+    usleep(500 * MILLISECOND);
+    moveWristVer(180);
+    usleep(500 * MILLISECOND);
+    
+    moveElbow(110);
+    moveWristVer(270);
+    stand();
+    moveBase(150);
+    usleep(500 * MILLISECOND);
+
+    stand();
+    usleep(500 * MILLISECOND);
+    //openGripper();
+    usleep(500 * MILLISECOND);
+    //closeGripper();
+
+    usleep(1000 * MILLISECOND);
+    stand();
+
+    _Stop = clock();
+    long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
+    cout << "Angry emotion lasted " << time << "seconds." << endl;
+}
+
 #ifndef __APPLE__
 /**
  * Takes a picture and saves it
