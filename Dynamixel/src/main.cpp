@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
 {
    cout << "bras initialisé" << endl; 
 //    BraccioNeo.Infos();
-    BraccioNeo.setSpeed(SHOULDER, 10);
+    /*BraccioNeo.setSpeed(SHOULDER, 10);
     BraccioNeo.moveShoulder(100, true);
     BraccioNeo.moveShoulder(200);
     unsigned base = 80;
@@ -114,7 +114,10 @@ int main(int argc, char const *argv[])
     BraccioNeo.moveWristVer(270, true);
     BraccioNeo.moveShoulder(45, true);
     BraccioNeo.moveShoulder(2500, false);
+    */
    BraccioNeo.stand(); 
+   BraccioNeo.angry();
+   
     
     /*
     BraccioNeo.Infos();
