@@ -16,6 +16,7 @@
 #include "AX12A.hpp"
 #include "MX12W.hpp"
 
+#define MILLISECOND 1000
 
 using namespace std;
 using namespace raspicam;
@@ -51,7 +52,7 @@ class _BraccioNeo
         bool stand();
         bool Infos() const;
         short getMotors() const;
-        bool setSpeed(MOTORS Motor, unsigned percentage);
+        bool changeSpeed(MOTORS Motor, unsigned percentage);
         bool moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool blocking = true, const bool degree = true);
         bool moveBase(unsigned base, const bool degree = true);
         bool moveShoulder(unsigned shoulder, const bool degree = true);
@@ -60,7 +61,7 @@ class _BraccioNeo
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
         
-        bool angry();
+        void angry();
 
         #ifndef __APPLE__
             bool takePicture(RaspiCam& cam, string filename);

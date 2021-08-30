@@ -142,7 +142,7 @@ short _BraccioNeo::getMotors() const
  * @param percentage New percentage speed (Warning ! Setting percentage to 0 set the motor speed to max speed) 
  * @returns true if every speed motor changed well, else false
  */
-bool _BraccioNeo::setSpeed(MOTORS Motor, unsigned percentage)
+bool _BraccioNeo::changeSpeed(MOTORS Motor, unsigned percentage)
 {
     unsigned speed;
     switch(Motor)
@@ -345,6 +345,206 @@ bool _BraccioNeo::moveGripper(unsigned gripper, const bool degree)
         _CurrentPosition[GRIPPER] = (gripper > _Limits[GRIPPER][MAXPOS]) ? _Limits[GRIPPER][MAXPOS] : gripper;
     }
   return _Motors[GRIPPER]->move(_CurrentPosition[GRIPPER], degree);
+}
+
+/**
+ * Plays the angry emotion
+ */
+void _BraccioNeo::angry()
+{
+    _Start = clock();
+    _Speed = NORMAL;
+
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        changeSpeed((MOTORS)i, _Speed);
+        //_Motors[i]->setSpeed(_Speed);
+    }
+    
+    moveShoulder(240, _Speed);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    usleep(20 * MILLISECOND);
+    moveWristVer(205);
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(10 * MILLISECOND);
+        closeGripper();
+        usleep(10 * MILLISECOND);
+        */
+    }
+    // openGripper();
+
+    moveShoulder(120);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(120, 200, 170, 240, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(180, 160, 150, 180, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(210, 120, 180, 180, 150, 150);
+    usleep(100 * MILLISECOND);
+
+    moveShoulder(240);
+    usleep(10 * MILLISECOND);
+    moveWristVer(240);
+    usleep(50 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+
+    usleep(10 * MILLISECOND);
+    stand();
+    usleep(5000 * MILLISECOND);
+
+    moveShoulder(240);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    usleep(20 * MILLISECOND);
+    moveWristVer(205);
+    usleep(10 * MILLISECOND);
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(10 * MILLISECOND);
+        closeGripper();
+        usleep(10 * MILLISECOND);
+        */
+    }
+    // openGripper();
+
+    moveShoulder(120);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(120, 200, 170, 240, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(180, 160, 150, 180, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(210, 120, 180, 180, 150, 150);
+    usleep(100 * MILLISECOND);
+
+    moveShoulder(240);
+    usleep(10 * MILLISECOND);
+    moveWristVer(150);
+    usleep(50 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+
+    usleep(10 * MILLISECOND);
+    stand();
+    usleep(5000 * MILLISECOND);
+
+    moveShoulder(240);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    usleep(20 * MILLISECOND);
+    moveWristVer(205);
+    usleep(10 * MILLISECOND);
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(10 * MILLISECOND);
+        closeGripper();
+        usleep(10 * MILLISECOND);
+        */
+    }
+    // openGripper();
+
+    moveShoulder(250);
+    usleep(10 * MILLISECOND);
+    moveWristVer(240);
+    usleep(50 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    usleep(10 * MILLISECOND);
+    stand();
+    usleep(5000 * MILLISECOND);
+
+    moveShoulder(240);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    usleep(20 * MILLISECOND);
+    moveWristVer(205);
+    usleep(10 * MILLISECOND);
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(10 * MILLISECOND);
+        closeGripper();
+        usleep(10 * MILLISECOND);
+        */
+    }
+    // openGripper();
+
+    moveShoulder(120);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(120, 200, 170, 240, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(180, 160, 150, 180, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(210, 120, 180, 180, 150, 150);
+    usleep(100 * MILLISECOND);
+
+    moveShoulder(250);
+    usleep(10 * MILLISECOND);
+    moveWristVer(240);
+    usleep(50 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+
+    usleep(1000 * MILLISECOND);
+    stand();
+    usleep(1000 * MILLISECOND);
+
+    moveShoulder(240);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    usleep(20 * MILLISECOND);
+    moveWristVer(205);
+    usleep(10 * MILLISECOND);
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(10 * MILLISECOND);
+        closeGripper();
+        usleep(10 * MILLISECOND);
+        */
+    }
+    // openGripper();
+
+    moveShoulder(120);
+    usleep(10 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(120, 200, 170, 240, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(180, 160, 150, 180, 150, 150);
+    usleep(30 * MILLISECOND);
+    moveAll(210, 120, 180, 180, 150, 150);
+    usleep(100 * MILLISECOND);
+
+    moveShoulder(250);
+    usleep(10 * MILLISECOND);
+    moveWristVer(240);
+    usleep(50 * MILLISECOND);
+    moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+
+    usleep(1000 * MILLISECOND);
+    stand();
+
+    _Stop = clock();
+    long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
+    cout << "Angry emotion lasted " << time << "seconds." << endl;
 }
 
 #ifndef __APPLE__
