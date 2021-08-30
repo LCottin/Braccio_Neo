@@ -142,7 +142,7 @@ short _BraccioNeo::getMotors() const
  * @param percentage New percentage speed (Warning ! Setting percentage to 0 set the motor speed to max speed) 
  * @returns true if every speed motor changed well, else false
  */
-bool _BraccioNeo::setSpeed(MOTORS Motor, unsigned percentage)
+bool _BraccioNeo::changeSpeed(MOTORS Motor, unsigned percentage)
 {
     unsigned speed;
     switch(Motor)
@@ -357,7 +357,8 @@ void _BraccioNeo::angry()
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
-        _Motors[i]->setSpeed(_Speed);
+        changeSpeed((MOTORS)i, _Speed);
+        //_Motors[i]->setSpeed(_Speed);
     }
     
     moveShoulder(240, _Speed);
