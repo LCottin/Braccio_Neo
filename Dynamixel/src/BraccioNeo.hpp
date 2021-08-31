@@ -52,7 +52,7 @@ class _BraccioNeo
         bool stand();
         bool Infos() const;
         short getMotors() const;
-        bool changeSpeed(MOTORS Motor, unsigned percentage);
+        bool changeSpeed(MOTORS motor, unsigned percentage);
         bool moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsigned wristver, unsigned wristrot, unsigned gripper, const bool blocking = true, const bool degree = true);
         bool moveBase(unsigned base, const bool degree = true);
         bool moveShoulder(unsigned shoulder, const bool degree = true);
@@ -61,9 +61,10 @@ class _BraccioNeo
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
         
-        void angry();
         void surprise(SPEED speed = NORMAL);
-
+        void angry(SPEED speed = NORMAL);
+        void shy(SPEED speed = SLOW);
+  
         #ifndef __APPLE__
             bool takePicture(RaspiCam& cam, string filename);
         #endif

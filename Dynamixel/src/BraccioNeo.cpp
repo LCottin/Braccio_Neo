@@ -142,10 +142,10 @@ short _BraccioNeo::getMotors() const
  * @param percentage New percentage speed (Warning ! Setting percentage to 0 set the motor speed to max speed) 
  * @returns true if every speed motor changed well, else false
  */
-bool _BraccioNeo::changeSpeed(MOTORS Motor, unsigned percentage)
+bool _BraccioNeo::changeSpeed(MOTORS motor, unsigned percentage)
 {
     unsigned speed;
-    switch(Motor)
+    switch(motor)
     {
         case BASE :
         case SHOULDER :
@@ -153,14 +153,14 @@ bool _BraccioNeo::changeSpeed(MOTORS Motor, unsigned percentage)
         case WRISTVER :
         case WRISTROT :
         case GRIPPER :
-            speed = mapping (percentage, 0, 100, 0, _Motors[Motor]->getMaxSpeed());
+            speed = mapping (percentage, 0, 100, 0, _Motors[motor]->getMaxSpeed());
             break;
 
         default : 
             cout << "Error : wrong motor selected !\n" << endl;
             return false;
     }
-  return _Motors[Motor]->setSpeed(speed);
+  return _Motors[motor]->setSpeed(speed);
 }
 
 /**
@@ -350,15 +350,14 @@ bool _BraccioNeo::moveGripper(unsigned gripper, const bool degree)
 /**
  * Plays the angry emotion
  */
-void _BraccioNeo::angry()
+void _BraccioNeo::angry(SPEED speed)
 {
     _Start = clock();
-    _Speed = NORMAL;
+    _Speed = speed;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
         changeSpeed((MOTORS)i, _Speed);
-        //_Motors[i]->setSpeed(_Speed);
     }
     
     moveShoulder(240, _Speed);
@@ -376,7 +375,7 @@ void _BraccioNeo::angry()
         usleep(10 * MILLISECOND);
         */
     }
-    // openGripper();
+    // moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -415,7 +414,7 @@ void _BraccioNeo::angry()
         usleep(10 * MILLISECOND);
         */
     }
-    // openGripper();
+    // moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -454,7 +453,7 @@ void _BraccioNeo::angry()
         usleep(10 * MILLISECOND);
         */
     }
-    // openGripper();
+    // moveGripper(150);
 
     moveShoulder(250);
     usleep(10 * MILLISECOND);
@@ -481,7 +480,7 @@ void _BraccioNeo::angry()
         usleep(10 * MILLISECOND);
         */
     }
-    // openGripper();
+    // moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -520,7 +519,7 @@ void _BraccioNeo::angry()
         usleep(10 * MILLISECOND);
         */
     }
-    // openGripper();
+    // moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -559,7 +558,7 @@ void _BraccioNeo::surprise(SPEED speed)
     {
         changeSpeed((MOTORS)i, _Speed);
     }
-
+  
     stand();
 
     moveWristRot(60);
@@ -587,13 +586,161 @@ void _BraccioNeo::surprise(SPEED speed)
     //openGripper();
     usleep(500 * MILLISECOND);
     //closeGripper();
-
+  
     usleep(1000 * MILLISECOND);
     stand();
 
     _Stop = clock();
     long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
     cout << "Surprise emotion lasted " << time << "seconds." << endl;
+}
+
+ * Plays the shy emotion
+ */
+void _BraccioNeo::shy(SPEED speed)
+{
+    _Start = clock();
+    _Speed = speed;
+
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        changeSpeed((MOTORS)i, _Speed);
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(50 * MILLISECOND);
+        closeGripper();
+        usleep(50 * MILLISECOND);
+        */
+    }
+    // moveGripper(150);
+
+    for (int i = 0; i < 3; i++)
+    {
+        moveBase(180);
+        usleep(20 * MILLISECOND);
+        moveBase(230);
+        usleep(20 * MILLISECOND);
+    }
+    moveBase(180);
+    usleep(200 * MILLISECOND);
+
+    for (int i = 0; i < 2; i++)
+    {
+        moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+        moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+    }
+
+    usleep(1000 * MILLISECOND);
+    stand();
+    usleep(5000 * MILLISECOND);
+    
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(50 * MILLISECOND);
+        closeGripper();
+        usleep(50 * MILLISECOND);
+        */
+    }
+    // moveGripper(150);
+    
+    for (int i = 0; i < 3; i++)
+    {
+        moveBase(180);
+        usleep(20 * MILLISECOND);
+        moveBase(230);
+        usleep(20 * MILLISECOND);
+    }
+    moveBase(180);
+    usleep(200 * MILLISECOND);
+
+    for (int i = 0; i < 2; i++)
+    {
+        moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+        moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+    }
+
+    usleep(1000 * MILLISECOND);
+    stand();
+    usleep(5000 * MILLISECOND);
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(50 * MILLISECOND);
+        closeGripper();
+        usleep(50 * MILLISECOND);
+        */
+    }
+    // moveGripper(150);
+    
+    for (int i = 0; i < 3; i++)
+    {
+        moveBase(180);
+        usleep(20 * MILLISECOND);
+        moveBase(230);
+        usleep(20 * MILLISECOND);
+    }
+    moveBase(180);
+    usleep(200 * MILLISECOND);
+
+    for (int i = 0; i < 2; i++)
+    {
+        moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+        moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+    }
+
+    usleep(1000 * MILLISECOND);
+    stand();
+    usleep(5000 * MILLISECOND);
+
+    for (int i = 0; i < 3; i++)
+    {
+        /*
+        openGripper();
+        usleep(50 * MILLISECOND);
+        closeGripper();
+        usleep(50 * MILLISECOND);
+        */
+    }
+    // moveGripper(150);
+    
+    for (int i = 0; i < 3; i++)
+    {
+        moveBase(180);
+        usleep(20 * MILLISECOND);
+        moveBase(230);
+        usleep(20 * MILLISECOND);
+    }
+    moveBase(180);
+    usleep(200 * MILLISECOND);
+
+    for (int i = 0; i < 2; i++)
+    {
+        moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+        moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+    }
+   
+    usleep(1000 * MILLISECOND);
+    stand();
+
+    _Stop = clock();
+    long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
+    cout << "Shy emotion lasted " << time << "seconds." << endl;
 }
 
 #ifndef __APPLE__
