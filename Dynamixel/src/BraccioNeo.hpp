@@ -62,7 +62,7 @@ class _BraccioNeo
         bool moveGripper(unsigned gripper, const bool degree = true);
         
         void angry(SPEED speed = NORMAL);
-        void shy(SPEED speed = NORMAL);
+        void shy(SPEED speed = SLOW);
 
         #ifndef __APPLE__
             bool takePicture(RaspiCam& cam, string filename);
