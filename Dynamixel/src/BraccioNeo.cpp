@@ -137,6 +137,17 @@ short _BraccioNeo::getMotors() const
 }
 
 /**
+ * Returns extrem value available for a motor
+ * @param motor Motor to get the extrem value
+ * @param extrem What should be returned ?
+ * @returns Extrem value of the given motor
+ */
+unsigned _BraccioNeo::getExtremValue(MOTORS motor, EXTREM extrem)
+{
+    return _Limits[motor][extrem];
+}
+
+/**
  * Changes motor speed
  * @param Motor choose motor
  * @param percentage New percentage speed (Warning ! Setting percentage to 0 set the motor speed to max speed) 

@@ -60,6 +60,8 @@ class _BraccioNeo
         bool moveWristVer(unsigned wirstver, const bool degree = true);
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
+
+        unsigned getExtremValue(MOTORS motor, EXTREM extrem);
         
         void surprise(SPEED speed = NORMAL);
         void angry(SPEED speed = NORMAL);
