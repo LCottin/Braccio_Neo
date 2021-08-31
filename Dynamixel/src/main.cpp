@@ -100,9 +100,9 @@ int main(int argc, char const *argv[])
 {
     cout << "bras initialisé" << endl; 
 
-	#ifndef __APPLE__
+#ifndef __APPLE__
 	radio.begin();
-	radio.setPALevel(RF24_PA_MAX);
+	//radio.setPALevel(RF24_PA_MAX);
 	radio.setDataRate(RF24_2MBPS);
 
 	radio.startListening();
@@ -122,7 +122,7 @@ int main(int argc, char const *argv[])
             cout << "Y =        " << read_data.yAxis << endl;
         }
 
-        unsigned basePos = mapping(read_data.xAxis, vMax.XMIN, vMax.YMAX, 100, 300);
+        unsigned basePos = mapping(read_data.xAxis, vMax.XMIN, vMax.YMAX, BraccioNeo.getExtremValue(BASE, MINANGLE), BraccioNeo.getExtremValue(BASE, MAXANGLE));
         BraccioNeo.moveBase(basePos);
     }
 
