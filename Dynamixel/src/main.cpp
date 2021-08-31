@@ -109,7 +109,7 @@ int main(int argc, char const *argv[])
 
 	network.begin(108, monNoeud);
 
-	for (int i = 0; i < 1000; i++)
+	while(true)
 	{
 		network.update();
 
@@ -121,6 +121,9 @@ int main(int argc, char const *argv[])
             cout << "X =        " << read_data.xAxis << endl;
             cout << "Y =        " << read_data.yAxis << endl;
         }
+
+        unsigned basePos = mapping(read_data.xAxis, vMax.XMIN, vMax.YMAX, 100, 300);
+        BraccioNeo.moveBase(basePos);
     }
 
 #endif
