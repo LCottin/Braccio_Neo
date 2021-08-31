@@ -116,7 +116,7 @@ int main(int argc, char const *argv[])
     BraccioNeo.moveShoulder(2500, false);
     */
    BraccioNeo.stand(); 
-   BraccioNeo.angry();
+   BraccioNeo.surprise();
    
     
     /*
