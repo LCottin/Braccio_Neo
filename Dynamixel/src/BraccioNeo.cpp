@@ -553,7 +553,7 @@ void _BraccioNeo::angry()
 void _BraccioNeo::surprise(SPEED speed)
 {
     _Start = clock();
-    _Speed = NORMAL;
+    _Speed = speed;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
@@ -593,7 +593,7 @@ void _BraccioNeo::surprise(SPEED speed)
 
     _Stop = clock();
     long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
-    cout << "Angry emotion lasted " << time << "seconds." << endl;
+    cout << "Surprise emotion lasted " << time << "seconds." << endl;
 }
 
 #ifndef __APPLE__
