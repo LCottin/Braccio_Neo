@@ -595,6 +595,7 @@ void _BraccioNeo::surprise(SPEED speed)
     cout << "Surprise emotion lasted " << time << "seconds." << endl;
 }
 
+/*
  * Plays the shy emotion
  */
 void _BraccioNeo::shy(SPEED speed)
