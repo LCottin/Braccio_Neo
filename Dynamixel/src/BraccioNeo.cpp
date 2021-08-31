@@ -692,7 +692,7 @@ void _BraccioNeo::shy(SPEED speed)
 
     _Stop = clock();
     long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
-    cout << "Angry emotion lasted " << time << "seconds." << endl;
+    cout << "Shy emotion lasted " << time << "seconds." << endl;
 }
 
 #ifndef __APPLE__
