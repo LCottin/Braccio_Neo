@@ -61,9 +61,10 @@ class _BraccioNeo
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
         
+        void surprise(SPEED speed = NORMAL);
         void angry(SPEED speed = NORMAL);
         void shy(SPEED speed = SLOW);
-
+  
         #ifndef __APPLE__
             bool takePicture(RaspiCam& cam, string filename);
         #endif
