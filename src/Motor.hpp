@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "functions.hpp"
-#include "../include/dynamixel_sdk/dynamixel_sdk.h"  
+#include "./lib/SDK/dynamixel_sdk.h"  
 
 using namespace std;
 using namespace dynamixel;
