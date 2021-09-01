@@ -81,7 +81,7 @@ unsigned baseControl 		= 180;
 unsigned shoulderControl 	= 180;
 unsigned elbowControl 		= 180;
 unsigned wristVerControl 	= 180;
-unsigned wristRotControl 	= 150;
-unsigned gripperControl 	= 150;
+unsigned wristRotControl 	= 180;
+unsigned gripperControl 	= 180;
 
 #endif
