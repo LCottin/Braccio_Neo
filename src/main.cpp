@@ -136,7 +136,7 @@ int main(int argc, char const *argv[])
                             break;
                     }
                     dataShapping();
-                    BraccioNeo.moveAll(baseControl, shoulderControl, elbowControl, wristRotControl, wristVerControl, gripperControl, false);
+                    BraccioNeo.moveAll(baseControl, shoulderControl, elbowControl, wristVerControl, wristRotControl, gripperControl, false);
                     break;
 
                 case NONE :
