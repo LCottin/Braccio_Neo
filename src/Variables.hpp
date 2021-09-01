@@ -9,9 +9,9 @@
 // -             ENUMERATIONS             - //
 // ---------------------------------------- //
 //Tells which bracelet is speaking and with which order
-enum BRACELETS  {Bracelet1, Bracelet2, Bracelet3, Telecommande};
+enum BRACELETS  {EMITTER1, EMITTER2, EMITTER3, Telecommande};
 enum ACTIONS    {PLAY = 11, PAUSE = 12, STOP = 13};
-enum MODES      {COLERE = 20, JOIE = 21, SURPRISE = 22, CONTROLE = 23, RIEN = 24};
+enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, CONTROL = 23, NONE = 24};
 
 
 // ---------------------------------------- //
@@ -24,7 +24,7 @@ struct data
 	short x;
 	short y;
 	char mode;
-	char _action;
+	char action;
 } receivedData;
 
 //Extrem values received by radio
@@ -42,14 +42,14 @@ struct V_MAX
 //Values local, stores current values
 struct localData
 {
-	short posBase     = vMax.XMOY;
-	short posShoulder = vMax.YMOY;
-	short posElbow    = vMax.XMOY; 
-	short posWristRot = vMax.YMOY;
-	short posWristVer = vMax.XMOY;
-	short posGripper  = vMax.YMOY;
+	short baseControl     = vMax.XMOY;
+	short shoulderControl = vMax.YMOY;
+	short elbowControl    = vMax.XMOY; 
+	short wristVerControl = vMax.XMOY;
+	short wristRotControl = vMax.YMOY;
+	short gripperControl  = vMax.YMOY;
 	char mode;
-	char _action = RIEN;
+	char action = NONE;
 } localData;
 
 
@@ -58,7 +58,7 @@ struct localData
 // ---------------------------------------- //
 //global variables for averaging data
 const unsigned AVERAGE_NB = 7; //must be odd
-const unsigned median = (unsigned)AVERAGE_NB / 2;
+const unsigned median = AVERAGE_NB / 2;
 unsigned counter = 0;
 
 //arrays to store positions
@@ -77,11 +77,11 @@ short averageX3;
 short averageY3;
 
 //positions
-unsigned char baseControle 		= 90;
-unsigned char shoulderControle 	= 95;
-unsigned char elbowControle 	= 95;
-unsigned char wristRotControle 	= 90;
-unsigned char wristVerControle 	= 90;
-unsigned char gripperControle 	= 95;
+unsigned baseControl 		= 180;
+unsigned shoulderControl 	= 180;
+unsigned elbowControl 		= 180;
+unsigned wristVerControl 	= 180;
+unsigned wristRotControl 	= 180;
+unsigned gripperControl 	= 180;
 
 #endif
