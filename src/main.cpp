@@ -12,15 +12,8 @@
 	
 	RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
 	RF24Network network(radio);
-	const uint16_t noeudMere = 00;
-	const uint16_t monNoeud = noeudMere;
-
-    struct dataToRead
-    {
-        short id;
-        short xAxis;
-        short yAxis;
-    } read_data;
+	const uint16_t motherNode = 00;
+	const uint16_t myNode = motherNode;
 #endif
 
 using namespace std;
@@ -43,17 +36,17 @@ int compare (const void * a, const void * b)
 // ---------------------------------------- //
 void dataShapping()
 {
-    cout << "Controle ..." << endl;
+    cout << "Control ..." << endl;
     //updates counter
     counter = (counter + 1) % AVERAGE_NB;
 
     //reads data
-    _x1[counter] = localData.posBase;
-    _y1[counter] = localData.posShoulder;
-    _x2[counter] = localData.posElbow;
-    _y2[counter] = localData.posWristRot;
-    _x3[counter] = localData.posWristVer;
-    _y3[counter] = localData.posGripper;
+    _x1[counter] = localData.baseControl;
+    _y1[counter] = localData.shoulderControl;
+    _x2[counter] = localData.elbowControl;
+    _y2[counter] = localData.wristVerControl;
+    _x3[counter] = localData.wristRotControl;
+    _y3[counter] = localData.gripperControl;
 
     //sorts arrays
     qsort(_x1, AVERAGE_NB, sizeof(short), compare);
@@ -72,27 +65,12 @@ void dataShapping()
     averageY3 = _y3[median];
     
     //gets value to send to motor thanks to a map
-    baseControle       = mapping(averageX1, vMax.XMIN, vMax.XMAX, 0, 180);
-    shoulderControle   = mapping(averageY1, vMax.YMIN, vMax.YMAX, 20, 160);
-    elbowControle      = mapping(averageX2, vMax.XMIN, vMax.XMAX, 0, 180);
-    wristRotControle   = mapping(averageY2, vMax.YMIN, vMax.YMAX, 0, 180);
-    wristVerControle   = mapping(averageX3, vMax.XMIN, vMax.XMAX, 0, 180);
-    gripperControle    = mapping(averageY3, vMax.YMIN, vMax.YMAX, 25, 90);
-    
-    //makes sure values are not breaking the arm
-    if (baseControle > 180) baseControle = 180;
-    
-    if (shoulderControle > 165) shoulderControle = 165;
-    if (shoulderControle < 15)  shoulderControle = 15;
-    
-    if (elbowControle > 180) elbowControle = 180;
-    
-    if (wristRotControle > 180) wristRotControle = 180;
-    
-    if (wristVerControle > 180) wristVerControle = 180;
-    
-    if (gripperControle > 90) gripperControle = 90;
-    if (gripperControle < 25) gripperControle = 25;
+    baseControl       = mapping(averageX1, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(BASE, MINANGLE), BraccioNeo.getExtremValue(BASE, MAXANGLE));
+    shoulderControl   = mapping(averageY1, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(SHOULDER, MINANGLE), BraccioNeo.getExtremValue(SHOULDER, MAXANGLE));
+    elbowControl      = mapping(averageX2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(ELBOW, MINANGLE), BraccioNeo.getExtremValue(ELBOW, MAXANGLE));
+    wristVerControl   = mapping(averageY2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(WRISTVER, MINANGLE), BraccioNeo.getExtremValue(WRISTVER, MAXANGLE));
+    wristRotControl   = mapping(averageX3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(WRISTROT, MINANGLE), BraccioNeo.getExtremValue(WRISTROT, MAXANGLE));
+    gripperControl    = mapping(averageY3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(GRIPPER, MINANGLE), BraccioNeo.getExtremValue(GRIPPER, MAXANGLE));
 }
 
 
@@ -107,7 +85,7 @@ int main(int argc, char const *argv[])
 
 	radio.startListening();
 
-	network.begin(108, monNoeud);
+	network.begin(108, myNode);
 
 	while(true)
 	{
@@ -116,25 +94,20 @@ int main(int argc, char const *argv[])
 		while(network.available())
 		{
 			RF24NetworkHeader nHeader;
-			network.read(nHeader, &read_data, sizeof(read_data));
-            cout << "Emetteur : " << read_data.id << endl;
-            cout << "X =        " << read_data.xAxis << endl;
-            cout << "Y =        " << read_data.yAxis << endl;
-        }
+			network.read(nHeader, &receivedData, sizeof(receivedData));
+            // cout << "Emetteur : " << receivedData.ID << endl;
+            // cout << "X =        " << receivedData.x << endl;
+            // cout << "Y =        " << receivedData.y << endl;
+            receivedData.action = PLAY;
+            receivedData.mode   = CONTROL;
 
-        unsigned basePos = mapping(read_data.xAxis, vMax.XMIN, vMax.YMAX, BraccioNeo.getExtremValue(BASE, MINANGLE), BraccioNeo.getExtremValue(BASE, MAXANGLE));
-        BraccioNeo.moveBase(basePos);
-    }
-
-#endif
-/*
             switch (receivedData.mode)
             {
-                case COLERE :
+                case ANGRY :
                     cout << "Colère" << endl;
                     break;
                 
-                case JOIE : 
+                case JOY : 
                     cout << "JOIE" << endl;
                     break;
 
@@ -142,42 +115,37 @@ int main(int argc, char const *argv[])
                     cout << "SURPRISE" << endl;
                     break;
 
-                case CONTROLE : 
+                case CONTROL : 
                     cout << "CONTROLE" << endl;
-                    localData._action = receivedData._action;
+                    localData.action = receivedData.action;
                     switch (receivedData.ID)
                     {
-                        case Bracelet1 :
-                            localData.posBase       = receivedData.x;
-                            localData.posShoulder     = receivedData.y;
+                        case EMITTER1 :
+                            localData.baseControl       = receivedData.x;
+                            localData.shoulderControl   = receivedData.y;
                             break;
                 
-                        case Bracelet2 :
-                            localData.posElbow      = receivedData.x;
-                            localData.posWristRot = receivedData.y;
+                        case EMITTER2 :
+                            localData.elbowControl      = receivedData.x;
+                            localData.wristVerControl   = receivedData.y;
                             break;
                         
-                        case Bracelet3 :
-                            localData.posWristVer = receivedData.x;
-                            localData.posGripper      = receivedData.y;
+                        case EMITTER3 :
+                            localData.wristRotControl   = receivedData.x;
+                            localData.gripperControl    = receivedData.y;
                             break;
                     }
                     dataShapping();
-                    //Braccio.moveAll(baseControle, shoulderControle, elbowControle, wristRotControle, wristVerControle, gripperControle, speedMove);
+                    BraccioNeo.moveAll(baseControl, shoulderControl, elbowControl, wristRotControl, wristVerControl, gripperControl, false);
                     break;
 
-                case RIEN :
+                case NONE :
                 default:
                     cout << "Droit" << endl;
                     break;
             }
 		}
-
-		cout << "ID = " << receivedData.ID << endl;
-		cout << "X =  " << receivedData.x << endl;
-		cout << "Y =  " << receivedData.y << endl;
 	}	
-	#endif
-    */
+#endif
 	return 0;
 }
