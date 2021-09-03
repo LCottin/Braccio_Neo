@@ -6,14 +6,14 @@
 #include <cstdlib>
 
 #ifndef __APPLE__
-	#include "lib/RF24/RF24.h"
-	#include "lib/RF24/nRF24L01.h"
-	#include "lib/RF24/RF24Network.h"
-	
-	RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
-	RF24Network network(radio);
-	const uint16_t motherNode = 00;
-	const uint16_t myNode = motherNode;
+    #include "lib/RF24/RF24.h"
+    #include "lib/RF24/nRF24L01.h"
+    #include "lib/RF24/RF24Network.h"
+    
+    RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
+    RF24Network network(radio);
+    const uint16_t motherNode = 00;
+    const uint16_t myNode = motherNode;
 #endif
 
 using namespace std;
@@ -73,46 +73,78 @@ void dataShapping()
     gripperControl    = mapping(averageY3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(GRIPPER, MINANGLE), BraccioNeo.getExtremValue(GRIPPER, MAXANGLE));
 }
 
+// ---------------------------------------- //
+// -             INIT ARRAYS              - //
+// ---------------------------------------- //
+void initArrays()
+{
+    //inits data in each array that receive data from radio
+    for (unsigned i = 0; i < AVERAGE_NB; i++)
+    {
+        _x1[i] = vMax.XMOY;
+        _y1[i] = vMax.YMOY;
+        _x2[i] = vMax.XMOY;
+        _y2[i] = vMax.YMOY;
+        _x3[i] = vMax.XMOY;
+        _y3[i] = vMax.YMOY;
+    }
+
+    //inits other variables
+    counter             = 0;
+    
+    baseControl         = 180;
+    shoulderControl     = 180;
+    elbowControl        = 180;
+    wristVerControl     = 180;
+    wristRotControl     = 180;
+    gripperControl      = 180;
+
+    _pause   = false;
+    _stop    = false;
+}
 
 int main(int argc, char const *argv[])
 {
-    cout << "bras initialisé" << endl; 
+//#ifndef __APPLE__
+    //init radio
+    radio.begin();
+    //radio.setPALevel(RF24_PA_MAX);
+    radio.setDataRate(RF24_2MBPS);
+    radio.startListening();
+    network.begin(108, myNode);
 
-#ifndef __APPLE__
-	radio.begin();
-	//radio.setPALevel(RF24_PA_MAX);
-	radio.setDataRate(RF24_2MBPS);
+    //init data
+    initArrays();
 
-	radio.startListening();
+    while(true)
+    {
+        network.update();
 
-	network.begin(108, myNode);
-
-	while(true)
-	{
-		network.update();
-
-		while(network.available())
-		{
-			RF24NetworkHeader nHeader;
-			network.read(nHeader, &receivedData, sizeof(receivedData));
-            // cout << "Emetteur : " << receivedData.ID << endl;
-            // cout << "X =        " << receivedData.x << endl;
-            // cout << "Y =        " << receivedData.y << endl;
-            receivedData.action = PLAY;
-            receivedData.mode   = CONTROL;
-
+        while(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
             switch (receivedData.mode)
             {
                 case ANGRY :
-                    cout << "Colère" << endl;
+                    cout << "ANGRY" << endl;
+                    BraccioNeo.angry();
                     break;
                 
                 case JOY : 
                     cout << "JOIE" << endl;
+                    BraccioNeo.joy();
                     break;
 
                 case SURPRISE :
                     cout << "SURPRISE" << endl;
+                    BraccioNeo.surprise();
+                    break;
+
+                case SHY :
+                    cout << "SHY" << endl;
+                    BraccioNeo.shy();
                     break;
 
                 case CONTROL : 
@@ -141,11 +173,12 @@ int main(int argc, char const *argv[])
 
                 case NONE :
                 default:
-                    cout << "Droit" << endl;
+                    if (!BraccioNeo.isStanding())
+                        BraccioNeo.stand();
                     break;
             }
-		}
-	}	
-#endif
-	return 0;
+        }
+    }   
+// #endif
+    return 0;
 }
