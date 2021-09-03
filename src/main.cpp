@@ -77,7 +77,8 @@ void dataShapping()
 int main(int argc, char const *argv[])
 {
     cout << "bras initialisé" << endl; 
-
+    BraccioNeo.readFromFile("test");
+/*
 #ifndef __APPLE__
 	radio.begin();
 	//radio.setPALevel(RF24_PA_MAX);
@@ -147,5 +148,6 @@ int main(int argc, char const *argv[])
 		}
 	}	
 #endif
+*/
 	return 0;
 }

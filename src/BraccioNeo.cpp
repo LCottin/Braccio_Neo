@@ -148,6 +148,37 @@ unsigned _BraccioNeo::getExtremValue(MOTORS motor, EXTREM extrem)
 }
 
 /**
+ * Reads a file and plays the movements described in it
+ * @param filename Name of the file to read
+ * @returns true if everything went right, else false
+ */
+bool _BraccioNeo::readFromFile(const string filename)
+{
+    //makes the complete path
+    string path = "../src/Records/";
+    path += filename;
+    path += ".txt";
+
+    //opens the file and reads it's content
+    ifstream file(path);
+    if (file)
+    {
+        unsigned base, shoudler, elbow, wristver, wristrot, gripper;
+
+        //reads a line and moves the arm
+        while (file >> base >> shoudler >> elbow >> wristver >> wristrot >> gripper)
+        {
+            moveAll(base, shoudler, elbow, wristver, wristrot, gripper, false);
+            usleep(500 * MILLISECOND);
+        }
+        return true;
+    }
+
+    cout << "File not found." << endl;
+    return false;
+}
+
+/**
  * Changes motor speed
  * @param Motor choose motor
  * @param percentage New percentage speed (Warning ! Setting percentage to 0 set the motor speed to max speed) 
