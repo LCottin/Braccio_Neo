@@ -155,9 +155,10 @@ unsigned _BraccioNeo::getExtremValue(MOTORS motor, EXTREM extrem)
 bool _BraccioNeo::readFromFile(const string filename)
 {
     //makes the complete path
-    string path = "./Records/";
+    string path = "../src/Records/";
     path += filename;
     path += ".txt";
+    cout << path << endl;
 
     //opens the file and reads it's content
     ifstream file(path);
