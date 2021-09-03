@@ -11,7 +11,7 @@
 //Tells which bracelet is speaking and with which order
 enum BRACELETS  {EMITTER1, EMITTER2, EMITTER3, Telecommande};
 enum ACTIONS    {PLAY = 11, PAUSE = 12, STOP = 13};
-enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, CONTROL = 23, NONE = 24};
+enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, NONE = 25};
 
 
 // ---------------------------------------- //
@@ -59,7 +59,9 @@ struct localData
 //global variables for averaging data
 const unsigned AVERAGE_NB = 7; //must be odd
 const unsigned median = AVERAGE_NB / 2;
-unsigned counter = 0;
+unsigned counter;
+bool _pause;
+bool _stop;
 
 //arrays to store positions
 short _x1[AVERAGE_NB];
@@ -77,11 +79,11 @@ short averageX3;
 short averageY3;
 
 //positions
-unsigned baseControl 		= 180;
-unsigned shoulderControl 	= 180;
-unsigned elbowControl 		= 180;
-unsigned wristVerControl 	= 180;
-unsigned wristRotControl 	= 180;
-unsigned gripperControl 	= 180;
+unsigned baseControl;
+unsigned shoulderControl;
+unsigned elbowControl;
+unsigned wristVerControl;
+unsigned wristRotControl;
+unsigned gripperControl;
 
 #endif
