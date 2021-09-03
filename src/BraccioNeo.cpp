@@ -158,7 +158,6 @@ bool _BraccioNeo::readFromFile(const string filename)
     string path = "../src/Records/";
     path += filename;
     path += ".txt";
-    cout << path << endl;
 
     //opens the file and reads it's content
     ifstream file(path);
@@ -170,7 +169,7 @@ bool _BraccioNeo::readFromFile(const string filename)
         while (file >> base >> shoudler >> elbow >> wristver >> wristrot >> gripper)
         {
             moveAll(base, shoudler, elbow, wristver, wristrot, gripper, false);
-            usleep(100 * MILLISECOND);
+            usleep(500 * MILLISECOND);
         }
         return true;
     }
