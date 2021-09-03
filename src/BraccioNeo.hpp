@@ -39,12 +39,13 @@ class _BraccioNeo
         
         unsigned _NbMotors;
         unsigned** _Limits;
+        unsigned* _CurrentPosition;
+        bool _Stand;
 
         clock_t _Start;
         clock_t _Stop;
         SPEED _Speed;  
 
-        unsigned* _CurrentPosition;
 
     public:
         _BraccioNeo();
@@ -60,12 +61,14 @@ class _BraccioNeo
         bool moveWristVer(unsigned wirstver, const bool degree = true);
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
+        bool isStanding() const;
 
         unsigned getExtremValue(MOTORS motor, EXTREM extrem);
         
         void surprise(SPEED speed = NORMAL);
         void angry(SPEED speed = NORMAL);
         void shy(SPEED speed = SLOW);
+        void joy(SPEED speed = NORMAL);
   
         #ifndef __APPLE__
             bool takePicture(RaspiCam& cam, string filename);

@@ -21,6 +21,7 @@ _BraccioNeo::_BraccioNeo()
     _Motors.push_back(_Gripper);
     
     initValues();
+    _Stand = true;
 } 
 
 /**
@@ -110,6 +111,7 @@ bool _BraccioNeo::stand()
 
         _CurrentPosition[i] = _Motors[i]->getPosition();
     }
+    _Stand = true;
     return true;
 }
 
@@ -134,6 +136,15 @@ bool _BraccioNeo::Infos() const
 short _BraccioNeo::getMotors() const
 {
     return _NbMotors; 
+}
+
+/**
+ * Tells if the arm is standing
+ * @returns true if the arm is standing, else false
+ */
+bool _BraccioNeo::isStanding() const
+{
+    return _Stand;
 }
 
 /**
@@ -234,7 +245,7 @@ bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsi
     {
 	    success &= _Motors[i]->move(_CurrentPosition[i], degree, blocking);
     }
-
+    _Stand = false;
     return success;
 }
 
@@ -255,6 +266,7 @@ bool _BraccioNeo::moveBase(unsigned base, const bool degree)
         _CurrentPosition[BASE] = (base < _Limits[BASE][MINPOS]) ? _Limits[BASE][MINPOS] : base;
         _CurrentPosition[BASE] = (base > _Limits[BASE][MAXPOS]) ? _Limits[BASE][MAXPOS] : base;
     }
+    _Stand = false;
     return _Motors[BASE]->move(_CurrentPosition[BASE], degree);
 }
 
@@ -275,6 +287,7 @@ bool _BraccioNeo::moveShoulder(unsigned shoulder, const bool degree)
         _CurrentPosition[SHOULDER] = (shoulder < _Limits[SHOULDER][MINPOS]) ? _Limits[SHOULDER][MINPOS] : shoulder;
         _CurrentPosition[SHOULDER] = (shoulder > _Limits[SHOULDER][MAXPOS]) ? _Limits[SHOULDER][MAXPOS] : shoulder;
     }
+    _Stand = false;
     return _Motors[SHOULDER]->move(_CurrentPosition[SHOULDER], degree);
 }
 
@@ -295,6 +308,7 @@ bool _BraccioNeo::moveElbow(unsigned elbow, const bool degree)
         _CurrentPosition[ELBOW] = (elbow < _Limits[ELBOW][MINPOS]) ? _Limits[ELBOW][MINPOS] : elbow;
         _CurrentPosition[ELBOW] = (elbow > _Limits[ELBOW][MAXPOS]) ? _Limits[ELBOW][MAXPOS] : elbow;
     }
+    _Stand = false;
     return _Motors[ELBOW]->move(_CurrentPosition[ELBOW], degree);
 }
 
@@ -315,6 +329,7 @@ bool _BraccioNeo::moveWristVer(unsigned wristver, const bool degree)
         _CurrentPosition[WRISTVER] = (wristver < _Limits[WRISTVER][MINPOS]) ? _Limits[WRISTVER][MINPOS] : wristver;
         _CurrentPosition[WRISTVER] = (wristver > _Limits[WRISTVER][MAXPOS]) ? _Limits[WRISTVER][MAXPOS] : wristver;
     }
+    _Stand = false;
     return _Motors[WRISTVER]->move(_CurrentPosition[WRISTVER], degree);
 }
 
@@ -335,6 +350,7 @@ bool _BraccioNeo::moveWristRot(unsigned wristrot, const bool degree)
         _CurrentPosition[WRISTROT] = (wristrot < _Limits[WRISTROT][MINPOS]) ? _Limits[WRISTROT][MINPOS] : wristrot;
         _CurrentPosition[WRISTROT] = (wristrot > _Limits[WRISTROT][MAXPOS]) ? _Limits[WRISTROT][MAXPOS] : wristrot;
     }
+    _Stand = false;
     return _Motors[WRISTROT]->move(_CurrentPosition[WRISTROT], degree);
 }
 
@@ -355,7 +371,8 @@ bool _BraccioNeo::moveGripper(unsigned gripper, const bool degree)
         _CurrentPosition[GRIPPER] = (gripper < _Limits[GRIPPER][MINPOS]) ? _Limits[GRIPPER][MINPOS] : gripper;
         _CurrentPosition[GRIPPER] = (gripper > _Limits[GRIPPER][MAXPOS]) ? _Limits[GRIPPER][MAXPOS] : gripper;
     }
-  return _Motors[GRIPPER]->move(_CurrentPosition[GRIPPER], degree);
+    _Stand = false;
+    return _Motors[GRIPPER]->move(_CurrentPosition[GRIPPER], degree);
 }
 
 /**
@@ -365,6 +382,7 @@ void _BraccioNeo::angry(SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
+    _Stand = false;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
@@ -564,6 +582,7 @@ void _BraccioNeo::surprise(SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
+    _Stand = false;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
@@ -613,6 +632,7 @@ void _BraccioNeo::shy(SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
+    _Stand = false;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
@@ -747,6 +767,106 @@ void _BraccioNeo::shy(SPEED speed)
         usleep(200 * MILLISECOND);
     }
    
+    usleep(1000 * MILLISECOND);
+    stand();
+
+    _Stop = clock();
+    long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
+    cout << "Shy emotion lasted " << time << "seconds." << endl;
+}
+
+/*
+ * Plays the joy emotion
+ */
+void _BraccioNeo::joy(SPEED speed)
+{
+    _Start = clock();
+    _Speed = speed;
+    _Stand = false;
+
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        changeSpeed((MOTORS)i, _Speed);
+    }
+
+    moveShoulder(230);
+    usleep(100 * MILLISECOND);
+    moveElbow(130);
+    usleep(100 * MILLISECOND);
+
+    for (char i = 0; i < 4; i++)
+    {
+        moveWristRot(240);
+        usleep(50 * MILLISECOND);
+        moveWristRot(100);
+        usleep(50 * MILLISECOND);
+    }
+
+    usleep(1000 * MILLISECOND);
+    stand();
+
+    moveWristRot(150);
+    moveBase(260);
+    moveWristVer(180);
+    usleep(50 * MILLISECOND);
+    moveBase(30);
+    moveWristVer(100);
+    usleep(50 * MILLISECOND);
+
+    for (char i = 0; i < 2; i++)
+    {
+        moveBase(240);
+        usleep(25 * MILLISECOND);
+        moveShoulder(150);
+        usleep(25 * MILLISECOND);
+        moveElbow(240);
+        usleep(250 * MILLISECOND);
+        moveWristRot(120);
+        usleep(25 * MILLISECOND);
+
+        moveBase(130);
+        usleep(25 * MILLISECOND);
+        moveWristRot(150);
+        usleep(250 * MILLISECOND);
+        moveElbow(130);
+        usleep(25 * MILLISECOND);
+        moveShoulder(220);
+        usleep(25 * MILLISECOND);
+    }
+                
+    moveBase(180);
+    moveShoulder(230);
+    usleep(25 * MILLISECOND);
+    moveElbow(130);
+    usleep(25 * MILLISECOND);
+
+    for (char i = 0; i < 3; i++)
+    {
+        // openGripper();
+        // usleep(50 * MILLISECOND);
+        // closeGripper();
+        // usleep(50 * MILLISECOND);
+    }
+    moveGripper(180);
+
+    for (char i = 0; i < 3; i++)
+    {
+        moveBase(130);
+        usleep(25 * MILLISECOND);
+        moveBase(230);
+        usleep(25 * MILLISECOND);
+    }
+    moveBase(180);
+    usleep(200 * MILLISECOND);
+
+    for (char i = 0; i < 2; i++)
+    {
+        moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+        moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+    }
+    
     usleep(1000 * MILLISECOND);
     stand();
 
