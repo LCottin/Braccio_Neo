@@ -105,7 +105,7 @@ void initArrays()
 
 int main(int argc, char const *argv[])
 {
-//#ifndef __APPLE__
+#ifndef __APPLE__
     //init radio
     radio.begin();
     //radio.setPALevel(RF24_PA_MAX);
@@ -179,6 +179,6 @@ int main(int argc, char const *argv[])
             }
         }
     }   
-// #endif
+#endif
     return 0;
 }
