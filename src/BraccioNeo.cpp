@@ -130,6 +130,94 @@ bool _BraccioNeo::Infos() const
 }
 
 /**
+ * Records a sequence of movement and allows the user to save it
+ * @param replay Tells if the movement should be repeated 
+ * @param save Tells if the movement should be saved
+ * @param filename Name of the file too save the movement 
+ * @returns true if correctly recorded, else false
+ */
+bool _BraccioNeo::record(RF24Network& network, const bool replay, const bool save, const string filename)
+{
+    //declares six vectors for each motor
+    vector<unsigned> base;
+    vector<unsigned> shoudler;
+    vector<unsigned> elbow;
+    vector<unsigned> wristVer;
+    vector<unsigned> wristRot;
+    vector<unsigned> gripper;
+
+    //tells when we should stop
+    bool record = true;
+
+    //tells if an erro occured 
+    bool success = true;
+
+    //puts the arm straight and disables every torque
+    stand();
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        success &= _Motors[i]->disableTorque();
+    }
+    
+    //records movement while stop wasn't pressed
+    while(record)
+    {
+        //reads each position and converts its to degrees
+        base.push_back      (mapping(_Motors[BASE]->getPosition(),     _Limits[BASE][MINPOS],     _Limits[BASE][MAXPOS],     0, 360));
+        shoudler.push_back  (mapping(_Motors[SHOULDER]->getPosition(), _Limits[SHOULDER][MINPOS], _Limits[SHOULDER][MAXPOS], 0, 360));
+        elbow.push_back     (mapping(_Motors[ELBOW]->getPosition(),    _Limits[ELBOW][MINPOS],    _Limits[ELBOW][MAXPOS],    0, 360));
+        wristVer.push_back  (mapping(_Motors[WRISTVER]->getPosition(), _Limits[WRISTVER][MINPOS], _Limits[WRISTVER][MAXPOS], 0, 360));
+        wristRot.push_back  (mapping(_Motors[WRISTROT]->getPosition(), _Limits[WRISTROT][MINPOS], _Limits[WRISTROT][MAXPOS], 0, 360));
+        gripper.push_back   (mapping(_Motors[GRIPPER]->getPosition(),  _Limits[GRIPPER][MINPOS],  _Limits[GRIPPER][MAXPOS],  0, 360));
+        
+        //reads network to search for a stop
+        network.update();
+        if(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
+            if (receivedData.ID == Telecommande)
+                record = !((short)receivedData.action == STOP);
+        }
+
+        //delay to have smaller files, longer sleep results in smaller files put movement with less accuracy
+        usleep(200 * MILLISECOND);
+    };
+
+    //replays the movement
+    if (replay)
+    {
+        for (unsigned long i = 0; i < base.size(); i++)
+        {
+            success &= moveAll(base[i], shoudler[i], elbow[i], wristVer[i], wristRot[i], gripper[i], false);
+            usleep(500 * MILLISECOND);
+        }
+    }
+
+    //saves the movement to the file
+    if (save)
+    {
+        string path = "../src/Records/";
+        path += filename;
+        path += ".txt";
+
+        ofstream file(path);
+        if (file)
+        {
+            for (unsigned long i = 0; i < base.size(); i++)
+                file << base[i] << " " << shoudler[i] << " " << elbow[i] << " " << wristVer[i] << " " << wristRot[i] << " " << gripper[i] << endl;
+        }
+        else
+        {
+            cout << "Error when opening the file." << endl;
+            success = false;
+        }
+    }
+    return success;
+}
+
+/**
  * Returns how many motors are connected
  * @returns The number of motor
  */
@@ -882,30 +970,32 @@ void _BraccioNeo::joy(SPEED speed)
  * @param filename Name of the saved picture
  * @returns true if successfully taken and saved, else false
  */
-bool _BraccioNeo::takePicture(RaspiCam& cam, string filename)
+bool _BraccioNeo::takePicture(RaspiCam& cam, const string filename)
 {
     if (cam.open() == false)
     {
-        cout << "Erreur lors de l'ouverture" << endl;
+        cout << "Error : camera is not opened." << endl;
         return false;
     }
 
+	unsigned char* data = new unsigned char [cam.getImageTypeSize(RASPICAM_FORMAT_RGB) ];
+
 	//takes picture
 	cam.grab();
-
-	unsigned char* data;
-    data = new unsigned char [cam.getImageTypeSize(RASPICAM_FORMAT_RGB) ];
 
 	//extracts image
 	cam.retrieve(data, RASPICAM_FORMAT_RGB);
 
     //saves it
-    filename += ".jpg";
-	ofstream outfile(filename, std::ios::binary);
-	outfile << "P6\n" << cam.getWidth() << " " << cam.getHeight() << " 255\n";
-	outfile.write( (char*)data, cam.getImageTypeSize(RASPICAM_FORMAT_RGB) );
-	cout << "Image saved" << endl;
+    string path = "../src/Records/"
+    path += filename;
+    path += ".jpg";
+	ofstream file(path, std::ios::binary);
+
+	file << "P6\n" << cam.getWidth() << " " << cam.getHeight() << " 255\n";
+	file.write( (char*)data, cam.getImageTypeSize(RASPICAM_FORMAT_RGB) );
 	
+    cout << "Image saved" << endl;
     delete[] data;
 	return true;
 }
