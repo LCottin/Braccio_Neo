@@ -39,6 +39,7 @@ class XL320 : public Motor
         double getLoad();
         bool middle();
         bool Infos();
+        unsigned getPosition();
 
         ~XL320();
 };

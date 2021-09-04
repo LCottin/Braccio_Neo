@@ -152,6 +152,28 @@ bool MX106AT::move(const unsigned newPos, const bool degree, const bool blocking
 }
 
 /**
+ * Reads present position of the motor
+ * @returns It's current position
+ */
+unsigned MX106AT::getPosition()
+{
+	unsigned pos;
+	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _PresentPosAddr, (uint16_t*)&pos, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		return _PresentPos;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		return _PresentPos;
+	}
+	_PresentPos = pos;
+	return _PresentPos;
+}
+
+/**
  * Enable the torque
  * @returns true if correctly enabled, else false
  */

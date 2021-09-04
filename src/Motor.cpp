@@ -19,15 +19,6 @@ Motor::Motor(const unsigned char ID)
 }
 
 /**
- * Tells where is the motor
- * @returns Current position
- */
-unsigned Motor::getPosition() const
-{
-    return _PresentPos;
-}
-
-/**
  * Tells the motor baudrate
  * @returns Current baudrate
  */

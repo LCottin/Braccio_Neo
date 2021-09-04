@@ -31,6 +31,7 @@ class AX18A : public Motor
         double getLoad();
         bool middle();
         bool Infos();
+        unsigned getPosition();
 
         ~AX18A();
 };
