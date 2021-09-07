@@ -18,67 +18,6 @@
 
 using namespace std;
 
-
-//Extrem values received by radio
-struct V_MAX
-{
-    const short XMIN = 260;
-    const short XMAX = 420;
-    const short XMOY = (XMIN + XMAX)/2;
-    
-    const short YMIN = 260; 
-    const short YMAX = 420;
-    const short YMOY = (YMIN + YMAX)/2;
-} vMax; 
-
-//Values local, stores current values
-struct localData
-{
-	short baseControl     = vMax.XMOY;
-	short shoulderControl = vMax.YMOY;
-	short elbowControl    = vMax.XMOY; 
-	short wristVerControl = vMax.XMOY;
-	short wristRotControl = vMax.YMOY;
-	short gripperControl  = vMax.YMOY;
-	char mode;
-	char action = NONE;
-} localData;
-
-
-// ---------------------------------------- //
-// -                AVERAGING             - //
-// ---------------------------------------- //
-//global variables for averaging data
-const unsigned AVERAGE_NB = 7; //must be odd
-const unsigned median = AVERAGE_NB / 2;
-unsigned counter;
-bool _pause;
-bool _stop;
-
-//arrays to store positions
-short _x1[AVERAGE_NB];
-short _y1[AVERAGE_NB];
-short _x2[AVERAGE_NB];
-short _y2[AVERAGE_NB];
-short _x3[AVERAGE_NB];
-short _y3[AVERAGE_NB];
-
-short averageX1;
-short averageY1;
-short averageX2;
-short averageY2;
-short averageX3;
-short averageY3;
-
-//positions
-unsigned _baseControl;
-unsigned _shoulderControl;
-unsigned _elbowControl;
-unsigned _wristVerControl;
-unsigned _wristRotControl;
-unsigned _gripperControl;
-
-
 // ---------------------------------------- //
 // -              COMPARAISON             - //
 // ---------------------------------------- //
@@ -89,7 +28,6 @@ int compare (const void * a, const void * b)
 {
    return ( *(int*)a - *(int*)b );
 }
-
 
 // ---------------------------------------- //
 // -            DATA SHAPPING             - //
@@ -125,12 +63,12 @@ void dataShapping()
     averageY3 = _y3[median];
     
     //gets value to send to motor thanks to a map
-    _baseControl       = mapping(averageX1, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(BASE, MINANGLE), BraccioNeo.getExtremValue(BASE, MAXANGLE));
-    _shoulderControl   = mapping(averageY1, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(SHOULDER, MINANGLE), BraccioNeo.getExtremValue(SHOULDER, MAXANGLE));
-    _elbowControl      = mapping(averageX2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(ELBOW, MINANGLE), BraccioNeo.getExtremValue(ELBOW, MAXANGLE));
-    _wristVerControl   = mapping(averageY2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(WRISTVER, MINANGLE), BraccioNeo.getExtremValue(WRISTVER, MAXANGLE));
-    _wristRotControl   = mapping(averageX3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(WRISTROT, MINANGLE), BraccioNeo.getExtremValue(WRISTROT, MAXANGLE));
-    _gripperControl    = mapping(averageY3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(GRIPPER, MINANGLE), BraccioNeo.getExtremValue(GRIPPER, MAXANGLE));
+    baseControl       = mapping(averageX1, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(BASE, MINANGLE), BraccioNeo.getExtremValue(BASE, MAXANGLE));
+    shoulderControl   = mapping(averageY1, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(SHOULDER, MINANGLE), BraccioNeo.getExtremValue(SHOULDER, MAXANGLE));
+    elbowControl      = mapping(averageX2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(ELBOW, MINANGLE), BraccioNeo.getExtremValue(ELBOW, MAXANGLE));
+    wristVerControl   = mapping(averageY2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(WRISTVER, MINANGLE), BraccioNeo.getExtremValue(WRISTVER, MAXANGLE));
+    wristRotControl   = mapping(averageX3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(WRISTROT, MINANGLE), BraccioNeo.getExtremValue(WRISTROT, MAXANGLE));
+    gripperControl    = mapping(averageY3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(GRIPPER, MINANGLE), BraccioNeo.getExtremValue(GRIPPER, MAXANGLE));
 }
 
 // ---------------------------------------- //
@@ -150,14 +88,14 @@ void initArrays()
     }
 
     //inits other variables
-    counter             = 0;
+    counter              = 0;
     
-    _baseControl         = 180;
-    _shoulderControl     = 180;
-    _elbowControl        = 180;
-    _wristVerControl     = 180;
-    _wristRotControl     = 180;
-    _gripperControl      = 180;
+    baseControl         = 180;
+    shoulderControl     = 180;
+    elbowControl        = 180;
+    wristVerControl     = 180;
+    wristRotControl     = 180;
+    gripperControl      = 180;
 
     _pause   = false;
     _stop    = false;
@@ -166,14 +104,14 @@ void initArrays()
 int main(int argc, char const *argv[])
 {
 #ifndef __APPLE__
-    //init radio
+    //inits radio
     radio.begin();
     //radio.setPALevel(RF24_PA_MAX);
     radio.setDataRate(RF24_2MBPS);
     radio.startListening();
     network.begin(108, myNode);
 
-    //init data
+    //inits data
     initArrays();
 
     while(true)
@@ -228,7 +166,7 @@ int main(int argc, char const *argv[])
                             break;
                     }
                     dataShapping();
-                    BraccioNeo.moveAll(_baseControl, _shoulderControl, _elbowControl, _wristVerControl, _wristRotControl, _gripperControl, false);
+                    BraccioNeo.moveAll(baseControl, shoulderControl, elbowControl, wristVerControl, wristRotControl, gripperControl, false);
                     break;
 
                 case NONE :
