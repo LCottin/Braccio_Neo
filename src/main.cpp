@@ -44,14 +44,6 @@ struct localData
 	char action = NONE;
 } localData;
 
-struct data
-{
-	short ID;
-	short x;
-	short y;
-	char mode;
-	char action;
-} receivedData;
 
 // ---------------------------------------- //
 // -                AVERAGING             - //

@@ -14,7 +14,7 @@
 #include "AX18A.hpp"
 #include "AX12A.hpp"
 #include "MX12W.hpp"
-// #include "Variables.hpp"
+#include "Variables.hpp"
 #include "lib/RASPICAM/raspicam.h"
 #include "lib/RF24/RF24.h"
 #include "lib/RF24/nRF24L01.h"
@@ -35,15 +35,6 @@ enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, NO
 enum MOTORS {BASE, SHOULDER, ELBOW, WRISTVER, WRISTROT, GRIPPER};
 enum EXTREM {MINPOS, MINANGLE, MIDDLEPOS, MIDDLEANGLE, MAXPOS, MAXANGLE};
 enum SPEED {V_SLOW = 10, SLOW = 25, NORMAL = 50, FAST = 75, V_FAST = 90};
-
-struct data2
-{
-	short ID;
-	short x;
-	short y;
-	char mode;
-	char action;
-} databraccio;
 
 class _BraccioNeo
 {

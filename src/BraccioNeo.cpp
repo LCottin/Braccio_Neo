@@ -175,10 +175,10 @@ bool _BraccioNeo::record(RF24Network& network, const bool replay, const bool sav
         if(network.available())
         {
             RF24NetworkHeader nHeader;
-            network.read(nHeader, &databraccio, sizeof(databraccio));
+            network.read(nHeader, &receivedData, sizeof(receivedData));
             
-            if (databraccio.ID == Telecommande)
-                record = !((short)databraccio.action == STOP);
+            if (receivedData.ID == Telecommande)
+                record = !((short)receivedData.action == STOP);
         }
 
         //delay to have smaller files, longer sleep results in smaller files put movement with less accuracy

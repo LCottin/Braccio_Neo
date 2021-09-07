@@ -16,14 +16,14 @@
 // -               STRUCTURES             - //
 // // ---------------------------------------- //
 // //Values received by the radio
-// struct data
-// {
-// 	short ID;
-// 	short x;
-// 	short y;
-// 	char mode;
-// 	char action;
-// };
+static struct data
+{
+	short ID;
+	short x;
+	short y;
+	char mode;
+	char action;
+} receivedData;
 
 // //Extrem values received by radio
 // struct V_MAX
