@@ -987,7 +987,7 @@ bool _BraccioNeo::takePicture(RaspiCam& cam, const string filename)
 	cam.retrieve(data, RASPICAM_FORMAT_RGB);
 
     //saves it
-    string path = "../src/Records/"
+    string path = "../src/Records/";
     path += filename;
     path += ".jpg";
 	ofstream file(path, std::ios::binary);
