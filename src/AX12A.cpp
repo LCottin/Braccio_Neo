@@ -88,6 +88,28 @@ bool AX12A::openPort()
 }
 
 /**
+ * Reads present position of the motor
+ * @returns It's current position
+ */
+unsigned AX12A::getPosition()
+{
+	unsigned pos;
+	_ComResult = _PacketHandler->read2ByteTxRx(_PortHandler, _ID, _PresentPosAddr, (uint16_t*)&pos, &_Error);
+	if (_ComResult != COMM_SUCCESS)
+	{
+		printf("%s\n", _PacketHandler->getTxRxResult(_ComResult));
+		return _PresentPos;
+	}
+	else if (_Error != 0)
+	{
+		printf("%s\n", _PacketHandler->getRxPacketError(_Error));
+		return _PresentPos;
+	}
+	_PresentPos = pos;
+	return _PresentPos;
+}
+
+/**
  * Makes the motor turn
  * @param newPos New position of the motor
  * @param degree Indicates if the position is given in degree

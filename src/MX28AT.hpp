@@ -34,6 +34,7 @@ class MX28AT : public Motor
         double getLoad();
         bool middle();
         bool Infos();
+        unsigned getPosition();
 
         ~MX28AT();
 };
