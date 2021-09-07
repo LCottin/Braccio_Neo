@@ -131,12 +131,11 @@ bool _BraccioNeo::Infos() const
 
 /**
  * Records a sequence of movement and allows the user to save it
- * @param replay Tells if the movement should be repeated 
- * @param save Tells if the movement should be saved
+ * @param network Network pointer 
  * @param filename Name of the file too save the movement 
  * @returns true if correctly recorded, else false
  */
-bool _BraccioNeo::record(RF24Network& network, const bool replay, const bool save, const string filename)
+bool _BraccioNeo::record(RF24Network& network, const string filename)
 {
     //declares six vectors for each motor
     vector<unsigned> base;
@@ -149,18 +148,24 @@ bool _BraccioNeo::record(RF24Network& network, const bool replay, const bool sav
     //tells when we should stop
     bool record = true;
 
+    unsigned stepDelay = 200;
+    const unsigned delay = 200;
+    const unsigned timeout = 60 * MILLISECOND;
+
     //tells if an erro occured 
     bool success = true;
 
     //puts the arm straight and disables every torque
     stand();
+    usleep(100 * MILLISECOND);
+
     for (unsigned i = 0; i < _NbMotors; i++)
     {
         success &= _Motors[i]->disableTorque();
     }
     
     //records movement while stop wasn't pressed
-    while(record)
+    while(record && (stepDelay < timeout))
     {
         //reads each position and converts its to degrees
         base.push_back      (mapping(_Motors[BASE]->getPosition(),     _Limits[BASE][MINPOS],     _Limits[BASE][MAXPOS],     0, 360));
@@ -177,16 +182,33 @@ bool _BraccioNeo::record(RF24Network& network, const bool replay, const bool sav
             RF24NetworkHeader nHeader;
             network.read(nHeader, &receivedData, sizeof(receivedData));
             
-            if (receivedData.ID == Telecommande)
+            if (receivedData.ID == REMOTE)
                 record = !((short)receivedData.action == STOP);
         }
 
         //delay to have smaller files, longer sleep results in smaller files put movement with less accuracy
-        usleep(200 * MILLISECOND);
+        stepDelay += delay;
+        usleep(delay * MILLISECOND);
     };
 
     //replays the movement
-    if (replay)
+    char replay = 0;
+    do
+    {
+        //gets the info
+        network.update();
+        if(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
+            if (receivedData.ID == REMOTE)
+                replay = (char)receivedData.action;
+        }
+    } while((replay != PLAY) && (replay != STOP));
+
+    //replays 
+    if (replay == PLAY)
     {
         for (unsigned long i = 0; i < base.size(); i++)
         {
@@ -196,7 +218,23 @@ bool _BraccioNeo::record(RF24Network& network, const bool replay, const bool sav
     }
 
     //saves the movement to the file
-    if (save)
+    char save = 0;
+    do
+    {
+        //gets the info
+        network.update();
+        if(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
+            if (receivedData.ID == REMOTE)
+                save = (char)receivedData.action;
+        }
+    } while((save != PLAY) && (save != STOP));
+
+    //Replays
+    if (save == PLAY)
     {
         string path = "../src/Records/";
         path += filename;
