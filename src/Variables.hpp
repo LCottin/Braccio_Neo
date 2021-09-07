@@ -3,8 +3,6 @@
 
 //This file contains global variables used by the Braccio
 
-#include "BraccioNeo.hpp"
-
 // ---------------------------------------- //
 // -             ENUMERATIONS             - //
 // ---------------------------------------- //
@@ -51,39 +49,5 @@ struct localData
 	char mode;
 	char action = NONE;
 } localData;
-
-
-// ---------------------------------------- //
-// -                AVERAGING             - //
-// ---------------------------------------- //
-//global variables for averaging data
-const unsigned AVERAGE_NB = 7; //must be odd
-const unsigned median = AVERAGE_NB / 2;
-unsigned counter;
-bool _pause;
-bool _stop;
-
-//arrays to store positions
-short _x1[AVERAGE_NB];
-short _y1[AVERAGE_NB];
-short _x2[AVERAGE_NB];
-short _y2[AVERAGE_NB];
-short _x3[AVERAGE_NB];
-short _y3[AVERAGE_NB];
-
-short averageX1;
-short averageY1;
-short averageX2;
-short averageY2;
-short averageX3;
-short averageY3;
-
-//positions
-unsigned baseControl;
-unsigned shoulderControl;
-unsigned elbowControl;
-unsigned wristVerControl;
-unsigned wristRotControl;
-unsigned gripperControl;
 
 #endif

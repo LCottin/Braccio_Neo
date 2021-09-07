@@ -1,5 +1,5 @@
 #include "BraccioNeo.hpp"
-#include "Variables.hpp"
+//#include "Variables.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -17,6 +17,39 @@
 #endif
 
 using namespace std;
+
+// ---------------------------------------- //
+// -                AVERAGING             - //
+// ---------------------------------------- //
+//global variables for averaging data
+const unsigned AVERAGE_NB = 7; //must be odd
+const unsigned median = AVERAGE_NB / 2;
+unsigned counter;
+bool _pause;
+bool _stop;
+
+//arrays to store positions
+short _x1[AVERAGE_NB];
+short _y1[AVERAGE_NB];
+short _x2[AVERAGE_NB];
+short _y2[AVERAGE_NB];
+short _x3[AVERAGE_NB];
+short _y3[AVERAGE_NB];
+
+short averageX1;
+short averageY1;
+short averageX2;
+short averageY2;
+short averageX3;
+short averageY3;
+
+//positions
+unsigned _baseControl;
+unsigned _shoulderControl;
+unsigned _elbowControl;
+unsigned _wristVerControl;
+unsigned _wristRotControl;
+unsigned _gripperControl;
 
 
 // ---------------------------------------- //
@@ -65,12 +98,12 @@ void dataShapping()
     averageY3 = _y3[median];
     
     //gets value to send to motor thanks to a map
-    baseControl       = mapping(averageX1, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(BASE, MINANGLE), BraccioNeo.getExtremValue(BASE, MAXANGLE));
-    shoulderControl   = mapping(averageY1, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(SHOULDER, MINANGLE), BraccioNeo.getExtremValue(SHOULDER, MAXANGLE));
-    elbowControl      = mapping(averageX2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(ELBOW, MINANGLE), BraccioNeo.getExtremValue(ELBOW, MAXANGLE));
-    wristVerControl   = mapping(averageY2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(WRISTVER, MINANGLE), BraccioNeo.getExtremValue(WRISTVER, MAXANGLE));
-    wristRotControl   = mapping(averageX3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(WRISTROT, MINANGLE), BraccioNeo.getExtremValue(WRISTROT, MAXANGLE));
-    gripperControl    = mapping(averageY3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(GRIPPER, MINANGLE), BraccioNeo.getExtremValue(GRIPPER, MAXANGLE));
+    _baseControl       = mapping(averageX1, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(BASE, MINANGLE), BraccioNeo.getExtremValue(BASE, MAXANGLE));
+    _shoulderControl   = mapping(averageY1, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(SHOULDER, MINANGLE), BraccioNeo.getExtremValue(SHOULDER, MAXANGLE));
+    _elbowControl      = mapping(averageX2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(ELBOW, MINANGLE), BraccioNeo.getExtremValue(ELBOW, MAXANGLE));
+    _wristVerControl   = mapping(averageY2, vMax.XMIN, vMax.XMAX, BraccioNeo.getExtremValue(WRISTVER, MINANGLE), BraccioNeo.getExtremValue(WRISTVER, MAXANGLE));
+    _wristRotControl   = mapping(averageX3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(WRISTROT, MINANGLE), BraccioNeo.getExtremValue(WRISTROT, MAXANGLE));
+    _gripperControl    = mapping(averageY3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(GRIPPER, MINANGLE), BraccioNeo.getExtremValue(GRIPPER, MAXANGLE));
 }
 
 // ---------------------------------------- //
@@ -92,12 +125,12 @@ void initArrays()
     //inits other variables
     counter             = 0;
     
-    baseControl         = 180;
-    shoulderControl     = 180;
-    elbowControl        = 180;
-    wristVerControl     = 180;
-    wristRotControl     = 180;
-    gripperControl      = 180;
+    _baseControl         = 180;
+    _shoulderControl     = 180;
+    _elbowControl        = 180;
+    _wristVerControl     = 180;
+    _wristRotControl     = 180;
+    _gripperControl      = 180;
 
     _pause   = false;
     _stop    = false;
@@ -168,7 +201,7 @@ int main(int argc, char const *argv[])
                             break;
                     }
                     dataShapping();
-                    BraccioNeo.moveAll(baseControl, shoulderControl, elbowControl, wristVerControl, wristRotControl, gripperControl, false);
+                    BraccioNeo.moveAll(_baseControl, _shoulderControl, _elbowControl, _wristVerControl, _wristRotControl, _gripperControl, false);
                     break;
 
                 case NONE :
