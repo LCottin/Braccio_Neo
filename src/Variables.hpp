@@ -1,5 +1,5 @@
-// #ifndef __VARIABLES__
-// #define __VARIABLES__
+#ifndef __VARIABLES__
+#define __VARIABLES__
 
 // //This file contains global variables used by the Braccio
 
@@ -12,18 +12,18 @@
 // enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, NONE = 25};
 
 
-// // ---------------------------------------- //
-// // -               STRUCTURES             - //
-// // ---------------------------------------- //
-// //Values received by the radio
-// struct data
-// {
-// 	short ID;
-// 	short x;
-// 	short y;
-// 	char mode;
-// 	char action;
-// } receivedData;
+// ---------------------------------------- //
+// -               STRUCTURES             - //
+// ---------------------------------------- //
+//Values received by the radio
+struct data
+{
+	short ID;
+	short x;
+	short y;
+	char mode;
+	char action;
+};
 
 // //Extrem values received by radio
 // struct V_MAX
@@ -50,4 +50,4 @@
 // 	char action = NONE;
 // } localData;
 
-// #endif
+#endif

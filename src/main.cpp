@@ -1,5 +1,5 @@
 #include "BraccioNeo.hpp"
-//#include "Variables.hpp"
+#include "Variables.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -44,6 +44,7 @@ struct localData
 	char action = NONE;
 } localData;
 
+struct data receivedData;
 
 // ---------------------------------------- //
 // -                AVERAGING             - //
