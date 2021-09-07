@@ -18,6 +18,33 @@
 
 using namespace std;
 
+
+//Extrem values received by radio
+struct V_MAX
+{
+    const short XMIN = 260;
+    const short XMAX = 420;
+    const short XMOY = (XMIN + XMAX)/2;
+    
+    const short YMIN = 260; 
+    const short YMAX = 420;
+    const short YMOY = (YMIN + YMAX)/2;
+} vMax; 
+
+//Values local, stores current values
+struct localData
+{
+	short baseControl     = vMax.XMOY;
+	short shoulderControl = vMax.YMOY;
+	short elbowControl    = vMax.XMOY; 
+	short wristVerControl = vMax.XMOY;
+	short wristRotControl = vMax.YMOY;
+	short gripperControl  = vMax.YMOY;
+	char mode;
+	char action = NONE;
+} localData;
+
+
 // ---------------------------------------- //
 // -                AVERAGING             - //
 // ---------------------------------------- //
