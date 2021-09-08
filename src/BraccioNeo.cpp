@@ -21,7 +21,7 @@ _BraccioNeo::_BraccioNeo()
     _Motors.push_back(_Gripper);
     
     initValues();
-    _Stand = true;
+    stand();
 } 
 
 /**

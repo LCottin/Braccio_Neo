@@ -513,7 +513,7 @@ double MX106AT::getLoad()
  */
 bool MX106AT::middle()
 {
-	return move(_Middle, true);
+	return move(_Middle, false);
 }
 
 /**

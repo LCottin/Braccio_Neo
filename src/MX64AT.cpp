@@ -513,7 +513,7 @@ double MX64AT::getLoad()
  */
 bool MX64AT::middle()
 {
-	return move(2048, false);
+	return move(_Middle, false);
 }
 
 /**
