@@ -5,12 +5,12 @@ _BraccioNeo BraccioNeo;
 _BraccioNeo::_BraccioNeo()
 {
     //declares motors
-    _Base       = new MX64AT(BASE);
-    _Shoulder   = new MX64AT(SHOULDER);
+    _Base       = new MX106AT(BASE);
+    _Shoulder   = new MX106AT(SHOULDER);
     _Elbow      = new MX64AT(ELBOW);
     _WristVer   = new MX28AT(WRISTVER);
-    _WristRot   = new AX12A(WRISTROT);
-    _Gripper    = new MX12W(GRIPPER);
+    _WristRot   = new AX18A(WRISTROT);
+    _Gripper    = new AX18A(GRIPPER);
     
     //pushes them into the vector
     _Motors.push_back(_Base);
@@ -87,12 +87,12 @@ void _BraccioNeo::initValues()
     _Limits[WRISTROT][MAXANGLE]     = 300;
     
     //limits for the gripper
-    _Limits[GRIPPER][MINPOS]       = 0;
-    _Limits[GRIPPER][MINANGLE]     = 0;
+    _Limits[GRIPPER][MINPOS]       = 212;
+    _Limits[GRIPPER][MINANGLE]     = 62;
     _Limits[GRIPPER][MIDDLEPOS]    = 512;
-    _Limits[GRIPPER][MIDDLEANGLE]  = 180;
-    _Limits[GRIPPER][MAXPOS]       = 1023;
-    _Limits[GRIPPER][MAXANGLE]     = 300;
+    _Limits[GRIPPER][MIDDLEANGLE]  = 150;
+    _Limits[GRIPPER][MAXPOS]       = 805;
+    _Limits[GRIPPER][MAXANGLE]     = 236;
 
     cout << "Init values correctly done" << endl;
 }
@@ -499,6 +499,24 @@ bool _BraccioNeo::moveGripper(unsigned gripper, const bool degree)
     }
     _Stand = false;
     return _Motors[GRIPPER]->move(_CurrentPosition[GRIPPER], degree);
+}
+
+/**
+ * Closes the gripper 
+ * @returns true if correctly closed, else false
+ */
+bool _BraccioNeo::closeGripper()
+{
+    return moveGripper(_Limits[GRIPPER][MAXANGLE]);
+}
+
+/**
+ * Opens the gripper 
+ * @returns true if correctly opened, else false
+ */
+bool _BraccioNeo::openGripper()
+{
+    return moveGripper(_Limits[GRIPPER][MINANGLE]);
 }
 
 /**

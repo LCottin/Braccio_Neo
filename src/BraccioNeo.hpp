@@ -62,6 +62,8 @@ class _BraccioNeo
         bool moveWristVer(unsigned wirstver, const bool degree = true);
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
+        bool openGripper();
+        bool closeGripper();
         bool isStanding() const;
 
         bool record(RF24Network& network, const string filename = "test");
