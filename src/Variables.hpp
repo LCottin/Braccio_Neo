@@ -60,31 +60,31 @@ static struct localData
 //global variables for averaging data
 const static unsigned AVERAGE_NB = 7; //must be odd
 const static unsigned median = AVERAGE_NB / 2;
-static unsigned counter;
-static bool _pause;
-static bool _stop;
+static unsigned counter = 0;
+static bool _pause = false;
+static bool _stop = false;
 
 //arrays to store positions
-static short _x1[AVERAGE_NB];
-static short _y1[AVERAGE_NB];
-static short _x2[AVERAGE_NB];
-static short _y2[AVERAGE_NB];
-static short _x3[AVERAGE_NB];
-static short _y3[AVERAGE_NB];
+static short _x1[AVERAGE_NB] = {0};
+static short _y1[AVERAGE_NB] = {0};
+static short _x2[AVERAGE_NB] = {0};
+static short _y2[AVERAGE_NB] = {0};
+static short _x3[AVERAGE_NB] = {0};
+static short _y3[AVERAGE_NB] = {0};
 
-static short averageX1;
-static short averageY1;
-static short averageX2;
-static short averageY2;
-static short averageX3;
-static short averageY3;
+static short averageX1 = 0;
+static short averageY1 = 0;
+static short averageX2 = 0;
+static short averageY2 = 0;
+static short averageX3 = 0;
+static short averageY3 = 0;
 
 //positions
-static unsigned baseControl;
-static unsigned shoulderControl;
-static unsigned elbowControl;
-static unsigned wristVerControl;
-static unsigned wristRotControl;
-static unsigned gripperControl;
+static unsigned baseControl = 0;
+static unsigned shoulderControl = 0;
+static unsigned elbowControl = 0;
+static unsigned wristVerControl = 0;
+static unsigned wristRotControl = 0;
+static unsigned gripperControl = 0;
 
 #endif
