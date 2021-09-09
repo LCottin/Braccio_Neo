@@ -6,6 +6,7 @@
 #include <fstream>
 #include <ctime>
 #include <unistd.h>
+#include <algorithm>
 
 #include "Motor.hpp"
 #include "MX106AT.hpp"
