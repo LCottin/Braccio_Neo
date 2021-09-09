@@ -9,7 +9,8 @@
 //Tells which bracelet is speaking and with which order
 enum BRACELETS  {EMITTER1, EMITTER2, EMITTER3, REMOTE};
 enum ACTIONS    {PLAY = 11, PAUSE = 12, STOP = 13};
-enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, RECORD = 25, NONE = 26};
+enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, RECORD = 25, READ = 26, NONE = 27};
+enum FILES      {FILE_1, FILE_2, FILE_3, FILE_4, FILE_5};
 enum MOTORS 	{BASE, SHOULDER, ELBOW, WRISTVER, WRISTROT, GRIPPER};
 enum EXTREM 	{MINPOS, MINANGLE, MIDDLEPOS, MIDDLEANGLE, MAXPOS, MAXANGLE};
 enum SPEED 		{V_SLOW = 10, SLOW = 25, NORMAL = 50, FAST = 75, V_FAST = 90};
@@ -21,11 +22,12 @@ enum SPEED 		{V_SLOW = 10, SLOW = 25, NORMAL = 50, FAST = 75, V_FAST = 90};
 // //Values received by the radio
 static struct data
 {
-	short ID;
+	char ID;
 	short x;
 	short y;
 	char mode;
 	char action;
+	char file;
 } receivedData;
 
 //Extrem values received by radio
@@ -51,6 +53,7 @@ static struct localData
 	short gripperControl  = vMax.YMOY;
 	char mode;
 	char action = NONE;
+	char file;
 } localData;
 
 
