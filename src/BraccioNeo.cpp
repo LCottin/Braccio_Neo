@@ -236,6 +236,10 @@ bool _BraccioNeo::record(RF24Network& network, const string filename)
     //Replays
     if (save == PLAY)
     {
+        string filename;
+        filename.push_back(receivedData.file);
+        transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
+
         string path = "../src/Records/";
         path += filename;
         path += ".txt";
