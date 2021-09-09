@@ -125,13 +125,22 @@ int main(int argc, char const *argv[])
             
             switch (receivedData.mode)
             {
+                case READ :
+                    //lower each letter of the filename before opening it
+                    string filename;
+                    filename.push_back(receivedData.file);
+
+                    cout << "READ" << endl;
+                    BraccioNeo.readFromFile(filename);
+                    break;
+
                 case ANGRY :
                     cout << "ANGRY" << endl;
                     BraccioNeo.angry();
                     break;
                 
                 case JOY : 
-                    cout << "JOIE" << endl;
+                    cout << "JOY" << endl;
                     BraccioNeo.joy();
                     break;
 
@@ -146,7 +155,7 @@ int main(int argc, char const *argv[])
                     break;
 
                 case CONTROL : 
-                    cout << "CONTROLE" << endl;
+                    cout << "CONTROL" << endl;
                     localData.action = receivedData.action;
                     switch (receivedData.ID)
                     {
