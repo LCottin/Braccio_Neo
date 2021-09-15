@@ -287,7 +287,7 @@ void loop()
                   } while (u8g2.nextPage());
                   break;
   
-              case PAUSE :
+              case PAUSE : 
                   u8g2.firstPage();
                   do 
                   {
