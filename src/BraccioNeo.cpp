@@ -293,11 +293,36 @@ unsigned _BraccioNeo::getExtremValue(MOTORS motor, EXTREM extrem)
  * @param filename Name of the file to read
  * @returns true if everything went right, else false
  */
-bool _BraccioNeo::readFromFile(const string filename)
+bool _BraccioNeo::readFromFile(const FILES filename)
 {
     //makes the complete path
     string path = "../src/Records/";
-    path += filename;
+    switch (filename)
+    {
+        case FILE_1 :
+            path += "FILE_1";
+            break;
+        
+        case FILE_2 :
+            path += "FILE_2";
+            break;
+
+        case FILE_3 :
+            path += "FILE_3";
+            break;
+
+        case FILE_4 :
+            path += "FILE_4";
+            break;
+
+        case FILE_5 :
+            path += "FILE_5";
+            break;
+        
+        default:
+            break;
+    }
+
     path += ".txt";
 
     //opens the file and reads it's content

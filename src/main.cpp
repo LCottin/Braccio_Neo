@@ -129,12 +129,8 @@ int main(int argc, char const *argv[])
             switch (receivedData.mode)
             {
                 case READ :
-                    //lower each letter of the filename before opening it
-                    string filename;
-                    filename.push_back(receivedData.file);
-
                     cout << "READ" << endl;
-                    BraccioNeo.readFromFile(filename);
+                    BraccioNeo.readFromFile(receivedData.file);
                     break;
 
                 case ANGRY :
