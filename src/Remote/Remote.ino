@@ -11,7 +11,8 @@
 #define REMOTE 4 
 
 //buttons
-enum BUTTONS {PIN_HIGH = 6, PIN_LOW = 5, PIN_PLAY = 3, PIN_PAUSE = 2, PIN_STOP = 4};
+//enum BUTTONS {PIN_HIGH = 6, PIN_LOW = 5, PIN_PLAY = 3, PIN_PAUSE = 2, PIN_STOP = 4};
+enum BUTTONS {PIN_HIGH = 4, PIN_LOW = 2, PIN_PLAY = 3, PIN_PAUSE = 5, PIN_STOP = 6};
 enum ACTIONS {PLAY = 11, PAUSE = 12, STOP = 13};
 enum MODES   {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, RECORD = 25, READ = 26, NONE = 27};
 enum FILES   {FILE_1, FILE_2, FILE_3, FILE_4, FILE_5};
@@ -73,8 +74,8 @@ void setup()
     pinMode(PIN_PAUSE, INPUT);
     pinMode(PIN_STOP, INPUT);
     
-    pinMode(A7, OUTPUT);
-    digitalWrite(A7, HIGH);
+    pinMode(A0, OUTPUT);
+    digitalWrite(A0, HIGH);
     
     //inits screen
     u8g2.begin();
