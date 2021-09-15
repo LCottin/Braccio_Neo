@@ -62,7 +62,6 @@ class Motor
     public:
         Motor(const unsigned char ID);
         
-        unsigned getPosition() const;
         unsigned getBaudrate() const;
         unsigned getP() const;
         unsigned getI() const;
@@ -89,6 +88,7 @@ class Motor
         virtual double getTemperature() = 0;
         virtual double getLoad() = 0;
         virtual bool Infos() = 0;
+        virtual unsigned getPosition() = 0;
 
         virtual ~Motor() = 0;
 };

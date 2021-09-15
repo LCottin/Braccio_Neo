@@ -34,6 +34,7 @@ class MX12W : public Motor
         double getLoad();
         bool middle();
         bool Infos();
+        unsigned getPosition();
 
         ~MX12W();
 };

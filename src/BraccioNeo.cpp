@@ -5,12 +5,12 @@ _BraccioNeo BraccioNeo;
 _BraccioNeo::_BraccioNeo()
 {
     //declares motors
-    _Base       = new MX64AT(BASE);
-    _Shoulder   = new MX64AT(SHOULDER);
+    _Base       = new MX106AT(BASE);
+    _Shoulder   = new MX106AT(SHOULDER);
     _Elbow      = new MX64AT(ELBOW);
     _WristVer   = new MX28AT(WRISTVER);
-    _WristRot   = new AX12A(WRISTROT);
-    _Gripper    = new MX12W(GRIPPER);
+    _WristRot   = new AX18A(WRISTROT);
+    _Gripper    = new AX18A(GRIPPER);
     
     //pushes them into the vector
     _Motors.push_back(_Base);
@@ -21,6 +21,7 @@ _BraccioNeo::_BraccioNeo()
     _Motors.push_back(_Gripper);
     
     initValues();
+    stand();
 } 
 
 /**
@@ -86,12 +87,12 @@ void _BraccioNeo::initValues()
     _Limits[WRISTROT][MAXANGLE]     = 300;
     
     //limits for the gripper
-    _Limits[GRIPPER][MINPOS]       = 0;
-    _Limits[GRIPPER][MINANGLE]     = 0;
+    _Limits[GRIPPER][MINPOS]       = 212;
+    _Limits[GRIPPER][MINANGLE]     = 62;
     _Limits[GRIPPER][MIDDLEPOS]    = 512;
-    _Limits[GRIPPER][MIDDLEANGLE]  = 180;
-    _Limits[GRIPPER][MAXPOS]       = 1023;
-    _Limits[GRIPPER][MAXANGLE]     = 300;
+    _Limits[GRIPPER][MIDDLEANGLE]  = 150;
+    _Limits[GRIPPER][MAXPOS]       = 805;
+    _Limits[GRIPPER][MAXANGLE]     = 236;
 
     cout << "Init values correctly done" << endl;
 }
@@ -110,6 +111,7 @@ bool _BraccioNeo::stand()
 
         _CurrentPosition[i] = _Motors[i]->getPosition();
     }
+    _Stand = true;
     return true;
 }
 
@@ -128,12 +130,151 @@ bool _BraccioNeo::Infos() const
 }
 
 /**
+ * Records a sequence of movement and allows the user to save it
+ * @param network Network pointer 
+ * @param filename Name of the file too save the movement 
+ * @returns true if correctly recorded, else false
+ */
+bool _BraccioNeo::record(RF24Network& network, const string filename)
+{
+    //declares six vectors for each motor
+    vector<unsigned> base;
+    vector<unsigned> shoudler;
+    vector<unsigned> elbow;
+    vector<unsigned> wristVer;
+    vector<unsigned> wristRot;
+    vector<unsigned> gripper;
+
+    //tells when we should stop
+    bool record = true;
+
+    unsigned stepDelay = 200;
+    const unsigned delay = 200;
+    const unsigned timeout = 60 * MILLISECOND;
+
+    //tells if an erro occured 
+    bool success = true;
+
+    //puts the arm straight and disables every torque
+    stand();
+    usleep(100 * MILLISECOND);
+
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        success &= _Motors[i]->disableTorque();
+    }
+    
+    //records movement while stop wasn't pressed
+    while(record && (stepDelay < timeout))
+    {
+        //reads each position and converts its to degrees
+        base.push_back      (mapping(_Motors[BASE]->getPosition(),     _Limits[BASE][MINPOS],     _Limits[BASE][MAXPOS],     0, 360));
+        shoudler.push_back  (mapping(_Motors[SHOULDER]->getPosition(), _Limits[SHOULDER][MINPOS], _Limits[SHOULDER][MAXPOS], 0, 360));
+        elbow.push_back     (mapping(_Motors[ELBOW]->getPosition(),    _Limits[ELBOW][MINPOS],    _Limits[ELBOW][MAXPOS],    0, 360));
+        wristVer.push_back  (mapping(_Motors[WRISTVER]->getPosition(), _Limits[WRISTVER][MINPOS], _Limits[WRISTVER][MAXPOS], 0, 360));
+        wristRot.push_back  (mapping(_Motors[WRISTROT]->getPosition(), _Limits[WRISTROT][MINPOS], _Limits[WRISTROT][MAXPOS], 0, 360));
+        gripper.push_back   (mapping(_Motors[GRIPPER]->getPosition(),  _Limits[GRIPPER][MINPOS],  _Limits[GRIPPER][MAXPOS],  0, 360));
+        
+        //reads network to search for a stop
+        network.update();
+        if(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
+            if (receivedData.ID == REMOTE)
+                record = !((short)receivedData.action == STOP);
+        }
+
+        //delay to have smaller files, longer sleep results in smaller files put movement with less accuracy
+        stepDelay += delay;
+        usleep(delay * MILLISECOND);
+    };
+
+    //replays the movement
+    char replay = 0;
+    do
+    {
+        //gets the info
+        network.update();
+        if(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
+            if (receivedData.ID == REMOTE)
+                replay = (char)receivedData.action;
+        }
+    } while((replay != PLAY) && (replay != STOP));
+
+    //replays 
+    if (replay == PLAY)
+    {
+        for (unsigned long i = 0; i < base.size(); i++)
+        {
+            success &= moveAll(base[i], shoudler[i], elbow[i], wristVer[i], wristRot[i], gripper[i], false);
+            usleep(500 * MILLISECOND);
+        }
+    }
+
+    //saves the movement to the file
+    char save = 0;
+    do
+    {
+        //gets the info
+        network.update();
+        if(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
+            if (receivedData.ID == REMOTE)
+                save = (char)receivedData.action;
+        }
+    } while((save != PLAY) && (save != STOP));
+
+    //Replays
+    if (save == PLAY)
+    {
+        string filename;
+        filename.push_back(receivedData.file);
+        transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
+
+        string path = "../src/Records/";
+        path += filename;
+        path += ".txt";
+
+        ofstream file(path);
+        if (file)
+        {
+            for (unsigned long i = 0; i < base.size(); i++)
+                file << base[i] << " " << shoudler[i] << " " << elbow[i] << " " << wristVer[i] << " " << wristRot[i] << " " << gripper[i] << endl;
+        }
+        else
+        {
+            cout << "Error when opening the file." << endl;
+            success = false;
+        }
+    }
+    return success;
+}
+
+/**
  * Returns how many motors are connected
  * @returns The number of motor
  */
 short _BraccioNeo::getMotors() const
 {
     return _NbMotors; 
+}
+
+/**
+ * Tells if the arm is standing
+ * @returns true if the arm is standing, else false
+ */
+bool _BraccioNeo::isStanding() const
+{
+    return _Stand;
 }
 
 /**
@@ -265,7 +406,7 @@ bool _BraccioNeo::moveAll(unsigned base, unsigned shoulder, unsigned elbow, unsi
     {
 	    success &= _Motors[i]->move(_CurrentPosition[i], degree, blocking);
     }
-
+    _Stand = false;
     return success;
 }
 
@@ -286,6 +427,7 @@ bool _BraccioNeo::moveBase(unsigned base, const bool degree)
         _CurrentPosition[BASE] = (base < _Limits[BASE][MINPOS]) ? _Limits[BASE][MINPOS] : base;
         _CurrentPosition[BASE] = (base > _Limits[BASE][MAXPOS]) ? _Limits[BASE][MAXPOS] : base;
     }
+    _Stand = false;
     return _Motors[BASE]->move(_CurrentPosition[BASE], degree);
 }
 
@@ -306,6 +448,7 @@ bool _BraccioNeo::moveShoulder(unsigned shoulder, const bool degree)
         _CurrentPosition[SHOULDER] = (shoulder < _Limits[SHOULDER][MINPOS]) ? _Limits[SHOULDER][MINPOS] : shoulder;
         _CurrentPosition[SHOULDER] = (shoulder > _Limits[SHOULDER][MAXPOS]) ? _Limits[SHOULDER][MAXPOS] : shoulder;
     }
+    _Stand = false;
     return _Motors[SHOULDER]->move(_CurrentPosition[SHOULDER], degree);
 }
 
@@ -326,6 +469,7 @@ bool _BraccioNeo::moveElbow(unsigned elbow, const bool degree)
         _CurrentPosition[ELBOW] = (elbow < _Limits[ELBOW][MINPOS]) ? _Limits[ELBOW][MINPOS] : elbow;
         _CurrentPosition[ELBOW] = (elbow > _Limits[ELBOW][MAXPOS]) ? _Limits[ELBOW][MAXPOS] : elbow;
     }
+    _Stand = false;
     return _Motors[ELBOW]->move(_CurrentPosition[ELBOW], degree);
 }
 
@@ -346,6 +490,7 @@ bool _BraccioNeo::moveWristVer(unsigned wristver, const bool degree)
         _CurrentPosition[WRISTVER] = (wristver < _Limits[WRISTVER][MINPOS]) ? _Limits[WRISTVER][MINPOS] : wristver;
         _CurrentPosition[WRISTVER] = (wristver > _Limits[WRISTVER][MAXPOS]) ? _Limits[WRISTVER][MAXPOS] : wristver;
     }
+    _Stand = false;
     return _Motors[WRISTVER]->move(_CurrentPosition[WRISTVER], degree);
 }
 
@@ -366,6 +511,7 @@ bool _BraccioNeo::moveWristRot(unsigned wristrot, const bool degree)
         _CurrentPosition[WRISTROT] = (wristrot < _Limits[WRISTROT][MINPOS]) ? _Limits[WRISTROT][MINPOS] : wristrot;
         _CurrentPosition[WRISTROT] = (wristrot > _Limits[WRISTROT][MAXPOS]) ? _Limits[WRISTROT][MAXPOS] : wristrot;
     }
+    _Stand = false;
     return _Motors[WRISTROT]->move(_CurrentPosition[WRISTROT], degree);
 }
 
@@ -386,7 +532,26 @@ bool _BraccioNeo::moveGripper(unsigned gripper, const bool degree)
         _CurrentPosition[GRIPPER] = (gripper < _Limits[GRIPPER][MINPOS]) ? _Limits[GRIPPER][MINPOS] : gripper;
         _CurrentPosition[GRIPPER] = (gripper > _Limits[GRIPPER][MAXPOS]) ? _Limits[GRIPPER][MAXPOS] : gripper;
     }
-  return _Motors[GRIPPER]->move(_CurrentPosition[GRIPPER], degree);
+    _Stand = false;
+    return _Motors[GRIPPER]->move(_CurrentPosition[GRIPPER], degree);
+}
+
+/**
+ * Closes the gripper 
+ * @returns true if correctly closed, else false
+ */
+bool _BraccioNeo::closeGripper()
+{
+    return moveGripper(_Limits[GRIPPER][MAXANGLE]);
+}
+
+/**
+ * Opens the gripper 
+ * @returns true if correctly opened, else false
+ */
+bool _BraccioNeo::openGripper()
+{
+    return moveGripper(_Limits[GRIPPER][MINANGLE]);
 }
 
 /**
@@ -396,6 +561,7 @@ void _BraccioNeo::angry(SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
+    _Stand = false;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
@@ -595,6 +761,7 @@ void _BraccioNeo::surprise(SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
+    _Stand = false;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
@@ -644,6 +811,7 @@ void _BraccioNeo::shy(SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
+    _Stand = false;
 
     for (unsigned i = 0; i < _NbMotors; i++)
     {
@@ -786,6 +954,106 @@ void _BraccioNeo::shy(SPEED speed)
     cout << "Shy emotion lasted " << time << "seconds." << endl;
 }
 
+/*
+ * Plays the joy emotion
+ */
+void _BraccioNeo::joy(SPEED speed)
+{
+    _Start = clock();
+    _Speed = speed;
+    _Stand = false;
+
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        changeSpeed((MOTORS)i, _Speed);
+    }
+
+    moveShoulder(230);
+    usleep(100 * MILLISECOND);
+    moveElbow(130);
+    usleep(100 * MILLISECOND);
+
+    for (char i = 0; i < 4; i++)
+    {
+        moveWristRot(240);
+        usleep(50 * MILLISECOND);
+        moveWristRot(100);
+        usleep(50 * MILLISECOND);
+    }
+
+    usleep(1000 * MILLISECOND);
+    stand();
+
+    moveWristRot(150);
+    moveBase(260);
+    moveWristVer(180);
+    usleep(50 * MILLISECOND);
+    moveBase(30);
+    moveWristVer(100);
+    usleep(50 * MILLISECOND);
+
+    for (char i = 0; i < 2; i++)
+    {
+        moveBase(240);
+        usleep(25 * MILLISECOND);
+        moveShoulder(150);
+        usleep(25 * MILLISECOND);
+        moveElbow(240);
+        usleep(250 * MILLISECOND);
+        moveWristRot(120);
+        usleep(25 * MILLISECOND);
+
+        moveBase(130);
+        usleep(25 * MILLISECOND);
+        moveWristRot(150);
+        usleep(250 * MILLISECOND);
+        moveElbow(130);
+        usleep(25 * MILLISECOND);
+        moveShoulder(220);
+        usleep(25 * MILLISECOND);
+    }
+                
+    moveBase(180);
+    moveShoulder(230);
+    usleep(25 * MILLISECOND);
+    moveElbow(130);
+    usleep(25 * MILLISECOND);
+
+    for (char i = 0; i < 3; i++)
+    {
+        // openGripper();
+        // usleep(50 * MILLISECOND);
+        // closeGripper();
+        // usleep(50 * MILLISECOND);
+    }
+    moveGripper(180);
+
+    for (char i = 0; i < 3; i++)
+    {
+        moveBase(130);
+        usleep(25 * MILLISECOND);
+        moveBase(230);
+        usleep(25 * MILLISECOND);
+    }
+    moveBase(180);
+    usleep(200 * MILLISECOND);
+
+    for (char i = 0; i < 2; i++)
+    {
+        moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+        moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        usleep(200 * MILLISECOND);
+    }
+    
+    usleep(1000 * MILLISECOND);
+    stand();
+
+    _Stop = clock();
+    long double time = (_Stop - _Start) / CLOCKS_PER_SEC;
+    cout << "Shy emotion lasted " << time << "seconds." << endl;
+}
+
 #ifndef __APPLE__
 /**
  * Takes a picture and saves it
@@ -793,30 +1061,32 @@ void _BraccioNeo::shy(SPEED speed)
  * @param filename Name of the saved picture
  * @returns true if successfully taken and saved, else false
  */
-bool _BraccioNeo::takePicture(RaspiCam& cam, string filename)
+bool _BraccioNeo::takePicture(RaspiCam& cam, const string filename)
 {
     if (cam.open() == false)
     {
-        cout << "Erreur lors de l'ouverture" << endl;
+        cout << "Error : camera is not opened." << endl;
         return false;
     }
 
+	unsigned char* data = new unsigned char [cam.getImageTypeSize(RASPICAM_FORMAT_RGB) ];
+
 	//takes picture
 	cam.grab();
-
-	unsigned char* data;
-    data = new unsigned char [cam.getImageTypeSize(RASPICAM_FORMAT_RGB) ];
 
 	//extracts image
 	cam.retrieve(data, RASPICAM_FORMAT_RGB);
 
     //saves it
-    filename += ".jpg";
-	ofstream outfile(filename, std::ios::binary);
-	outfile << "P6\n" << cam.getWidth() << " " << cam.getHeight() << " 255\n";
-	outfile.write( (char*)data, cam.getImageTypeSize(RASPICAM_FORMAT_RGB) );
-	cout << "Image saved" << endl;
+    string path = "../src/Records/";
+    path += filename;
+    path += ".jpg";
+	ofstream file(path, std::ios::binary);
+
+	file << "P6\n" << cam.getWidth() << " " << cam.getHeight() << " 255\n";
+	file.write( (char*)data, cam.getImageTypeSize(RASPICAM_FORMAT_RGB) );
 	
+    cout << "Image saved" << endl;
     delete[] data;
 	return true;
 }

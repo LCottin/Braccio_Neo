@@ -6,24 +6,26 @@
 #include <fstream>
 #include <ctime>
 #include <unistd.h>
+#include <algorithm>
 
 #include "Motor.hpp"
 #include "MX106AT.hpp"
 #include "MX28AT.hpp"
 #include "MX64AT.hpp"
 #include "AX18A.hpp"
-#include "lib/RASPICAM/raspicam.h"
 #include "AX12A.hpp"
 #include "MX12W.hpp"
+#include "Variables.hpp"
+
+#include "lib/RASPICAM/raspicam.h"
+#include "lib/RF24/RF24.h"
+#include "lib/RF24/nRF24L01.h"
+#include "lib/RF24/RF24Network.h"
 
 #define MILLISECOND 1000
 
 using namespace std;
 using namespace raspicam;
-
-enum MOTORS {BASE, SHOULDER, ELBOW, WRISTVER, WRISTROT, GRIPPER};
-enum EXTREM {MINPOS, MINANGLE, MIDDLEPOS, MIDDLEANGLE, MAXPOS, MAXANGLE};
-enum SPEED {V_SLOW = 10, SLOW = 25, NORMAL = 50, FAST = 75, V_FAST = 90};
 
 class _BraccioNeo
 {
@@ -39,12 +41,13 @@ class _BraccioNeo
         
         unsigned _NbMotors;
         unsigned** _Limits;
+        unsigned* _CurrentPosition;
+        bool _Stand;
 
         clock_t _Start;
         clock_t _Stop;
         SPEED _Speed;  
 
-        unsigned* _CurrentPosition;
 
     public:
         _BraccioNeo();
@@ -60,6 +63,12 @@ class _BraccioNeo
         bool moveWristVer(unsigned wirstver, const bool degree = true);
         bool moveWristRot(unsigned wirstrot, const bool degree = true);
         bool moveGripper(unsigned gripper, const bool degree = true);
+        bool openGripper();
+        bool closeGripper();
+        bool isStanding() const;
+
+        bool record(RF24Network& network, const string filename = "test");
+        bool takePicture(RaspiCam& cam, const string filename);
         bool readFromFile(const string filename);
 
         unsigned getExtremValue(MOTORS motor, EXTREM extrem);
@@ -67,10 +76,8 @@ class _BraccioNeo
         void surprise(SPEED speed = NORMAL);
         void angry(SPEED speed = NORMAL);
         void shy(SPEED speed = SLOW);
+        void joy(SPEED speed = NORMAL);
   
-        #ifndef __APPLE__
-            bool takePicture(RaspiCam& cam, string filename);
-        #endif
         ~_BraccioNeo();
 };
 

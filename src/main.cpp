@@ -1,23 +1,22 @@
 #include "BraccioNeo.hpp"
-#include "Variables.hpp"
+// #include "Variables.hpp"
 
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 
 #ifndef __APPLE__
-	#include "lib/RF24/RF24.h"
-	#include "lib/RF24/nRF24L01.h"
-	#include "lib/RF24/RF24Network.h"
-	
-	RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
-	RF24Network network(radio);
-	const uint16_t motherNode = 00;
-	const uint16_t myNode = motherNode;
+    #include "lib/RF24/RF24.h"
+    #include "lib/RF24/nRF24L01.h"
+    #include "lib/RF24/RF24Network.h"
+    
+    RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
+    RF24Network network(radio);
+    const uint16_t motherNode = 00;
+    const uint16_t myNode = motherNode;
 #endif
 
 using namespace std;
-
 
 // ---------------------------------------- //
 // -              COMPARAISON             - //
@@ -29,7 +28,6 @@ int compare (const void * a, const void * b)
 {
    return ( *(int*)a - *(int*)b );
 }
-
 
 // ---------------------------------------- //
 // -            DATA SHAPPING             - //
@@ -73,6 +71,35 @@ void dataShapping()
     gripperControl    = mapping(averageY3, vMax.YMIN, vMax.YMAX, BraccioNeo.getExtremValue(GRIPPER, MINANGLE), BraccioNeo.getExtremValue(GRIPPER, MAXANGLE));
 }
 
+// ---------------------------------------- //
+// -             INIT ARRAYS              - //
+// ---------------------------------------- //
+void initArrays()
+{
+    //inits data in each array that receive data from radio
+    for (unsigned i = 0; i < AVERAGE_NB; i++)
+    {
+        _x1[i] = vMax.XMOY;
+        _y1[i] = vMax.YMOY;
+        _x2[i] = vMax.XMOY;
+        _y2[i] = vMax.YMOY;
+        _x3[i] = vMax.XMOY;
+        _y3[i] = vMax.YMOY;
+    }
+
+    //inits other variables
+    counter              = 0;
+    
+    baseControl         = 180;
+    shoulderControl     = 180;
+    elbowControl        = 180;
+    wristVerControl     = 180;
+    wristRotControl     = 180;
+    gripperControl      = 180;
+
+    _pause   = false;
+    _stop    = false;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -80,44 +107,58 @@ int main(int argc, char const *argv[])
     BraccioNeo.readFromFile("test");
 /*
 #ifndef __APPLE__
-	radio.begin();
-	//radio.setPALevel(RF24_PA_MAX);
-	radio.setDataRate(RF24_2MBPS);
+    //inits radio
+    radio.begin();
+    //radio.setPALevel(RF24_PA_MAX);
+    radio.setDataRate(RF24_2MBPS);
+    radio.startListening();
+    network.begin(108, myNode);
 
-	radio.startListening();
+    //inits data
+    initArrays();
 
-	network.begin(108, myNode);
+    while(true)
+    {
+        network.update();
 
-	while(true)
-	{
-		network.update();
-
-		while(network.available())
-		{
-			RF24NetworkHeader nHeader;
-			network.read(nHeader, &receivedData, sizeof(receivedData));
-            // cout << "Emetteur : " << receivedData.ID << endl;
-            // cout << "X =        " << receivedData.x << endl;
-            // cout << "Y =        " << receivedData.y << endl;
-            receivedData.action = PLAY;
-            receivedData.mode   = CONTROL;
-
+        while(network.available())
+        {
+            RF24NetworkHeader nHeader;
+            network.read(nHeader, &receivedData, sizeof(receivedData));
+            
             switch (receivedData.mode)
             {
+                case READ :
+                    //lower each letter of the filename before opening it
+                    string filename;
+                    filename.push_back(receivedData.file);
+
+                    cout << "READ" << endl;
+                    BraccioNeo.readFromFile(filename);
+                    break;
+
                 case ANGRY :
-                    cout << "Colère" << endl;
+                    cout << "ANGRY" << endl;
+                    BraccioNeo.angry();
                     break;
                 
                 case JOY : 
-                    cout << "JOIE" << endl;
+                    cout << "JOY" << endl;
+                    BraccioNeo.joy();
                     break;
 
                 case SURPRISE :
                     cout << "SURPRISE" << endl;
+                    BraccioNeo.surprise();
+                    break;
+
+                case SHY :
+                    cout << "SHY" << endl;
+                    BraccioNeo.shy();
                     break;
 
                 case CONTROL : 
-                    cout << "CONTROLE" << endl;
+                    cout << "CONTROL" << endl;
                     localData.action = receivedData.action;
                     switch (receivedData.ID)
                     {
@@ -142,11 +183,12 @@ int main(int argc, char const *argv[])
 
                 case NONE :
                 default:
-                    cout << "Droit" << endl;
+                    if (!BraccioNeo.isStanding())
+                        BraccioNeo.stand();
                     break;
             }
-		}
-	}	
+        }
+    }   
 #endif
 */
 	return 0;

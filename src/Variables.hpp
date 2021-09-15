@@ -1,34 +1,37 @@
 #ifndef __VARIABLES__
 #define __VARIABLES__
 
-//This file contains global variables used by the Braccio
-
-#include "BraccioNeo.hpp"
+// //This file contains global variables used by the Braccio
 
 // ---------------------------------------- //
 // -             ENUMERATIONS             - //
 // ---------------------------------------- //
 //Tells which bracelet is speaking and with which order
-enum BRACELETS  {EMITTER1, EMITTER2, EMITTER3, Telecommande};
+enum BRACELETS  {EMITTER1, EMITTER2, EMITTER3, REMOTE};
 enum ACTIONS    {PLAY = 11, PAUSE = 12, STOP = 13};
-enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, CONTROL = 23, NONE = 24};
+enum MODES      {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, RECORD = 25, READ = 26, NONE = 27};
+enum FILES      {FILE_1, FILE_2, FILE_3, FILE_4, FILE_5};
+enum MOTORS 	{BASE, SHOULDER, ELBOW, WRISTVER, WRISTROT, GRIPPER};
+enum EXTREM 	{MINPOS, MINANGLE, MIDDLEPOS, MIDDLEANGLE, MAXPOS, MAXANGLE};
+enum SPEED 		{V_SLOW = 10, SLOW = 25, NORMAL = 50, FAST = 75, V_FAST = 90};
 
 
 // ---------------------------------------- //
 // -               STRUCTURES             - //
-// ---------------------------------------- //
-//Values received by the radio
-struct data
+// // ---------------------------------------- //
+// //Values received by the radio
+static struct data
 {
-	short ID;
+	char ID;
 	short x;
 	short y;
 	char mode;
 	char action;
+	char file;
 } receivedData;
 
 //Extrem values received by radio
-struct V_MAX
+static struct V_MAX
 {
     const short XMIN = 260;
     const short XMAX = 420;
@@ -40,7 +43,7 @@ struct V_MAX
 } vMax; 
 
 //Values local, stores current values
-struct localData
+static struct localData
 {
 	short baseControl     = vMax.XMOY;
 	short shoulderControl = vMax.YMOY;
@@ -50,6 +53,7 @@ struct localData
 	short gripperControl  = vMax.YMOY;
 	char mode;
 	char action = NONE;
+	char file;
 } localData;
 
 
@@ -57,31 +61,33 @@ struct localData
 // -                AVERAGING             - //
 // ---------------------------------------- //
 //global variables for averaging data
-const unsigned AVERAGE_NB = 7; //must be odd
-const unsigned median = AVERAGE_NB / 2;
-unsigned counter = 0;
+const static unsigned AVERAGE_NB = 7; //must be odd
+const static unsigned median = AVERAGE_NB / 2;
+static unsigned counter = 0;
+static bool _pause = false;
+static bool _stop = false;
 
 //arrays to store positions
-short _x1[AVERAGE_NB];
-short _y1[AVERAGE_NB];
-short _x2[AVERAGE_NB];
-short _y2[AVERAGE_NB];
-short _x3[AVERAGE_NB];
-short _y3[AVERAGE_NB];
+static short _x1[AVERAGE_NB] = {0};
+static short _y1[AVERAGE_NB] = {0};
+static short _x2[AVERAGE_NB] = {0};
+static short _y2[AVERAGE_NB] = {0};
+static short _x3[AVERAGE_NB] = {0};
+static short _y3[AVERAGE_NB] = {0};
 
-short averageX1;
-short averageY1;
-short averageX2;
-short averageY2;
-short averageX3;
-short averageY3;
+static short averageX1 = 0;
+static short averageY1 = 0;
+static short averageX2 = 0;
+static short averageY2 = 0;
+static short averageX3 = 0;
+static short averageY3 = 0;
 
 //positions
-unsigned baseControl 		= 180;
-unsigned shoulderControl 	= 180;
-unsigned elbowControl 		= 180;
-unsigned wristVerControl 	= 180;
-unsigned wristRotControl 	= 180;
-unsigned gripperControl 	= 180;
+static unsigned baseControl = 0;
+static unsigned shoulderControl = 0;
+static unsigned elbowControl = 0;
+static unsigned wristVerControl = 0;
+static unsigned wristRotControl = 0;
+static unsigned gripperControl = 0;
 
 #endif
