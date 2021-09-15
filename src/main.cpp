@@ -104,7 +104,7 @@ void initArrays()
 int main(int argc, char const *argv[])
 {
     cout << "bras initialisé" << endl; 
-    BraccioNeo.readFromFile("test");
+    
 /*
 #ifndef __APPLE__
     //inits radio
