@@ -12,7 +12,7 @@
 
 //buttons
 //enum BUTTONS {PIN_HIGH = 6, PIN_LOW = 5, PIN_PLAY = 3, PIN_PAUSE = 2, PIN_STOP = 4};
-enum BUTTONS {PIN_HIGH = 4, PIN_LOW = 2, PIN_PLAY = 3, PIN_PAUSE = 5, PIN_STOP = 6};
+enum BUTTONS {PIN_HIGH = 2, PIN_LOW = 3, PIN_PLAY = 5, PIN_PAUSE = 6, PIN_STOP = 4};
 enum ACTIONS {PLAY = 11, PAUSE = 12, STOP = 13};
 enum MODES   {ANGRY = 20, JOY = 21, SURPRISE = 22, SHY = 23, CONTROL = 24, RECORD = 25, READ = 26, NONE = 27};
 enum FILES   {FILE_1, FILE_2, FILE_3, FILE_4, FILE_5};
@@ -28,9 +28,9 @@ const byte myNode      = 04;
 //Screen 
 U8G2_SSD1306_128X64_NONAME_2_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 const byte ORDER_NUMBERS = 7;
-const char orderText[ORDER_NUMBERS][20] = {"Colere", "Joie", "Surprise", "Timite", "Controle", "Enregistrement", "Lecture"};
+const char orderText[ORDER_NUMBERS][20] = {"Colere", "Joie", "Surprise", "Timide", "Controle", "Enregistrer", "Lecture"};
 const byte order[ORDER_NUMBERS]         = {ANGRY, JOY, SURPRISE, SHY, CONTROL, RECORD, READ};
-short orderNum = 1; 
+short orderNum = -1; 
 
 //to read/write files
 const byte FILES_NUMBERS = 5;
@@ -45,7 +45,7 @@ struct dataToSend
     short xAxis   = 0; //useless for the remote
     short yAxis   = 0; //useless for the remote
     char mode     = NONE;
-    char _action  = PLAY;
+    char _action  = STOP;
     char file     = 0;
 } sendData;
 
@@ -179,10 +179,11 @@ void loop()
                 u8g2.firstPage();
                 do
                 {
+                    delay(25);
                     u8g2.setFont(u8g2_font_ncenB14_tr);
-                    u8g2.drawStr(10, 20, "Fichier à lire : ");
-                    u8g2.drawStr(20, 20, fileText[fileNum]);
-                    u8g2.drawStr(30, 20, "Oui = PLAY");
+                    u8g2.drawStr(10, 20, "A lire : ");
+                    u8g2.drawStr(10, 40, fileText[fileNum]);
+                    u8g2.drawStr(10, 60, "Oui = PLAY");
                 } while (u8g2.nextPage());
 
             } while (digitalRead(PIN_PLAY) != HIGH);
@@ -191,7 +192,7 @@ void loop()
             sendData.file = files[fileNum];
             RF24NetworkHeader nHeader(motherNode);
             network.write(nHeader, &sendData, sizeof(sendData));
-            delay(10);
+            delay(500);
             return;
         }
 
@@ -199,10 +200,11 @@ void loop()
         if (sendData.mode == RECORD)
         {
             //waits for the end of record
-            unsigned long t1 = millis();
+            unsigned long t = millis();
             while (digitalRead(PIN_STOP) != HIGH) {}
-            unsigned long t2 = millis();
+            t = millis() - t;
 
+            delay(1000);
             //asks for replay
             u8g2.clear();
             u8g2.firstPage();
@@ -210,9 +212,9 @@ void loop()
             {
                 u8g2.setFont(u8g2_font_ncenB14_tr);
                 u8g2.drawStr(10, 20, "Rejouer ?");
-                u8g2.drawStr(20, 20, "Oui = PLAY");
-                u8g2.drawStr(30, 20, "Non = STOP");
-            } while ((u8g2.nextPage()) && (digitalRead(PIN_PLAY) != HIGH) && (digitalRead(PIN_STOP) != HIGH));
+                u8g2.drawStr(10, 40, "Oui = PLAY");
+                u8g2.drawStr(10, 60, "Non = STOP");
+            } while ((u8g2.nextPage()) || ((digitalRead(PIN_PLAY) == LOW) && (digitalRead(PIN_STOP) == LOW)));
 
             u8g2.clear();
             if (digitalRead(PIN_PLAY) == HIGH)
@@ -225,32 +227,35 @@ void loop()
                 do 
                 {
                     u8g2.setFont(u8g2_font_ncenB14_tr);
-                    u8g2.drawStr(10, 20, "Replay ...");
+                    u8g2.drawStr(10, 20, "Relecture ...");
                 } while ((u8g2.nextPage()));
 
                 //waits for the replay to be done
-                delay(t2 - t1);
+                delay(t);
             }
             else
+            {
                 sendData._action = STOP;
+                RF24NetworkHeader nHeader(motherNode);
+                network.write(nHeader, &sendData, sizeof(sendData));
+            }
 
             //asks for save
+            delay(500);
             u8g2.clear();
             u8g2.firstPage();
             do 
             {
                 u8g2.setFont(u8g2_font_ncenB14_tr);
-                u8g2.drawStr(10, 20, "Enregistrer ?");
-                u8g2.drawStr(20, 20, "Oui = PLAY");
-                u8g2.drawStr(30, 20, "Non = STOP");
-            } while ((u8g2.nextPage()) && (digitalRead(PIN_PLAY) != HIGH) && (digitalRead(PIN_STOP) != HIGH));
+                u8g2.drawStr(10, 20, "Enregistrer?");
+                u8g2.drawStr(10, 40, "Oui = PLAY");
+                u8g2.drawStr(10, 60, "Non = STOP");
+            } while ((u8g2.nextPage()) || ((digitalRead(PIN_PLAY) == LOW) && (digitalRead(PIN_STOP) == LOW)));
 
             u8g2.clear();
             if (digitalRead(PIN_PLAY) == HIGH)
             {
-                //sends on network
-                RF24NetworkHeader nHeader(motherNode);
-                network.write(nHeader, &sendData, sizeof(sendData));
+                sendData._action = PLAY;
 
                 do 
                 {
@@ -271,18 +276,22 @@ void loop()
                     u8g2.firstPage();
                     do
                     {
+                        delay(25);
                         u8g2.setFont(u8g2_font_ncenB14_tr);
-                        u8g2.drawStr(10, 20, "Fichier à écraser : ");
-                        u8g2.drawStr(20, 20, fileText[fileNum]);
-                        u8g2.drawStr(30, 20, "Oui = PLAY");
+                        u8g2.drawStr(10, 20, "A ecraser : ");
+                        u8g2.drawStr(10, 40, fileText[fileNum]);
+                        u8g2.drawStr(10, 60, "Oui = PLAY");
                     } while (u8g2.nextPage());
 
                 } while (digitalRead(PIN_PLAY) != HIGH);
 
                 //sends on network
                 sendData.file = files[fileNum];
+                //sends on network
+                RF24NetworkHeader nHeader(motherNode);
                 network.write(nHeader, &sendData, sizeof(sendData));
-                delay(10);
+                delay(500);
+                sendData._action = STOP;
                 return; 
             }
             else
@@ -299,7 +308,7 @@ void loop()
             //sends on network
             RF24NetworkHeader nHeader(motherNode);
             network.write(nHeader, &sendData, sizeof(sendData));
-            delay(10);
+            delay(500);
             return;
         }
 
