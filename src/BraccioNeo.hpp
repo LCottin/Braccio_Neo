@@ -69,6 +69,7 @@ class _BraccioNeo
 
         bool record(RF24Network& network, const string filename = "test");
         bool takePicture(RaspiCam& cam, const string filename);
+        bool readFromFile(const string filename);
 
         unsigned getExtremValue(MOTORS motor, EXTREM extrem);
         

@@ -103,6 +103,9 @@ void initArrays()
 
 int main(int argc, char const *argv[])
 {
+    cout << "bras initialisé" << endl; 
+    BraccioNeo.readFromFile("test");
+/*
 #ifndef __APPLE__
     //inits radio
     radio.begin();
@@ -187,5 +190,6 @@ int main(int argc, char const *argv[])
         }
     }   
 #endif
-    return 0;
+*/
+	return 0;
 }
