@@ -7,10 +7,11 @@
 
 #ifndef __APPLE__
     #include "lib/RF24/RF24.h"
-    #include "lib/RF24/nRF24L01.h"
     #include "lib/RF24/RF24Network.h"
+    #include "lib/RF24/nRF24L01.h"
     
     RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
+    //RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24);
     RF24Network network(radio);
     const uint16_t motherNode = 00;
     const uint16_t myNode = motherNode;
@@ -105,14 +106,14 @@ int main(int argc, char const *argv[])
 {
     cout << "bras initialisé" << endl; 
     
-/*
+
 #ifndef __APPLE__
     //inits radio
     radio.begin();
     //radio.setPALevel(RF24_PA_MAX);
-    radio.setDataRate(RF24_2MBPS);
+    //radio.setDataRate(RF24_1MBPS);
     radio.startListening();
-    network.begin(108, myNode);
+    network.begin(90, myNode);
 
     //inits data
     initArrays();
@@ -125,7 +126,9 @@ int main(int argc, char const *argv[])
         {
             RF24NetworkHeader nHeader;
             network.read(nHeader, &receivedData, sizeof(receivedData));
-            
+	    cout << "ici" << endl;
+	    
+            /*
             switch (receivedData.mode)
             {
                 case READ :
@@ -182,10 +185,11 @@ int main(int argc, char const *argv[])
                     if (!BraccioNeo.isStanding())
                         BraccioNeo.stand();
                     break;
-            }
+
+		    }*/
         }
     }   
 #endif
-*/
+
 	return 0;
 }

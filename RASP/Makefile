@@ -10,11 +10,16 @@ CXFLAGS     = -O2 -Wall $(INCLUDES) -std=c++14
 LNKCC       = $(CX)
 LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
 
+ARCH=armv6zk
+ifeq "$(shell uname -m)" "armv7l"
+ARCH=armv7-a
+endif
+
 #---------------------------------------------------------------------
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
 INCLUDES   += -I../src/lib/SDK
-LIBRARIES  += -ldxl_sbc_cpp -lrt -lm -lrf24-bcm -lrf24network -lraspicam
+LIBRARIES  += -ldxl_sbc_cpp -lrt -lm -lrf24-bcm -lrf24network -lraspicam -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s
 
 #---------------------------------------------------------------------
 # Files
