@@ -26,13 +26,10 @@ LIBRARIES  += -ldxl_sbc_cpp -lrt -lm -lrf24-bcm -lrf24network -lraspicam -mfpu=v
 #---------------------------------------------------------------------
 SOURCES = src/functions.cpp \
 		  src/Motor.cpp \
-		  src/XL320.cpp \
 		  src/MX28AT.cpp \
 		  src/MX64AT.cpp \
-		  src/AX12A.cpp \
 		  src/AX18A.cpp \
 		  src/MX106AT.cpp \
-		  src/MX12W.cpp \
 		  src/BraccioNeo.cpp \
 		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***
