@@ -10,7 +10,7 @@
     #include "lib/RF24/RF24Network.h"
     #include "lib/RF24/nRF24L01.h"
     
-    RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_16MHZ);
+    RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_8MHZ);
     //RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24);
     RF24Network network(radio);
     const uint16_t motherNode = 00;
@@ -102,6 +102,32 @@ void initArrays()
     _stop    = false;
 }
 
+void affichebin(unsigned n)
+{
+	unsigned bit = 0 ;
+	unsigned mask = 1 ;
+	for (int i = 0 ; i < 32 ; ++i)
+	{
+		bit = (n & mask) >> i ;
+		printf("%d", bit) ;
+		mask <<= 1 ;
+	}
+}
+
+unsigned int dtobin(unsigned char h)
+{
+	double n;
+   unsigned int b=0;
+ 
+   for(n=0;n<=7;n++)
+   {
+       b+=(pow(10,n)*(h%2));
+       h/=2;
+   }
+ 
+   return b;
+}
+
 int main(int argc, char const *argv[])
 {
     cout << "bras initialisé" << endl; 
@@ -110,10 +136,13 @@ int main(int argc, char const *argv[])
 #ifndef __APPLE__
     //inits radio
     radio.begin();
-    //radio.setPALevel(RF24_PA_MAX);
-    //radio.setDataRate(RF24_1MBPS);
+    //radio.enableDynamicPayloads();
+    //radio.setPayloadSize(32);
+    //radio.setCRCLength(RF24_CRC_16);
+    // radio.setPALevel(RF24_PA_MAX);
+    radio.setDataRate(RF24_2MBPS);
     radio.startListening();
-    network.begin(90, myNode);
+    network.begin(108, myNode);
 
     //inits data
     initArrays();
@@ -124,10 +153,24 @@ int main(int argc, char const *argv[])
 
         while(network.available())
         {
+	
             RF24NetworkHeader nHeader;
+            
             network.read(nHeader, &receivedData, sizeof(receivedData));
-	    cout << "ici" << endl;
-	    
+	  //usleep(500 * MILLISECOND);
+	    //network.read(nHeader, &receivedData, radio.getDynamicPayloadSize());
+	
+
+	    cout << "ID = " << (int)receivedData.ID << endl; 
+	    cout << "x = " << (int)receivedData.x << endl;
+	    cout << "y = " << (int)receivedData.y << endl;
+	    cout << "mode = " << (int)receivedData.mode << endl;
+	    cout << "action = " << (int)receivedData.action << endl;
+		printf("file = %d\n", receivedData.file);
+	    cout << endl;
+	    usleep(100 * MILLISECOND);
+   	}
+
             /*
             switch (receivedData.mode)
             {
@@ -187,7 +230,7 @@ int main(int argc, char const *argv[])
                     break;
 
 		    }*/
-        }
+    		
     }   
 #endif
 
