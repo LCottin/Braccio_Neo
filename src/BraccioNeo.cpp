@@ -24,12 +24,13 @@ _BraccioNeo::_BraccioNeo()
     stand();
 
     //led options
-    _PinLed1 = 12;
-    _PinLed2 = 23;
+    _PinLed1 = 13;
+    _PinLed2 = 18;
 
     bcm2835_init();
     bcm2835_gpio_fsel(_PinLed1, BCM2835_GPIO_FSEL_OUTP);
     bcm2835_gpio_fsel(_PinLed2, BCM2835_GPIO_FSEL_OUTP);
+
 } 
 
 void _BraccioNeo::light(const unsigned pin, const bool on)

@@ -140,7 +140,8 @@ int main(int argc, char const *argv[])
     usleep(1000 * MILLISECOND);
     BraccioNeo.light(13, true);
     BraccioNeo.light(18, true);
-    
+   
+   cout << "debut radio " << endl; 
 #ifndef __APPLE__
     //inits radio
     radio.begin();
