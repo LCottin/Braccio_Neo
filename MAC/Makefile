@@ -21,13 +21,10 @@ LIBRARIES  += -ldxl_mac_cpp -lm
 #---------------------------------------------------------------------
 SOURCES = src/functions.cpp \
 		  src/Motor.cpp \
-		  src/XL320.cpp \
 		  src/MX28AT.cpp \
 		  src/MX64AT.cpp \
-		  src/AX12A.cpp \
 		  src/AX18A.cpp \
 		  src/MX106AT.cpp \
-		  src/MX12W.cpp \
 		  src/BraccioNeo.cpp \
 		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***

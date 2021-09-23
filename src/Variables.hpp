@@ -22,23 +22,23 @@ enum SPEED 		{V_SLOW = 10, SLOW = 25, NORMAL = 50, FAST = 75, V_FAST = 90};
 // //Values received by the radio
 static struct data
 {
-	char ID;
+	short ID;
 	short x;
 	short y;
-	char mode;
-	char action;
-	char file;
+	short mode;
+	short action;
+	short file;
 } receivedData;
 
 //Extrem values received by radio
 static struct V_MAX
 {
-    const short XMIN = 260;
-    const short XMAX = 420;
+    const short XMIN = 270;
+    const short XMAX = 435;
     const short XMOY = (XMIN + XMAX)/2;
     
-    const short YMIN = 260; 
-    const short YMAX = 420;
+    const short YMIN = 270; 
+    const short YMAX = 435;
     const short YMOY = (YMIN + YMAX)/2;
 } vMax; 
 

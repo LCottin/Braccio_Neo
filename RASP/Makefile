@@ -6,9 +6,17 @@ DIR_OBJS   = ../objects
 
 # compiler options
 CX          = g++
-CXFLAGS     = -O2 -Wall $(INCLUDES) -std=c++14
+#CXFLAGS     = -O2 -Wall $(INCLUDES) -std=c++14 -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s
+CXFLAGS     = -Ofast -Wall $(INCLUDES) -std=c++14 -march=$(ARCH) 
+
+
 LNKCC       = $(CX)
 LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
+
+ARCH=armv6zk
+ifeq "$(shell uname -m)" "armv7l"
+ARCH=armv7-a
+endif
 
 #---------------------------------------------------------------------
 # Core components (all of these are likely going to be needed)
@@ -21,13 +29,10 @@ LIBRARIES  += -ldxl_sbc_cpp -lrt -lm -lrf24-bcm -lrf24network -lraspicam
 #---------------------------------------------------------------------
 SOURCES = src/functions.cpp \
 		  src/Motor.cpp \
-		  src/XL320.cpp \
 		  src/MX28AT.cpp \
 		  src/MX64AT.cpp \
-		  src/AX12A.cpp \
 		  src/AX18A.cpp \
 		  src/MX106AT.cpp \
-		  src/MX12W.cpp \
 		  src/BraccioNeo.cpp \
 		  src/main.cpp \
     # *** OTHER SOURCES GO HERE ***
