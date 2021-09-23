@@ -24,19 +24,17 @@ _BraccioNeo::_BraccioNeo()
     stand();
 
     //led options
-    _PinLed1 = 1;
+    _PinLed1 = 12;
     _PinLed2 = 23;
 
-    pinMode(_PinLed1, PWM_OUTPUT);
-    pinMode(_PinLed2, PWM_OUTPUT);
+    bcm2835_init();
+    bcm2835_gpio_fsel(_PinLed1, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(_PinLed2, BCM2835_GPIO_FSEL_OUTP);
 } 
 
-void _BraccioNeo::light(const unsigned pin, unsigned percentage)
+void _BraccioNeo::light(const unsigned pin, const bool on)
 {
-    unsigned value = percentage > 100 ? 100 : percentage;
-    
-    value = mapping(percentage, 0, 100, 0, 1023);
-    pwmWrite(pin, value);
+    bcm2835_gpio_write(pin, on ? 1 : 0);
 }
 
 /**

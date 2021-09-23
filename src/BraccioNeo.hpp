@@ -77,7 +77,7 @@ class _BraccioNeo
 
         unsigned getExtremValue(MOTORS motor, EXTREM extrem);
         
-        void light(const unsigned pin, unsigned percentage = 100);
+        void light(const unsigned pin, const bool on);
         void surprise(SPEED speed = NORMAL);
         void angry(SPEED speed = NORMAL);
         void shy(SPEED speed = SLOW);
