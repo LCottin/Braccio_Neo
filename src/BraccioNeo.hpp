@@ -7,6 +7,7 @@
 #include <ctime>
 #include <unistd.h>
 #include <algorithm>
+#include <wiringPi.h>
 
 #include "Motor.hpp"
 #include "MX106AT.hpp"
@@ -44,6 +45,9 @@ class _BraccioNeo
         unsigned* _CurrentPosition;
         bool _Stand;
 
+        char _PinLed1;
+        char _PinLed2;
+
         clock_t _Start;
         clock_t _Stop;
         SPEED _Speed;  
@@ -73,6 +77,7 @@ class _BraccioNeo
 
         unsigned getExtremValue(MOTORS motor, EXTREM extrem);
         
+        void light(const unsigned pin, unsigned percentage = 100);
         void surprise(SPEED speed = NORMAL);
         void angry(SPEED speed = NORMAL);
         void shy(SPEED speed = SLOW);

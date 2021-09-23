@@ -22,7 +22,22 @@ _BraccioNeo::_BraccioNeo()
     
     initValues();
     stand();
+
+    //led options
+    _PinLed1 = 1;
+    _PinLed2 = 23;
+
+    pinMode(_PinLed1, PWM_OUTPUT);
+    pinMode(_PinLed2, PWM_OUTPUT);
 } 
+
+void _BraccioNeo::light(const unsigned pin, unsigned percentage)
+{
+    unsigned value = percentage > 100 ? 100 : percentage;
+    
+    value = mapping(percentage, 0, 100, 0, 1023);
+    pwmWrite(pin, value);
+}
 
 /**
  * Initializes extrem values of each motor

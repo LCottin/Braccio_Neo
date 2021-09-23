@@ -130,8 +130,15 @@ unsigned int dtobin(unsigned char h)
 
 int main(int argc, char const *argv[])
 {
-    cout << "bras initialisé" << endl; 
+    wiringPiSetup();
     
+    cout << "bras initialisé" << endl; 
+    BraccioNeo.light(1, 10);
+    BraccioNeo.light(23, 10);
+    usleep(1000 * MILLISECOND);
+    BraccioNeo.light(1, 100);
+    BraccioNeo.light(23, 100);
+
 
 #ifndef __APPLE__
     //inits radio
