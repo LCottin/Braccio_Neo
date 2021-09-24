@@ -31,7 +31,7 @@
 
 #define MILLISECOND 1000
 #define WAIT pauseStop (network); \
-        while(_pause){PauseStop();}; \
+        while(_pause){pauseStop();}; \
         if (_stop) return; 
 
 using namespace std;
