@@ -7,7 +7,7 @@
 #include <ctime>
 #include <unistd.h>
 #include <algorithm>
-#include <wiringPi.h>
+//#include <wiringPi.h>
 
 #include "Motor.hpp"
 #include "MX106AT.hpp"
@@ -19,9 +19,15 @@
 #include "Variables.hpp"
 
 #include "lib/RASPICAM/raspicam.h"
+/*
 #include "lib/RF24/RF24.h"
 #include "lib/RF24/nRF24L01.h"
 #include "lib/RF24/RF24Network.h"
+*/
+#include <RF24/RF24.h>
+#include <RF24Network/RF24Network.h>
+#include <RF24/nRF24L01.h>
+
 
 #define MILLISECOND 1000
 

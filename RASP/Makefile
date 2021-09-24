@@ -7,7 +7,8 @@ DIR_OBJS   = ../objects
 # compiler options
 CX          = g++
 #CXFLAGS     = -O2 -Wall $(INCLUDES) -std=c++14 -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s
-CXFLAGS     = -Ofast -Wall $(INCLUDES) -std=c++14 #-march=$(ARCH) 
+CXFLAGS     = -Ofast -Wall $(INCLUDES) -std=c++0x -mfpu=vfp -mfloat-abi=hard -march=$(ARCH) -mtune=arm1176jzf-s
+#CXFLAGS     = -Ofast -Wall $(INCLUDES) -std=c++14 #-march=$(ARCH) 
 
 
 LNKCC       = $(CX)
@@ -22,7 +23,7 @@ endif
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
 INCLUDES   += -I../src/lib/SDK
-LIBRARIES  += -ldxl_sbc_cpp -lrt -lm -lrf24-bcm -lrf24network -lraspicam
+LIBRARIES  += -ldxl_sbc_cpp -lrt -lm -lrf24-bcm -lrf24network -lraspicam #-lwiringPi
 
 #---------------------------------------------------------------------
 # Files
