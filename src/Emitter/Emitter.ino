@@ -6,6 +6,7 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #include <RF24Network.h>
+#include <printf.h>
 
 /**
     Number of emitter to change :
@@ -24,11 +25,11 @@ struct dataToSend
     short id = EMITTER - 1;
     short xAxis;
     short yAxis;
-    
+    /*
     short mode = 30000;
     short _action = 31000;
     short file = 32000;
-    
+    */
 } sendData;
 
 // Réseau
@@ -51,16 +52,27 @@ void setup()
 {
     Serial.begin(9600);
     SPI.begin();
+    printf_begin();
     
     //init radio
     radio.begin();
-    radio.setPALevel(RF24_PA_MAX);
-    radio.setDataRate(RF24_2MBPS);
+    //radio.setPALevel(RF24_PA_MAX);
+    //radio.setDataRate(RF24_2MBPS);
+    //radio.setAutoAck(1);
+    //radio.setRetries(1,3);
+    //radio.setRetries(15,15);
+    //radio.enableDynamicPayloads();
+    //radio.setPayloadSize(sizeof(sendData));
+    //radio.powerUp();
+    radio.printDetails();
     
     radio.stopListening();
 
+    //radio.printDetails();
+    
     //init network
     network.begin(108, myNode);
+    
 }   
 
 
@@ -71,28 +83,36 @@ void loop()
 {
     //updates network
     network.update();
-    i++;
+    //i++;
 
-    /*
+    
     //reads data from the accelerometer
     sendData.xAxis = analogRead(x_out);
     sendData.yAxis = analogRead(y_out);
-    */
-    sendData.id = i;
-    sendData.xAxis = 4;
-    sendData.yAxis = 4;
+    
+    //sendData.id = i;
+    //sendData.xAxis = 4;
+    //sendData.yAxis = 4;
+    /*
     sendData.mode = 4;
     sendData._action = 4;
     sendData.file = 4;  
+    */
     
+    Serial.print("ID = ");
+    Serial.println(sendData.id);
     Serial.print("x = ");
     Serial.println(sendData.xAxis);
     Serial.print("y = ");
     Serial.println(sendData.yAxis);
+    Serial.println(" ");
+    /*
+    Serial.print("PayLoadSize = ");
+    Serial.println(radio.getDynamicPayloadSize());
     //Serial.println(sendData.id);
     //Serial.println(sizeof(sendData));
-    delay(500);
-    
+    delay(1000);
+    */
   
     //sends data
     RF24NetworkHeader nHeader(targetedNode);
