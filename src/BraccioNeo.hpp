@@ -30,6 +30,9 @@
 
 
 #define MILLISECOND 1000
+#define WAIT pauseStop (network); \
+        while(_pause){PauseStop();}; \
+        if (_stop) return; 
 
 using namespace std;
 using namespace raspicam;
@@ -76,6 +79,8 @@ class _BraccioNeo
         bool openGripper();
         bool closeGripper();
         bool isStanding() const;
+
+        void pauseStop(RF24Network& network);
 
         bool record(RF24Network& network, const string filename = "test");
         bool takePicture(RaspiCam& cam, const string filename);
