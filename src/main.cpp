@@ -212,6 +212,11 @@ int main(int argc, char const *argv[])
     while(true)
     {
         
+        _pause = false;
+        _stop  = false;
+	if(receivedData.mode  != CONTROL)
+	  receivedData.mode = NONE;
+	
         network.update();
 
         while(network.available())
@@ -247,6 +252,7 @@ int main(int argc, char const *argv[])
 	*/
 	switch (receivedData.mode)
             {
+	        
                 case READ :
                     cout << "READ" << endl;
                     BraccioNeo.readFromFile((FILES)receivedData.file);
@@ -258,22 +264,22 @@ int main(int argc, char const *argv[])
 
                 case ANGRY :
                     cout << "ANGRY" << endl;
-                    BraccioNeo.angry();
+                    BraccioNeo.angry(network);
                     break;
                 
                 case JOY : 
                     cout << "JOY" << endl;
-                    BraccioNeo.joy();
+                    BraccioNeo.joy(network);
                     break;
 
                 case SURPRISE :
                     cout << "SURPRISE" << endl;
-                    BraccioNeo.surprise();
+                    BraccioNeo.surprise(network);
                     break;
 
                 case SHY :
                     cout << "SHY" << endl;
-                    BraccioNeo.shy();
+                    BraccioNeo.shy(network);
                     break;
 	     
 

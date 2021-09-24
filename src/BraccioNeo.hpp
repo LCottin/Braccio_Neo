@@ -30,9 +30,9 @@
 
 
 #define MILLISECOND 1000
-#define WAIT BraccionNeo::pauseStop (network); \
-        while(_pause){BraccionNeo::pauseStop();}; \
-        if (_stop) return; 
+#define WAIT _BraccioNeo::pauseStop (network); \
+        while(_pause){_BraccioNeo::pauseStop(network);} \
+        if (_stop) {receivedData.mode = NONE ; return;}
 
 using namespace std;
 using namespace raspicam;
@@ -89,10 +89,10 @@ class _BraccioNeo
         unsigned getExtremValue(MOTORS motor, EXTREM extrem);
         
         void light(const unsigned pin, const bool on);
-        void surprise(SPEED speed = NORMAL);
-        void angry(SPEED speed = NORMAL);
-        void shy(SPEED speed = SLOW);
-        void joy(SPEED speed = NORMAL);
+        void surprise(RF24Network& network, SPEED speed = NORMAL);
+        void angry(RF24Network& network, SPEED speed = NORMAL);
+        void shy(RF24Network& network, SPEED speed = SLOW);
+        void joy(RF24Network& network, SPEED speed = NORMAL);
   
         ~_BraccioNeo();
 };

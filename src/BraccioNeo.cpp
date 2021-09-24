@@ -59,7 +59,7 @@ void _BraccioNeo::pauseStop(RF24Network& network)
         
         if (receivedData.ID == REMOTE)
         {   
-            switch (receivedData.id._action)
+            switch (receivedData.action)
             {
                 case PAUSE :
                     _pause = true;
@@ -69,7 +69,8 @@ void _BraccioNeo::pauseStop(RF24Network& network)
                 case STOP : 
                     _pause = false;
                     _stop  = true;
-                    receivedData.mode = RIEN;
+                    receivedData.mode = NONE;
+		    _Stand = false;
                     break;
     
                 case PLAY : 
@@ -648,7 +649,7 @@ bool _BraccioNeo::openGripper()
 /**
  * Plays the angry emotion
  */
-void _BraccioNeo::angry(SPEED speed)
+void _BraccioNeo::angry(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
@@ -971,7 +972,7 @@ void _BraccioNeo::angry(SPEED speed)
 /**
  * Plays the surprise emotion
  */
-void _BraccioNeo::surprise(SPEED speed)
+void _BraccioNeo::surprise(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
@@ -1044,7 +1045,7 @@ void _BraccioNeo::surprise(SPEED speed)
 /*
  * Plays the shy emotion
  */
-void _BraccioNeo::shy(SPEED speed)
+void _BraccioNeo::shy(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
@@ -1261,7 +1262,7 @@ void _BraccioNeo::shy(SPEED speed)
 /*
  * Plays the joy emotion
  */
-void _BraccioNeo::joy(SPEED speed)
+void _BraccioNeo::joy(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
