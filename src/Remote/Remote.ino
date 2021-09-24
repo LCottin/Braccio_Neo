@@ -199,10 +199,16 @@ void loop()
         //if we want to record a movement, to replay and to save if
         if (sendData.mode == RECORD)
         {
+            RF24NetworkHeader nHeader(motherNode);
+            network.write(nHeader, &sendData, sizeof(sendData));
+            delay(10);
             //waits for the end of record
             unsigned long t = millis();
             while (digitalRead(PIN_STOP) != HIGH) {}
             t = millis() - t;
+
+            sendData._action = STOP;
+            network.write(nHeader, &sendData, sizeof(sendData));
 
             delay(1000);
             //asks for replay
@@ -306,7 +312,7 @@ void loop()
             }
 
             //sends on network
-            RF24NetworkHeader nHeader(motherNode);
+            //RF24NetworkHeader nHeader(motherNode);
             network.write(nHeader, &sendData, sizeof(sendData));
             delay(500);
             return;
@@ -316,6 +322,7 @@ void loop()
         RF24NetworkHeader nHeader(motherNode);
         network.write(nHeader, &sendData, sizeof(sendData));
         delay(10);
+        //sendData.mode = NONE;
         return;
     }
     
@@ -359,6 +366,9 @@ void loop()
     //when nothing is pressed
     else
     {
+        if(sendData.mode != CONTROL)
+          sendData.mode = NONE;
+          
         switch (sendData._action)
         {
             case PLAY :
