@@ -194,6 +194,21 @@ int main(int argc, char const *argv[])
  
     //inits data
     initArrays();
+
+    /*
+    for (unsigned i = 0; i < 6; i++)
+    {
+        BraccioNeo.changeSpeed((MOTORS)i, 15);
+    }
+    */
+    BraccioNeo.changeSpeed(BASE, 25);
+    BraccioNeo.changeSpeed(SHOULDER, 25);
+    BraccioNeo.changeSpeed(ELBOW, 40);
+    BraccioNeo.changeSpeed(WRISTVER, 25);
+    BraccioNeo.changeSpeed(WRISTROT, 25);
+    BraccioNeo.changeSpeed(GRIPPER, 10);
+    
+    
     while(true)
     {
         
@@ -212,23 +227,33 @@ int main(int argc, char const *argv[])
 	    
 	    //cout << "sizeof recievedData = " << (int)sizeof(receivedData) << endl;
 	    //cout << "sizeof PayloadSize = " << (int)radio.getDynamicPayloadSize() << endl;
-	    cout << "ID = " << (short)receivedData.ID << endl; 
-	    cout << "x = " << (short)receivedData.x << endl;
-	    cout << "y = " << (short)receivedData.y << endl;
+	    //cout << "ID = " << (short)receivedData.ID << endl; 
+	    //cout << "x = " << (short)receivedData.x << endl;
+	    //cout << "y = " << (short)receivedData.y << endl;
 	    cout << "mode = " << (short)receivedData.mode << endl;
-	    cout << "action = " << (short)receivedData.action << endl;
-	    cout << "file = " << (short)receivedData.file << endl;
+	    //cout << "action = " << (short)receivedData.action << endl;
+	    //cout << "file = " << (short)receivedData.file << endl;
 	    //printf("file = %d\n", receivedData.file);
 	    cout << endl;
-	    usleep(100 * MILLISECOND);
+	    //usleep(100 * MILLISECOND);
    	}
-
-            
-            switch (receivedData.mode)
+	/*
+	BraccioNeo.changeSpeed(BASE, 25);
+	BraccioNeo.changeSpeed(SHOULDER, 25);
+	BraccioNeo.changeSpeed(ELBOW, 40);
+	BraccioNeo.changeSpeed(WRISTVER, 25);
+	BraccioNeo.changeSpeed(WRISTROT, 25);
+	BraccioNeo.changeSpeed(GRIPPER, 25);
+	*/
+	switch (receivedData.mode)
             {
                 case READ :
                     cout << "READ" << endl;
                     BraccioNeo.readFromFile((FILES)receivedData.file);
+                    break;
+	        case RECORD :
+                    cout << "RECORD" << endl;
+                    BraccioNeo.record(network);
                     break;
 
                 case ANGRY :
@@ -250,7 +275,7 @@ int main(int argc, char const *argv[])
                     cout << "SHY" << endl;
                     BraccioNeo.shy();
                     break;
-	    }/*
+	     
 
                 case CONTROL : 
                     cout << "CONTROL" << endl;
@@ -275,6 +300,7 @@ int main(int argc, char const *argv[])
                     dataShapping();
                     BraccioNeo.moveAll(baseControl, shoulderControl, elbowControl, wristVerControl, wristRotControl, gripperControl, false);
                     break;
+	     
 
                 case NONE :
                 default:
@@ -282,7 +308,7 @@ int main(int argc, char const *argv[])
                         BraccioNeo.stand();
                     break;
 
-		    }*/
+	    }
     		
     }   
 #endif

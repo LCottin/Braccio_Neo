@@ -102,8 +102,8 @@ void _BraccioNeo::initValues()
     _Limits[WRISTROT][MAXANGLE]     = 300;
     
     //limits for the gripper
-    _Limits[GRIPPER][MINPOS]       = 212;
-    _Limits[GRIPPER][MINANGLE]     = 62;
+    _Limits[GRIPPER][MINPOS]       = 400;
+    _Limits[GRIPPER][MINANGLE]     = 117;
     _Limits[GRIPPER][MIDDLEPOS]    = 512;
     _Limits[GRIPPER][MIDDLEANGLE]  = 150;
     _Limits[GRIPPER][MAXPOS]       = 805;
@@ -206,6 +206,13 @@ bool _BraccioNeo::record(RF24Network& network, const string filename)
         usleep(delay * MILLISECOND);
     };
 
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        success &= _Motors[i]->enableTorque();
+    }
+    stand();
+    //usleep(100 * MILLISECOND);
+
     //replays the movement
     char replay = 0;
     do
@@ -228,7 +235,7 @@ bool _BraccioNeo::record(RF24Network& network, const string filename)
         for (unsigned long i = 0; i < base.size(); i++)
         {
             success &= moveAll(base[i], shoudler[i], elbow[i], wristVer[i], wristRot[i], gripper[i], false);
-            usleep(500 * MILLISECOND);
+            usleep(delay * MILLISECOND);
         }
     }
 
@@ -616,14 +623,14 @@ void _BraccioNeo::angry(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(10 * MILLISECOND);
         closeGripper();
         usleep(10 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -655,14 +662,14 @@ void _BraccioNeo::angry(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(10 * MILLISECOND);
         closeGripper();
         usleep(10 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -694,14 +701,14 @@ void _BraccioNeo::angry(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(10 * MILLISECOND);
         closeGripper();
         usleep(10 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
 
     moveShoulder(250);
     usleep(10 * MILLISECOND);
@@ -721,14 +728,14 @@ void _BraccioNeo::angry(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(10 * MILLISECOND);
         closeGripper();
         usleep(10 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -760,14 +767,14 @@ void _BraccioNeo::angry(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(10 * MILLISECOND);
         closeGripper();
         usleep(10 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
 
     moveShoulder(120);
     usleep(10 * MILLISECOND);
@@ -832,9 +839,9 @@ void _BraccioNeo::surprise(SPEED speed)
 
     stand();
     usleep(500 * MILLISECOND);
-    //openGripper();
+    openGripper();
     usleep(500 * MILLISECOND);
-    //closeGripper();
+    closeGripper();
   
     usleep(1000 * MILLISECOND);
     stand();
@@ -860,14 +867,14 @@ void _BraccioNeo::shy(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(50 * MILLISECOND);
         closeGripper();
         usleep(50 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
 
     for (int i = 0; i < 3; i++)
     {
@@ -893,14 +900,14 @@ void _BraccioNeo::shy(SPEED speed)
     
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(50 * MILLISECOND);
         closeGripper();
         usleep(50 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
     
     for (int i = 0; i < 3; i++)
     {
@@ -926,14 +933,14 @@ void _BraccioNeo::shy(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(50 * MILLISECOND);
         closeGripper();
         usleep(50 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
     
     for (int i = 0; i < 3; i++)
     {
@@ -959,14 +966,14 @@ void _BraccioNeo::shy(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
         usleep(50 * MILLISECOND);
         closeGripper();
         usleep(50 * MILLISECOND);
-        */
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
     
     for (int i = 0; i < 3; i++)
     {
@@ -1061,10 +1068,10 @@ void _BraccioNeo::joy(SPEED speed)
 
     for (char i = 0; i < 3; i++)
     {
-        // openGripper();
-        // usleep(50 * MILLISECOND);
-        // closeGripper();
-        // usleep(50 * MILLISECOND);
+        openGripper();
+        usleep(50 * MILLISECOND);
+        closeGripper();
+        usleep(50 * MILLISECOND);
     }
     moveGripper(180);
 
