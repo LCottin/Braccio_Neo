@@ -30,8 +30,8 @@
 
 
 #define MILLISECOND 1000
-#define WAIT pauseStop (network); \
-        while(_pause){pauseStop();}; \
+#define WAIT BraccionNeo::pauseStop (network); \
+        while(_pause){BraccionNeo::pauseStop();}; \
         if (_stop) return; 
 
 using namespace std;

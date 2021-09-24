@@ -1273,81 +1273,134 @@ void _BraccioNeo::joy(SPEED speed)
     }
 
     moveShoulder(230);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
     moveElbow(130);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 4; i++)
     {
         moveWristRot(240);
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
         moveWristRot(100);
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
     }
 
     usleep(1000 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
 
     moveWristRot(150);
+    WAIT
     moveBase(260);
+    WAIT
     moveWristVer(180);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
     moveBase(30);
+    WAIT
     moveWristVer(100);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 2; i++)
     {
         moveBase(240);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveShoulder(150);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveElbow(240);
+        WAIT
         usleep(250 * MILLISECOND);
+        WAIT
         moveWristRot(120);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
 
         moveBase(130);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveWristRot(150);
+        WAIT
         usleep(250 * MILLISECOND);
+        WAIT
         moveElbow(130);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveShoulder(220);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
     }
                 
     moveBase(180);
+    WAIT
     moveShoulder(230);
+    WAIT
     usleep(25 * MILLISECOND);
+    WAIT
     moveElbow(130);
+    WAIT
     usleep(25 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 3; i++)
     {
         openGripper();
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
     }
     moveGripper(180);
+    WAIT
 
     for (char i = 0; i < 3; i++)
     {
         moveBase(130);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveBase(230);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
     }
     moveBase(180);
+    WAIT
     usleep(200 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 2; i++)
     {
         moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
         moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
     }
     
     usleep(1000 * MILLISECOND);
