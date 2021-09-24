@@ -14,7 +14,7 @@
       EMITTER 2 : 2 (elbow / poignet ver)
       EMITTER 3 : 3 (poignet rot / gripper)
 */
-#define EMITTER 1
+#define EMITTER 2
 
 RF24 radio(9,10); //emission with Arduino Nano-rf
 

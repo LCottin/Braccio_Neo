@@ -41,12 +41,12 @@ short fileNum = 0;
 //data structure 
 struct dataToSend
 {
-    char id      = REMOTE - 1;
+    short id      = REMOTE - 1;
     short xAxis   = 0; //useless for the remote
     short yAxis   = 0; //useless for the remote
-    char mode     = NONE;
-    char _action  = STOP;
-    char file     = 0;
+    short mode     = NONE;
+    short _action  = STOP;
+    short file     = 0;
 } sendData;
 
 // ---------------------------------------- //
@@ -59,8 +59,8 @@ void setup()
 
     //inits radio
     radio.begin();
-    radio.setPALevel(RF24_PA_MAX);
-    radio.setDataRate(RF24_2MBPS);
+    //radio.setPALevel(RF24_PA_MAX);
+    //radio.setDataRate(RF24_2MBPS);
     
     radio.stopListening();
 
