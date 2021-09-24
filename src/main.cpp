@@ -147,6 +147,8 @@ int main(int argc, char const *argv[])
 
     int pwmPin1 = 1;
     int pwmPin2 = 23;
+
+    //system("gpio mode 1 output; gpio mode 23 output; gpio write 1 1; gpio write 23 1 ");
     /*
     BraccioNeo.light(13, true);
     BraccioNeo.light(18, true);
@@ -168,7 +170,9 @@ int main(int argc, char const *argv[])
     pwmWrite(pwmPin2, 1023);
     */
 
-    system("gpio write 1 1; gpio write 23 1 ");
+    //system("gpio mode 1 pwm ; gpio mode 23 pwm ; gpio pwm 1 256 ; gpio pwm 23 1024 ");
+    //system("gpio mode 1 pwm ; gpio pwm 1 256 ");
+    
     
     //radio.setAutoAck(1);
     //radio.setRetries(1,3);
@@ -192,6 +196,7 @@ int main(int argc, char const *argv[])
     initArrays();
     while(true)
     {
+        
         network.update();
 
         while(network.available())
@@ -218,12 +223,12 @@ int main(int argc, char const *argv[])
 	    usleep(100 * MILLISECOND);
    	}
 
-            /*
+            
             switch (receivedData.mode)
             {
                 case READ :
                     cout << "READ" << endl;
-                    BraccioNeo.readFromFile(receivedData.file);
+                    BraccioNeo.readFromFile((FILES)receivedData.file);
                     break;
 
                 case ANGRY :
@@ -245,6 +250,7 @@ int main(int argc, char const *argv[])
                     cout << "SHY" << endl;
                     BraccioNeo.shy();
                     break;
+	    }/*
 
                 case CONTROL : 
                     cout << "CONTROL" << endl;
