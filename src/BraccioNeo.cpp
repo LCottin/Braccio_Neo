@@ -22,7 +22,67 @@ _BraccioNeo::_BraccioNeo()
     
     initValues();
     stand();
+
+    //led options
+    _PinLed1 = 13;
+    _PinLed2 = 18;
+    /*
+    bcm2835_init();
+    bcm2835_gpio_fsel(_PinLed1, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(_PinLed2, BCM2835_GPIO_FSEL_OUTP);
+    */
+
 } 
+
+/**
+ * Turns on / off ligths
+ * @param pin 13 (left) or 18 (right)
+ * @param on True for on, false for off
+ */
+void _BraccioNeo::light(const unsigned pin, const bool on)
+{
+  //bcm2835_gpio_write(pin, on ? 1 : 0);
+}
+
+/**
+ * Updates global pause and stop variables
+ * @param network Network pointer 
+ */
+void _BraccioNeo::pauseStop(RF24Network& network)
+{
+    network.update(); //MAJ du réseau 
+
+    while(network.available())
+    {
+        RF24NetworkHeader nHeader;
+        network.read(nHeader, &receivedData, sizeof(receivedData));
+        
+        if (receivedData.ID == REMOTE)
+        {   
+            switch (receivedData.action)
+            {
+                case PAUSE :
+                    _pause = true;
+                    _stop  = false;
+                    break;
+    
+                case STOP : 
+                    _pause = false;
+                    _stop  = true;
+                    receivedData.mode = NONE;
+		    _Stand = false;
+                    break;
+    
+                case PLAY : 
+                default:
+                    _pause = false;
+                    _stop  = false;
+                    break;
+            }
+        }  
+    }
+}
+
 
 /**
  * Initializes extrem values of each motor
@@ -87,8 +147,8 @@ void _BraccioNeo::initValues()
     _Limits[WRISTROT][MAXANGLE]     = 300;
     
     //limits for the gripper
-    _Limits[GRIPPER][MINPOS]       = 212;
-    _Limits[GRIPPER][MINANGLE]     = 62;
+    _Limits[GRIPPER][MINPOS]       = 400;
+    _Limits[GRIPPER][MINANGLE]     = 117;
     _Limits[GRIPPER][MIDDLEPOS]    = 512;
     _Limits[GRIPPER][MIDDLEANGLE]  = 150;
     _Limits[GRIPPER][MAXPOS]       = 805;
@@ -191,6 +251,13 @@ bool _BraccioNeo::record(RF24Network& network, const string filename)
         usleep(delay * MILLISECOND);
     };
 
+    for (unsigned i = 0; i < _NbMotors; i++)
+    {
+        success &= _Motors[i]->enableTorque();
+    }
+    stand();
+    //usleep(100 * MILLISECOND);
+
     //replays the movement
     char replay = 0;
     do
@@ -213,7 +280,7 @@ bool _BraccioNeo::record(RF24Network& network, const string filename)
         for (unsigned long i = 0; i < base.size(); i++)
         {
             success &= moveAll(base[i], shoudler[i], elbow[i], wristVer[i], wristRot[i], gripper[i], false);
-            usleep(500 * MILLISECOND);
+            usleep(delay * MILLISECOND);
         }
     }
 
@@ -582,7 +649,7 @@ bool _BraccioNeo::openGripper()
 /**
  * Plays the angry emotion
  */
-void _BraccioNeo::angry(SPEED speed)
+void _BraccioNeo::angry(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
@@ -594,182 +661,305 @@ void _BraccioNeo::angry(SPEED speed)
     }
     
     moveShoulder(240, _Speed);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    WAIT
     usleep(20 * MILLISECOND);
+    WAIT
     moveWristVer(205);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
-        /*
         openGripper();
+        WAIT
         usleep(10 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(10 * MILLISECOND);
-        */
+        WAIT
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
 
     moveShoulder(120);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(120, 200, 170, 240, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(180, 160, 150, 180, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(210, 120, 180, 180, 150, 150);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
 
     moveShoulder(240);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveWristVer(240);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
 
     usleep(10 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
     usleep(5000 * MILLISECOND);
+    WAIT
 
     moveShoulder(240);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    WAIT
     usleep(20 * MILLISECOND);
+    WAIT
     moveWristVer(205);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
-        /*
         openGripper();
+        WAIT
         usleep(10 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(10 * MILLISECOND);
-        */
+        WAIT
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
 
     moveShoulder(120);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(120, 200, 170, 240, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(180, 160, 150, 180, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(210, 120, 180, 180, 150, 150);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
 
     moveShoulder(240);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveWristVer(150);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
 
     usleep(10 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
     usleep(5000 * MILLISECOND);
+    WAIT
 
     moveShoulder(240);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    WAIT
     usleep(20 * MILLISECOND);
+    WAIT
     moveWristVer(205);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
+        WAIT
         usleep(10 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(10 * MILLISECOND);
-        */
+        WAIT
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
 
     moveShoulder(250);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveWristVer(240);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
     usleep(5000 * MILLISECOND);
+    WAIT
 
     moveShoulder(240);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    WAIT
     usleep(20 * MILLISECOND);
+    WAIT
     moveWristVer(205);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
-        /*
         openGripper();
+        WAIT
         usleep(10 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(10 * MILLISECOND);
-        */
+        WAIT
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
 
     moveShoulder(120);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(120, 200, 170, 240, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(180, 160, 150, 180, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(210, 120, 180, 180, 150, 150);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
 
     moveShoulder(250);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveWristVer(240);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
 
     usleep(1000 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
     usleep(1000 * MILLISECOND);
+    WAIT
 
     moveShoulder(240);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 180, 110, 270, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+    WAIT
     usleep(20 * MILLISECOND);
+    WAIT
     moveWristVer(205);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
-        /*
         openGripper();
+        WAIT
         usleep(10 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(10 * MILLISECOND);
-        */
+        WAIT
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
 
     moveShoulder(120);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(120, 200, 170, 240, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(180, 160, 150, 180, 150, 150);
+    WAIT
     usleep(30 * MILLISECOND);
+    WAIT
     moveAll(210, 120, 180, 180, 150, 150);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
 
     moveShoulder(250);
+    WAIT
     usleep(10 * MILLISECOND);
+    WAIT
     moveWristVer(240);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
     moveAll(_CurrentPosition[BASE], 230, 185, 185, 150, 150);
+    WAIT
 
     usleep(1000 * MILLISECOND);
     stand();
@@ -782,7 +972,7 @@ void _BraccioNeo::angry(SPEED speed)
 /**
  * Plays the surprise emotion
  */
-void _BraccioNeo::surprise(SPEED speed)
+void _BraccioNeo::surprise(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
@@ -794,32 +984,55 @@ void _BraccioNeo::surprise(SPEED speed)
     }
   
     stand();
+    WAIT
 
     moveWristRot(60);
+    WAIT
     usleep(500 * MILLISECOND);
+    WAIT
     moveWristRot(240);
+    WAIT
     usleep(500 * MILLISECOND);
+    WAIT
     moveWristRot(150);
+    WAIT
     usleep(500 * MILLISECOND);
+    WAIT
 
     moveWristVer(110);
+    WAIT
     usleep(500 * MILLISECOND);
+    WAIT
     moveWristRot(60);
+    WAIT
     usleep(500 * MILLISECOND);
+    WAIT
     moveWristVer(180);
+    WAIT
     usleep(500 * MILLISECOND);
+    WAIT
     
     moveElbow(110);
+    WAIT
     moveWristVer(270);
+    WAIT
     stand();
+    WAIT
     moveBase(150);
+    WAIT
     usleep(500 * MILLISECOND);
+    WAIT
 
     stand();
+    WAIT
     usleep(500 * MILLISECOND);
-    //openGripper();
+    WAIT
+    openGripper();
+    WAIT
     usleep(500 * MILLISECOND);
-    //closeGripper();
+    WAIT
+    closeGripper();
+    WAIT
   
     usleep(1000 * MILLISECOND);
     stand();
@@ -832,7 +1045,7 @@ void _BraccioNeo::surprise(SPEED speed)
 /*
  * Plays the shy emotion
  */
-void _BraccioNeo::shy(SPEED speed)
+void _BraccioNeo::shy(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
@@ -845,130 +1058,197 @@ void _BraccioNeo::shy(SPEED speed)
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(50 * MILLISECOND);
-        */
+        WAIT
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
         moveBase(180);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
         moveBase(230);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
     }
     moveBase(180);
+    WAIT
     usleep(200 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 2; i++)
     {
         moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
         moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
     }
 
     usleep(1000 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
     usleep(5000 * MILLISECOND);
+    WAIT
     
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(50 * MILLISECOND);
-        */
+        WAIT
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
     
     for (int i = 0; i < 3; i++)
     {
         moveBase(180);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
         moveBase(230);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
     }
     moveBase(180);
+    WAIT
     usleep(200 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 2; i++)
     {
         moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
         moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
     }
 
     usleep(1000 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
     usleep(5000 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
-        /*
+        
         openGripper();
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(50 * MILLISECOND);
-        */
+        WAIT
+        
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
     
     for (int i = 0; i < 3; i++)
     {
         moveBase(180);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
         moveBase(230);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
     }
     moveBase(180);
+    WAIT
     usleep(200 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 2; i++)
     {
         moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
         moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
     }
 
     usleep(1000 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
     usleep(5000 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 3; i++)
     {
-        /*
         openGripper();
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
         closeGripper();
+        WAIT
         usleep(50 * MILLISECOND);
-        */
+        WAIT
     }
-    // moveGripper(150);
+    moveGripper(150);
+    WAIT
     
     for (int i = 0; i < 3; i++)
     {
         moveBase(180);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
         moveBase(230);
+        WAIT
         usleep(20 * MILLISECOND);
+        WAIT
     }
     moveBase(180);
+    WAIT
     usleep(200 * MILLISECOND);
+    WAIT
 
     for (int i = 0; i < 2; i++)
     {
         moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
         moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
     }
    
     usleep(1000 * MILLISECOND);
@@ -982,7 +1262,7 @@ void _BraccioNeo::shy(SPEED speed)
 /*
  * Plays the joy emotion
  */
-void _BraccioNeo::joy(SPEED speed)
+void _BraccioNeo::joy(RF24Network& network, SPEED speed)
 {
     _Start = clock();
     _Speed = speed;
@@ -994,81 +1274,134 @@ void _BraccioNeo::joy(SPEED speed)
     }
 
     moveShoulder(230);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
     moveElbow(130);
+    WAIT
     usleep(100 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 4; i++)
     {
         moveWristRot(240);
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
         moveWristRot(100);
+        WAIT
         usleep(50 * MILLISECOND);
+        WAIT
     }
 
     usleep(1000 * MILLISECOND);
+    WAIT
     stand();
+    WAIT
 
     moveWristRot(150);
+    WAIT
     moveBase(260);
+    WAIT
     moveWristVer(180);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
     moveBase(30);
+    WAIT
     moveWristVer(100);
+    WAIT
     usleep(50 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 2; i++)
     {
         moveBase(240);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveShoulder(150);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveElbow(240);
+        WAIT
         usleep(250 * MILLISECOND);
+        WAIT
         moveWristRot(120);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
 
         moveBase(130);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveWristRot(150);
+        WAIT
         usleep(250 * MILLISECOND);
+        WAIT
         moveElbow(130);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveShoulder(220);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
     }
                 
     moveBase(180);
+    WAIT
     moveShoulder(230);
+    WAIT
     usleep(25 * MILLISECOND);
+    WAIT
     moveElbow(130);
+    WAIT
     usleep(25 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 3; i++)
     {
-        // openGripper();
-        // usleep(50 * MILLISECOND);
-        // closeGripper();
-        // usleep(50 * MILLISECOND);
+        openGripper();
+        WAIT
+        usleep(50 * MILLISECOND);
+        WAIT
+        closeGripper();
+        WAIT
+        usleep(50 * MILLISECOND);
+        WAIT
     }
     moveGripper(180);
+    WAIT
 
     for (char i = 0; i < 3; i++)
     {
         moveBase(130);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
         moveBase(230);
+        WAIT
         usleep(25 * MILLISECOND);
+        WAIT
     }
     moveBase(180);
+    WAIT
     usleep(200 * MILLISECOND);
+    WAIT
 
     for (char i = 0; i < 2; i++)
     {
         moveAll(_CurrentPosition[BASE], 230, 115, 240, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
         moveAll(_CurrentPosition[BASE], 140, 265, 130, _CurrentPosition[WRISTROT], _CurrentPosition[GRIPPER]);
+        WAIT
         usleep(200 * MILLISECOND);
+        WAIT
     }
     
     usleep(1000 * MILLISECOND);

@@ -33,12 +33,12 @@ static struct data
 //Extrem values received by radio
 static struct V_MAX
 {
-    const short XMIN = 270;
-    const short XMAX = 435;
+    const short XMIN = 265;
+    const short XMAX = 405;
     const short XMOY = (XMIN + XMAX)/2;
     
-    const short YMIN = 270; 
-    const short YMAX = 435;
+    const short YMIN = 265; 
+    const short YMAX = 405;
     const short YMOY = (YMIN + YMAX)/2;
 } vMax; 
 

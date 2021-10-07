@@ -1,17 +1,28 @@
+//#include <wiringPi.h>
 #include "BraccioNeo.hpp"
 // #include "Variables.hpp"
 
+#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+//#include <wiringPi.h>
 
 #ifndef __APPLE__
+/*
     #include "lib/RF24/RF24.h"
     #include "lib/RF24/RF24Network.h"
     #include "lib/RF24/nRF24L01.h"
+*/
+
+    #include <RF24/RF24.h>
+    #include <RF24Network/RF24Network.h>
+    #include <RF24/nRF24L01.h>
     
-    RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_8MHZ);
+    
+    //RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_8MHZ);
     //RF24 radio(RPI_V2_GPIO_P1_22, RPI_V2_GPIO_P1_24);
+    RF24 radio(25,0);
     RF24Network network(radio);
     const uint16_t motherNode = 00;
     const uint16_t myNode = motherNode;
@@ -128,76 +139,149 @@ unsigned int dtobin(unsigned char h)
    return b;
 }
 
+
+
 int main(int argc, char const *argv[])
 {
     cout << "bras initialisé" << endl; 
-    
 
+    int pwmPin1 = 1;
+    int pwmPin2 = 23;
+
+    //system("gpio mode 1 output; gpio mode 23 output; gpio write 1 1; gpio write 23 1 ");
+    /*
+    BraccioNeo.light(13, true);
+    BraccioNeo.light(18, true);
+    usleep(500 * MILLISECOND);
+    BraccioNeo.light(13, false);
+    BraccioNeo.light(18, false);
+    usleep(500 * MILLISECOND);
+    BraccioNeo.light(13, true);
+    BraccioNeo.light(18, true);
+    */
 #ifndef __APPLE__
     //inits radio
     radio.begin();
-    //radio.enableDynamicPayloads();
-    //radio.setPayloadSize(32);
-    //radio.setCRCLength(RF24_CRC_16);
-    // radio.setPALevel(RF24_PA_MAX);
-    radio.setDataRate(RF24_2MBPS);
-    radio.startListening();
-    network.begin(108, myNode);
+    /*
+    wiringPiSetup();
+    pinMode(pwmPin1, PWM_OUTPUT);
+    pwmWrite(pwmPin1, 1023);
+    pinMode(pwmPin2, PWM_OUTPUT);
+    pwmWrite(pwmPin2, 1023);
+    */
 
+    //system("gpio mode 1 pwm ; gpio mode 23 pwm ; gpio pwm 1 256 ; gpio pwm 23 1024 ");
+    //system("gpio mode 1 pwm ; gpio pwm 1 256 ");
+    
+    
+    //radio.setAutoAck(1);
+    //radio.setRetries(1,3);
+    //radio.setRetries(15,15);
+    //radio.enableDynamicPayloads();
+    //radio.setPayloadSize(sizeof(receivedData));
+    //radio.setCRCLength(RF24_CRC_16);
+    //radio.setPALevel(RF24_PA_MAX);
+    //radio.setDataRate(RF24_2MBPS);
+    radio.startListening();
+    //radio.powerDown();
+    radio.printDetails();
+
+
+
+    network.begin(108, myNode);
+ 
+    cout << "debut radio " << endl; 
+ 
     //inits data
     initArrays();
 
+    /*
+    for (unsigned i = 0; i < 6; i++)
+    {
+        BraccioNeo.changeSpeed((MOTORS)i, 15);
+    }
+    */
+    BraccioNeo.changeSpeed(BASE, 25);
+    BraccioNeo.changeSpeed(SHOULDER, 25);
+    BraccioNeo.changeSpeed(ELBOW, 40);
+    BraccioNeo.changeSpeed(WRISTVER, 25);
+    BraccioNeo.changeSpeed(WRISTROT, 25);
+    BraccioNeo.changeSpeed(GRIPPER, 10);
+    
+    
     while(true)
     {
+        
+        _pause = false;
+        _stop  = false;
+	if(receivedData.mode  != CONTROL)
+	  receivedData.mode = NONE;
+	
         network.update();
 
         while(network.available())
         {
 	
             RF24NetworkHeader nHeader;
+	    //network.peek(nHeader);
             
             network.read(nHeader, &receivedData, sizeof(receivedData));
-	  //usleep(500 * MILLISECOND);
+	    //network.read(nHeader, &receivedData, sizeof(struct data));
+	    //usleep(500 * MILLISECOND);
 	    //network.read(nHeader, &receivedData, radio.getDynamicPayloadSize());
-	
-
-	    cout << "ID = " << (int)receivedData.ID << endl; 
-	    cout << "x = " << (int)receivedData.x << endl;
-	    cout << "y = " << (int)receivedData.y << endl;
-	    cout << "mode = " << (int)receivedData.mode << endl;
-	    cout << "action = " << (int)receivedData.action << endl;
-		printf("file = %d\n", receivedData.file);
+	    
+	    //cout << "sizeof recievedData = " << (int)sizeof(receivedData) << endl;
+	    //cout << "sizeof PayloadSize = " << (int)radio.getDynamicPayloadSize() << endl;
+	    //cout << "ID = " << (short)receivedData.ID << endl; 
+	    //cout << "x = " << (short)receivedData.x << endl;
+	    //cout << "y = " << (short)receivedData.y << endl;
+	    cout << "mode = " << (short)receivedData.mode << endl;
+	    //cout << "action = " << (short)receivedData.action << endl;
+	    //cout << "file = " << (short)receivedData.file << endl;
+	    //printf("file = %d\n", receivedData.file);
 	    cout << endl;
-	    usleep(100 * MILLISECOND);
+	    //usleep(100 * MILLISECOND);
    	}
-
-            /*
-            switch (receivedData.mode)
+	/*
+	BraccioNeo.changeSpeed(BASE, 25);
+	BraccioNeo.changeSpeed(SHOULDER, 25);
+	BraccioNeo.changeSpeed(ELBOW, 40);
+	BraccioNeo.changeSpeed(WRISTVER, 25);
+	BraccioNeo.changeSpeed(WRISTROT, 25);
+	BraccioNeo.changeSpeed(GRIPPER, 25);
+	*/
+	switch (receivedData.mode)
             {
+	        
                 case READ :
                     cout << "READ" << endl;
-                    BraccioNeo.readFromFile(receivedData.file);
+                    BraccioNeo.readFromFile((FILES)receivedData.file);
+                    break;
+	        case RECORD :
+                    cout << "RECORD" << endl;
+                    BraccioNeo.record(network);
                     break;
 
                 case ANGRY :
                     cout << "ANGRY" << endl;
-                    BraccioNeo.angry();
+                    BraccioNeo.angry(network);
                     break;
                 
                 case JOY : 
                     cout << "JOY" << endl;
-                    BraccioNeo.joy();
+                    BraccioNeo.joy(network);
                     break;
 
                 case SURPRISE :
                     cout << "SURPRISE" << endl;
-                    BraccioNeo.surprise();
+                    BraccioNeo.surprise(network);
                     break;
 
                 case SHY :
                     cout << "SHY" << endl;
-                    BraccioNeo.shy();
+                    BraccioNeo.shy(network);
                     break;
+	     
 
                 case CONTROL : 
                     cout << "CONTROL" << endl;
@@ -222,6 +306,7 @@ int main(int argc, char const *argv[])
                     dataShapping();
                     BraccioNeo.moveAll(baseControl, shoulderControl, elbowControl, wristVerControl, wristRotControl, gripperControl, false);
                     break;
+	     
 
                 case NONE :
                 default:
@@ -229,7 +314,7 @@ int main(int argc, char const *argv[])
                         BraccioNeo.stand();
                     break;
 
-		    }*/
+	    }
     		
     }   
 #endif
